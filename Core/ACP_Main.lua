@@ -10,8 +10,6 @@
 local VERSION = "0.1.0"
 local ANALYZER_NAME = "JS:ACP Studio/ACP_Analyzer"
 
-slider1 = 123
-
 --------------------------------------------------
 -- Utility
 --------------------------------------------------
@@ -122,10 +120,6 @@ end
 -- Main
 --------------------------------------------------
 
---------------------------------------------------
--- Main
---------------------------------------------------
-
 local function main()
 
     printHeader()
@@ -155,17 +149,18 @@ local function main()
     -- Read Analyzer Data
     --------------------------------------------------
 
+    --------------------------------------------------
+    -- Peak
+    --------------------------------------------------
+
     reaper.gmem_attach("ACP_STUDIO")
 
-    local value = reaper.gmem_read(0)
+    local peak = reaper.gmem_read(0)
 
     reaper.ShowConsoleMsg("\n")
-    reaper.ShowConsoleMsg("Communication\n")
+    reaper.ShowConsoleMsg("Peak\n")
     reaper.ShowConsoleMsg("------------------------------\n")
-    reaper.ShowConsoleMsg(string.format("Analyzer Value : %.0f\n", value))
-
+    reaper.ShowConsoleMsg(string.format("Linear : %.6f\n", peak))
 end
-
-main()
 
 main()

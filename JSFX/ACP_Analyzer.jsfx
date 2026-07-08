@@ -1,13 +1,29 @@
 desc:ACP Analyzer
 options:gmem=ACP_STUDIO
 
-slider1:0<0,1,1>Dummy
+//--------------------------------------------------
+// State
+//--------------------------------------------------
+
+@init
+
+peakMax = 0;
+
+//--------------------------------------------------
+// Audio Processing
+//--------------------------------------------------
 
 @sample
 
-// Test communication with Lua
-gmem[0] = 123;
+// Controllo reset (lo aggiungeremo nella prossima milestone)
 
-// Pass audio through unchanged
+samplePeak = max(abs(spl0), abs(spl1));
+
+peakMax = max(peakMax, samplePeak);
+
+gmem[0] = peakMax;
+
+// Pass audio unchanged
+
 spl0 = spl0;
 spl1 = spl1;
