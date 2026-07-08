@@ -3,7 +3,12 @@
 -- Analog Preparation Assistant
 --------------------------------------------------
 
+--------------------------------------------------
+-- Constants
+--------------------------------------------------
+
 local VERSION = "0.1.0"
+local ANALYZER_NAME = "JS:ACP Studio/ACP_Analyzer"
 
 --------------------------------------------------
 -- Utility
@@ -23,7 +28,7 @@ local function printHeader()
 end
 
 --------------------------------------------------
--- Track Detection
+-- Track
 --------------------------------------------------
 
 local function getSelectedTrack()
@@ -35,18 +40,79 @@ end
 local function printTrackInfo(track)
 
     local _, name = reaper.GetTrackName(track)
-    local index = math.floor(reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER"))
-    local sampleRate = reaper.GetSetProjectInfo(0, "PROJECT_SRATE", 0, false)
+    local index = math.floor(
+        reaper.GetMediaTrackInfo_Value(track, "IP_TRACKNUMBER")
+    )
+
+    local sampleRate =
+        reaper.GetSetProjectInfo(0, "PROJECT_SRATE", 0, false)
 
     if sampleRate == 0 then
-        sampleRate = reaper.GetSetProjectInfo(0, "PROJECT_SRATE_USE", 0, false)
+        sampleRate = 48000
     end
 
-    reaper.ShowConsoleMsg("Selected Track\n")
+    reaper.ShowConsoleMsg("Track\n")
     reaper.ShowConsoleMsg("------------------------------\n")
     reaper.ShowConsoleMsg("Name        : " .. name .. "\n")
     reaper.ShowConsoleMsg("Track Index : " .. index .. "\n")
-    reaper.ShowConsoleMsg(string.format("Sample Rate : %d\n", sampleRate))
+    reaper.ShowConsoleMsg(
+        string.format("Sample Rate : %.0f\n\n", sampleRate)
+    )
+
+end
+
+--------------------------------------------------
+-- Analyzer
+--------------------------------------------------
+
+local function findAnalyzer(track)
+
+    return reaper.TrackFX_AddByName(
+        track,
+        ANALYZER_NAME,
+        false,
+        0
+    )
+
+end
+
+local function insertAnalyzer(track)
+
+    return reaper.TrackFX_AddByName(
+        track,
+        ANALYZER_NAME,
+        false,
+        -1
+    )
+
+end
+
+local function ensureAnalyzer(track)
+
+    local slot = findAnalyzer(track)
+
+    if slot >= 0 then
+        return slot, false
+    end
+
+    slot = insertAnalyzer(track)
+
+    return slot, true
+
+end
+
+local function printAnalyzerStatus(slot, inserted)
+
+    reaper.ShowConsoleMsg("Analyzer\n")
+    reaper.ShowConsoleMsg("------------------------------\n")
+
+    if inserted then
+        reaper.ShowConsoleMsg("Status      : Inserted\n")
+    else
+        reaper.ShowConsoleMsg("Status      : Already present\n")
+    end
+
+    reaper.ShowConsoleMsg("FX Slot     : " .. slot .. "\n")
 
 end
 
@@ -68,6 +134,10 @@ local function main()
     end
 
     printTrackInfo(track)
+
+    local slot, inserted = ensureAnalyzer(track)
+
+    printAnalyzerStatus(slot, inserted)
 
 end
 

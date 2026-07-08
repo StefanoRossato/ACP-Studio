@@ -1,0 +1,10 @@
+desc:ACP Analyzer
+
+slider1:0<0,1,1>Dummy
+
+@init
+
+@sample
+
+spl0 = spl0;
+spl1 = spl1;
