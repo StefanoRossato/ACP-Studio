@@ -1,10 +1,13 @@
 desc:ACP Analyzer
+options:gmem=ACP_STUDIO
 
 slider1:0<0,1,1>Dummy
 
-@init
-
 @sample
 
+// Test communication with Lua
+gmem[0] = 123;
+
+// Pass audio through unchanged
 spl0 = spl0;
 spl1 = spl1;
