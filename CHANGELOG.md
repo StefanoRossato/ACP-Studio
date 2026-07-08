@@ -14,3 +14,9 @@
 
 ## 0.1.5
 - Peak analyzer (work in progress)
+
+## Baseline 0.1.6
+- Refactored ACP_Main.lua
+- Refactored ACP_Analyzer.jsfx
+- Defined GMEM layout
+- Stabilized project foundation
