@@ -1,27 +1,59 @@
 //--------------------------------------------------
 // ACP Studio v0.1
-// Baseline 0.1.6
+// ACP_Analyzer.jsfx
+// CF-001.2
 //--------------------------------------------------
 
 desc:ACP Analyzer
 options:gmem=ACP_STUDIO
 
 //--------------------------------------------------
-// GMEM Layout
+// Registers (AnalyzerProtocol v1)
 //--------------------------------------------------
 
-// 0   Peak Linear
-// 1   RMS Average
-// 2   RMS Maximum
-//100  Command
+REG_COMMAND     = 0;
+REG_STATE       = 1;
+
+REG_RMS         = 2;
+REG_PEAK        = 3;
+REG_LINEARITY   = 4;
+REG_SAMPLES     = 5;
 
 //--------------------------------------------------
-// State
+// Commands (Lua -> JSFX)
+//--------------------------------------------------
+
+CMD_IDLE        = 0;
+CMD_START       = 1;
+CMD_RESET       = 2;
+
+//--------------------------------------------------
+// States (JSFX -> Lua)
+//--------------------------------------------------
+
+STATE_IDLE        = 0;
+STATE_MEASURING   = 1;
+STATE_COMPLETED   = 2;
+STATE_ERROR       = 3;
+
+//--------------------------------------------------
+// Internal State
 //--------------------------------------------------
 
 @init
 
-peakMax = 0;
+
+isMeasuring = 0;
+
+gmem[REG_STATE] = 99;
+
+// Initialize protocol
+
+gmem[REG_STATE]      = STATE_IDLE;
+gmem[REG_RMS]        = 0;
+gmem[REG_PEAK]       = 0;
+gmem[REG_LINEARITY]  = 0;
+gmem[REG_SAMPLES]    = 0;
 
 //--------------------------------------------------
 // Processing
@@ -29,20 +61,13 @@ peakMax = 0;
 
 @sample
 
-samplePeak = max(abs(spl0), abs(spl1));
+command = gmem[REG_COMMAND];
 
-peakMax = max(
-    peakMax,
-    samplePeak
-);
+gmem[REG_STATE] = command;
 
 //--------------------------------------------------
-// Output
-//--------------------------------------------------
-
-gmem[0] = peakMax;
-
 // Pass audio unchanged
+//--------------------------------------------------
 
 spl0 = spl0;
 spl1 = spl1;
