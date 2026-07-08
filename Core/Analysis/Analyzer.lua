@@ -9,6 +9,12 @@ local Analyzer = {}
 Analyzer.__index = Analyzer
 
 ----------------------------------------------------------------------
+-- Constants
+----------------------------------------------------------------------
+
+local JSFX_NAME = "JS: ACP_Analyzer"
+
+----------------------------------------------------------------------
 -- Constructor
 ----------------------------------------------------------------------
 
@@ -17,6 +23,7 @@ function Analyzer.New()
     local self = setmetatable({}, Analyzer)
 
     self.ready = false
+    self.track = nil
 
     self.measurements = {
         peak = nil,
@@ -29,10 +36,49 @@ function Analyzer.New()
 end
 
 ----------------------------------------------------------------------
+-- Private
+----------------------------------------------------------------------
+
+local function GetSelectedTrack()
+
+    return reaper.GetSelectedTrack(0, 0)
+
+end
+
+local function EnsureAnalyzerFX(track)
+
+    if not track then
+        return false
+    end
+
+    local fxIndex = reaper.TrackFX_AddByName(
+        track,
+        JSFX_NAME,
+        false,
+        1
+    )
+
+    return fxIndex >= 0
+
+end
+
+----------------------------------------------------------------------
 -- Initialize
 ----------------------------------------------------------------------
 
 function Analyzer:Initialize()
+
+    self.track = GetSelectedTrack()
+
+    if not self.track then
+        reaper.ShowConsoleMsg("ERROR: No track selected.\n")
+        return false
+    end
+
+    if not EnsureAnalyzerFX(self.track) then
+        reaper.ShowConsoleMsg("ERROR: Unable to load ACP_Analyzer.jsfx\n")
+        return false
+    end
 
     self.ready = true
 
@@ -60,7 +106,8 @@ end
 
 function Analyzer:Update()
 
-    -- JSFX communication will be implemented in a future revision.
+    -- JSFX communication will be implemented
+    -- in CF-001.3
 
     return true
 
