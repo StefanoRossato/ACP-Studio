@@ -1,5 +1,19 @@
+//--------------------------------------------------
+// ACP Studio v0.1
+// Baseline 0.1.6
+//--------------------------------------------------
+
 desc:ACP Analyzer
 options:gmem=ACP_STUDIO
+
+//--------------------------------------------------
+// GMEM Layout
+//--------------------------------------------------
+
+// 0   Peak Linear
+// 1   RMS Average
+// 2   RMS Maximum
+//100  Command
 
 //--------------------------------------------------
 // State
@@ -10,16 +24,21 @@ options:gmem=ACP_STUDIO
 peakMax = 0;
 
 //--------------------------------------------------
-// Audio Processing
+// Processing
 //--------------------------------------------------
 
 @sample
 
-// Controllo reset (lo aggiungeremo nella prossima milestone)
-
 samplePeak = max(abs(spl0), abs(spl1));
 
-peakMax = max(peakMax, samplePeak);
+peakMax = max(
+    peakMax,
+    samplePeak
+);
+
+//--------------------------------------------------
+// Output
+//--------------------------------------------------
 
 gmem[0] = peakMax;
 
