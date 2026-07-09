@@ -63,8 +63,8 @@ gmem[REG_SAMPLES]    = 0;
 
 command = gmem[REG_COMMAND];
 
+gmem[10] = command;
 gmem[REG_STATE] = command;
-
 //--------------------------------------------------
 // Pass audio unchanged
 //--------------------------------------------------

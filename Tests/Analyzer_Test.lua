@@ -28,7 +28,7 @@ local analyzer = Analyzer.New()
 Logger.ConsoleInfo("Initialize")
 
 if not analyzer:Initialize() then
-    Logger.ConsoleError("Initialization failed")
+    Logger.ConsoleError("Initialize FAILED")
     return
 end
 
@@ -41,7 +41,7 @@ Logger.ConsoleInfo("Initialize OK")
 Logger.ConsoleInfo("Reset")
 
 if not analyzer:Reset() then
-    Logger.ConsoleError("Reset failed")
+    Logger.ConsoleError("Reset FAILED")
     return
 end
 
@@ -54,14 +54,14 @@ Logger.ConsoleInfo("Reset OK")
 Logger.ConsoleInfo("Start")
 
 if not analyzer:Start() then
-    Logger.ConsoleError("Start failed")
+    Logger.ConsoleError("Start FAILED")
     return
 end
 
 Logger.ConsoleInfo("Start OK")
 
 ----------------------------------------------------------------------
--- Polling
+-- Poll
 ----------------------------------------------------------------------
 
 local attempts = 0
@@ -73,16 +73,20 @@ local function Poll()
 
     analyzer:Update()
 
+    ------------------------------------------------------------
+    -- Completed
+    ------------------------------------------------------------
+
     if analyzer:IsCompleted() then
 
         local m = analyzer:Read()
 
         Logger.Section("Measurements")
 
-        Logger.ConsoleInfo(string.format("RMS        : %.2f", m.rms))
-        Logger.ConsoleInfo(string.format("PEAK       : %.2f", m.peak))
-        Logger.ConsoleInfo(string.format("LINEARITY  : %.2f", m.linearity))
-        Logger.ConsoleInfo(string.format("SAMPLES    : %.0f", m.samples))
+        Logger.ConsoleInfo("RMS        : " .. tostring(m.rms))
+        Logger.ConsoleInfo("PEAK       : " .. tostring(m.peak))
+        Logger.ConsoleInfo("LINEARITY  : " .. tostring(m.linearity))
+        Logger.ConsoleInfo("SAMPLES    : " .. tostring(m.samples))
 
         Logger.Section("Result")
 
@@ -92,13 +96,22 @@ local function Poll()
 
     end
 
-    if attempts >= maxAttempts then
+    ------------------------------------------------------------
+    -- Timeout
+    ------------------------------------------------------------
 
-        Logger.Section("Result")
+        if attempts >= maxAttempts then
 
-        Logger.ConsoleError("TIMEOUT")
+            local echo = reaper.gmem_read(10)
+            local stateRaw = reaper.gmem_read(1)
 
-        Logger.ConsoleInfo("STATE = " .. tostring(analyzer.state))
+            Logger.Section("Result")
+
+            Logger.ConsoleError("TIMEOUT")
+
+            Logger.ConsoleInfo("STATE (object) = " .. tostring(analyzer.state))
+            Logger.ConsoleInfo("STATE (raw)    = " .. tostring(stateRaw))
+            Logger.ConsoleInfo("COMMAND (echo) = " .. tostring(echo))
 
         return
 
