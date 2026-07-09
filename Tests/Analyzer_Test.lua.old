@@ -1,0 +1,104 @@
+----------------------------------------------------------------------
+-- ACP Studio
+-- Analyzer_Test.lua
+--
+-- Component     : CMP-302
+-- Layer         : Tests
+-- Purpose       : Analyzer Integration Test
+-- Specification : SPT-120 v2.0
+----------------------------------------------------------------------
+
+dofile(
+    debug.getinfo(1, "S").source:match("@?(.*[/\\])") ..
+    "TestSetup.lua"
+)
+
+local Logger   = require("Core.Logger")
+local Protocol = require("Core.IPC.SharedMemoryProtocol")
+local Analyzer = require("Core.Analysis.Analyzer")
+
+----------------------------------------------------------------------
+-- Test Setup
+----------------------------------------------------------------------
+
+Logger.Clear()
+Logger.ClearConsole()
+
+Logger.Section("Analyzer Integration Test")
+
+Logger.ConsoleInfo("Creating Analyzer")
+
+local analyzer = Analyzer.New()
+
+----------------------------------------------------------------------
+-- Initialization
+----------------------------------------------------------------------
+
+Logger.Section("Initialization")
+
+assert(analyzer:Initialize(), "Initialize FAILED")
+Logger.ConsoleInfo("Initialize OK")
+
+assert(analyzer:Reset(), "Reset FAILED")
+Logger.ConsoleInfo("Reset OK")
+
+assert(analyzer:Start(), "Start FAILED")
+Logger.ConsoleInfo("Start OK")
+
+----------------------------------------------------------------------
+-- Poll
+----------------------------------------------------------------------
+
+local attempts = 0
+local maxAttempts = 500
+
+local function Poll()
+
+    attempts = attempts + 1
+
+    analyzer:Update()
+
+    --------------------------------------------------------------
+    -- Measurement Completed
+    --------------------------------------------------------------
+
+    if analyzer.state == Protocol.STATE.COMPLETED then
+
+        local m = analyzer:Read()
+
+        Logger.Section("Measurements")
+
+        Logger.ConsoleInfo("RMS        = " .. tostring(m.rms))
+        Logger.ConsoleInfo("PEAK       = " .. tostring(m.peak))
+        Logger.ConsoleInfo("LINEARITY  = " .. tostring(m.linearity))
+        Logger.ConsoleInfo("SAMPLES    = " .. tostring(m.samples))
+
+        Logger.Section("Result")
+        Logger.ConsoleInfo("TEST PASSED")
+
+        return
+
+    end
+
+    --------------------------------------------------------------
+    -- Timeout
+    --------------------------------------------------------------
+
+    if attempts >= maxAttempts then
+
+        Logger.Section("Result")
+        Logger.ConsoleError("TEST FAILED")
+
+        return
+
+    end
+
+    reaper.defer(Poll)
+
+end
+
+----------------------------------------------------------------------
+-- Run
+----------------------------------------------------------------------
+
+Poll()

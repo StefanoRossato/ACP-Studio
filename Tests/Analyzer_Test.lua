@@ -1,128 +1,271 @@
 ----------------------------------------------------------------------
 -- ACP Studio
 -- Analyzer_Test.lua
+--
+-- Component     : CMP-303
+-- Layer         : Tests
+-- Purpose       : Analyzer Integration Test Harness
+-- Specification : SPT-120 v2.0
 ----------------------------------------------------------------------
 
-dofile(debug.getinfo(1, "S").source:match("@?(.*[/\\])") .. "TestSetup.lua")
+----------------------------------------------------------------------
+-- Dependencies
+----------------------------------------------------------------------
 
 local Logger   = require("Core.Logger")
-local Analyzer = require("Core.Analysis.Analyzer")
+local Analyzer = require("Core.Analyzer")
 
 ----------------------------------------------------------------------
--- Initialize
+-- Configuration
 ----------------------------------------------------------------------
 
-Logger.Clear()
-Logger.ClearConsole()
-
-Logger.Section("Analyzer Test")
-
-Logger.ConsoleInfo("Creating Analyzer")
-
-local analyzer = Analyzer.New()
+local TIMEOUT_SECONDS = 10
 
 ----------------------------------------------------------------------
--- Initialize
+-- Global State
 ----------------------------------------------------------------------
 
-Logger.ConsoleInfo("Initialize")
+local analyzer  = nil
+local startTime = 0
 
-if not analyzer:Initialize() then
-    Logger.ConsoleError("Initialize FAILED")
-    return
+----------------------------------------------------------------------
+-- Header
+----------------------------------------------------------------------
+
+Logger.Separator()
+
+Logger.ConsoleInfo(
+    "Analyzer Integration Test"
+)
+
+Logger.Separator()
+
+----------------------------------------------------------------------
+-- Initialize Test
+----------------------------------------------------------------------
+
+local function InitializeTest()
+
+    analyzer = Analyzer.New()
+
+    if not analyzer then
+
+        Logger.ConsoleError(
+            "Failed to create Analyzer."
+        )
+
+        return false
+
+    end
+
+    if not analyzer:Initialize() then
+
+        Logger.ConsoleError(
+            "Initialize FAILED"
+        )
+
+        return false
+
+    end
+
+    Logger.ConsoleInfo(
+        "Initialize OK"
+    )
+
+    if not analyzer:Reset() then
+
+        Logger.ConsoleError(
+            "Reset FAILED"
+        )
+
+        return false
+
+    end
+
+    Logger.ConsoleInfo(
+        "Reset OK"
+    )
+
+    if not analyzer:Start() then
+
+        Logger.ConsoleError(
+            "Start FAILED"
+        )
+
+        return false
+
+    end
+
+    Logger.ConsoleInfo(
+        "Start OK"
+    )
+
+    startTime = reaper.time_precise()
+
+    return true
+
 end
 
-Logger.ConsoleInfo("Initialize OK")
-
 ----------------------------------------------------------------------
--- Reset
+-- Print Results
 ----------------------------------------------------------------------
 
-Logger.ConsoleInfo("Reset")
+local function PrintResults()
 
-if not analyzer:Reset() then
-    Logger.ConsoleError("Reset FAILED")
-    return
+    local measurements = analyzer:Read()
+
+    if not measurements then
+
+        Logger.ConsoleError(
+            "Read FAILED"
+        )
+
+        return false
+
+    end
+
+    Logger.Separator()
+
+    Logger.ConsoleInfo(
+        string.format(
+            "RMS        : %.6f",
+            measurements.rms
+        )
+    )
+
+    Logger.ConsoleInfo(
+        string.format(
+            "Peak       : %.6f",
+            measurements.peak
+        )
+    )
+
+    Logger.ConsoleInfo(
+        string.format(
+            "Linearity  : %.6f",
+            measurements.linearity
+        )
+    )
+
+    Logger.ConsoleInfo(
+        string.format(
+            "Samples    : %d",
+            measurements.samples
+        )
+    )
+
+    Logger.Separator()
+
+    return true
+
 end
 
-Logger.ConsoleInfo("Reset OK")
-
 ----------------------------------------------------------------------
--- Start
+-- Cleanup
 ----------------------------------------------------------------------
 
-Logger.ConsoleInfo("Start")
+local function Cleanup()
 
-if not analyzer:Start() then
-    Logger.ConsoleError("Start FAILED")
-    return
+    if analyzer then
+
+        analyzer:Destroy()
+
+        analyzer = nil  
+
+    end
+
+    startTime = 0
+
 end
 
-Logger.ConsoleInfo("Start OK")
-
 ----------------------------------------------------------------------
--- Poll
+-- Run Test
 ----------------------------------------------------------------------
 
-local attempts = 0
-local maxAttempts = 100
+local function Run()
 
-local function Poll()
+    ------------------------------------------------------------------
+    -- Update
+    ------------------------------------------------------------------
 
-    attempts = attempts + 1
+    if not analyzer:Update() then
 
-    analyzer:Update()
+        Logger.Separator()
 
-    ------------------------------------------------------------
+        Logger.ConsoleError(
+            "Update FAILED"
+        )
+
+        Cleanup()
+
+        Logger.ConsoleError(
+            "TEST FAILED"
+        )
+
+        return
+
+    end
+
+    ------------------------------------------------------------------
     -- Completed
-    ------------------------------------------------------------
+    ------------------------------------------------------------------
 
     if analyzer:IsCompleted() then
 
-        local m = analyzer:Read()
+        if not PrintResults() then
 
-        Logger.Section("Measurements")
+            Cleanup()
 
-        Logger.ConsoleInfo("RMS        : " .. tostring(m.rms))
-        Logger.ConsoleInfo("PEAK       : " .. tostring(m.peak))
-        Logger.ConsoleInfo("LINEARITY  : " .. tostring(m.linearity))
-        Logger.ConsoleInfo("SAMPLES    : " .. tostring(m.samples))
+            Logger.ConsoleError(
+                "TEST FAILED"
+            )
 
-        Logger.Section("Result")
+            return
 
-        Logger.ConsoleInfo("TEST PASSED")
+        end
+
+        Logger.ConsoleInfo(
+            "TEST PASSED"
+        )
+
+        Cleanup()
 
         return
 
     end
 
-    ------------------------------------------------------------
+    ------------------------------------------------------------------
     -- Timeout
-    ------------------------------------------------------------
+    ------------------------------------------------------------------
 
-        if attempts >= maxAttempts then
+    if (reaper.time_precise() - startTime) >= TIMEOUT_SECONDS then
 
-            local echo = reaper.gmem_read(10)
-            local stateRaw = reaper.gmem_read(1)
+        Logger.Separator()
 
-            Logger.Section("Result")
+        Logger.ConsoleError(
+            "TEST FAILED (Timeout)"
+        )
 
-            Logger.ConsoleError("TIMEOUT")
-
-            Logger.ConsoleInfo("STATE (object) = " .. tostring(analyzer.state))
-            Logger.ConsoleInfo("STATE (raw)    = " .. tostring(stateRaw))
-            Logger.ConsoleInfo("COMMAND (echo) = " .. tostring(echo))
+        Cleanup()
 
         return
 
     end
 
-    reaper.defer(Poll)
+    ------------------------------------------------------------------
+    -- Continue
+    ------------------------------------------------------------------
+
+    reaper.defer(Run)
 
 end
 
 ----------------------------------------------------------------------
--- Run
+-- Main
 ----------------------------------------------------------------------
 
-Poll()
+if InitializeTest() then
+
+    Run()
+
+end

@@ -1,15 +1,28 @@
-//--------------------------------------------------
-// ACP Studio v0.1
+//-----------------------------------------------------------------------
+// ACP Studio
 // ACP_Analyzer.jsfx
-// CF-001.2
-//--------------------------------------------------
+//
+// Component     : CMP-301
+// Layer         : DSP
+// Purpose       : Analysis Endpoint
+// Specification : SPT-120 v2.0
+//-----------------------------------------------------------------------
 
-desc:ACP Analyzer
-options:gmem=ACP_STUDIO
+desc:ACP Studio - Analyzer
+author:ACP Studio Engineering
+version:2.0
 
-//--------------------------------------------------
-// Registers (AnalyzerProtocol v1)
-//--------------------------------------------------
+options:gmem=ACP_ANALYZER
+
+//-----------------------------------------------------------------------
+// DSP Constants
+//-----------------------------------------------------------------------
+
+TARGET_SAMPLES = 48000;
+
+//-----------------------------------------------------------------------
+// Registers
+//-----------------------------------------------------------------------
 
 REG_COMMAND     = 0;
 REG_STATE       = 1;
@@ -19,55 +32,193 @@ REG_PEAK        = 3;
 REG_LINEARITY   = 4;
 REG_SAMPLES     = 5;
 
-//--------------------------------------------------
-// Commands (Lua -> JSFX)
-//--------------------------------------------------
+REG_VERSION     = 255;
+
+//-----------------------------------------------------------------------
+// Commands
+//-----------------------------------------------------------------------
 
 CMD_IDLE        = 0;
 CMD_START       = 1;
 CMD_RESET       = 2;
 
-//--------------------------------------------------
-// States (JSFX -> Lua)
-//--------------------------------------------------
+//-----------------------------------------------------------------------
+// States
+//-----------------------------------------------------------------------
 
 STATE_IDLE        = 0;
 STATE_MEASURING   = 1;
 STATE_COMPLETED   = 2;
 STATE_ERROR       = 3;
 
-//--------------------------------------------------
+PROTOCOL_VERSION = 1;
+
+//-----------------------------------------------------------------------
 // Internal State
-//--------------------------------------------------
+//-----------------------------------------------------------------------
+
+measuring = 0;
+
+samples = 0;
+
+peak = 0;
+rms = 0;
+linearity = 0;
+
+rmsAccumulator = 0;
+
+//-----------------------------------------------------------------------
+// Functions
+//-----------------------------------------------------------------------
+
+//-----------------------------------------------------------------------
+// Reset Protocol
+//-----------------------------------------------------------------------
+
+function ResetProtocol()
+(
+    // Internal state
+
+    measuring = 0;
+
+    samples = 0;
+
+    peak = 0;
+    rms = 0;
+    linearity = 0;
+
+    rmsAccumulator = 0;
+
+    // Protocol
+
+    gmem[REG_VERSION] = PROTOCOL_VERSION;
+
+    gmem[REG_COMMAND] = CMD_IDLE;
+    gmem[REG_STATE]   = STATE_IDLE;
+
+    gmem[REG_RMS]       = 0;
+    gmem[REG_PEAK]      = 0;
+    gmem[REG_LINEARITY] = 0;
+    gmem[REG_SAMPLES]   = 0;
+);
+
+//-----------------------------------------------------------------------
+// Process Commands
+//-----------------------------------------------------------------------
+
+function ProcessCommand()
+(
+    cmd = gmem[REG_COMMAND];
+
+    //---------------------------------------------------------------
+    // START
+    //---------------------------------------------------------------
+
+    cmd == CMD_START ?
+    (
+        measuring = 1;
+
+        samples = 0;
+
+        peak = 0;
+        rms = 0;
+        linearity = 0;
+
+        rmsAccumulator = 0;
+
+        gmem[REG_COMMAND] = CMD_IDLE;
+        gmem[REG_STATE]   = STATE_MEASURING;
+        
+    );
+
+    //---------------------------------------------------------------
+    // RESET
+    //---------------------------------------------------------------
+
+    cmd == CMD_RESET ?
+    (
+        ResetProtocol();
+    );
+);
+
+//-----------------------------------------------------------------------
+// Analyze Sample
+//-----------------------------------------------------------------------
+
+function AnalyzeSample()
+(
+    level = max(abs(spl0), abs(spl1));
+
+    peak = max(peak, level);
+
+    rmsAccumulator += level * level;
+
+    samples += 1;
+
+    rms = sqrt(rmsAccumulator / samples);
+
+    // Placeholder
+    linearity = 0;
+);
+
+//-----------------------------------------------------------------------
+// Publish Measurements
+//-----------------------------------------------------------------------
+
+function PublishMeasurements()
+(
+    gmem[REG_RMS]       = rms;
+    gmem[REG_PEAK]      = peak;
+    gmem[REG_LINEARITY] = linearity;
+    gmem[REG_SAMPLES]   = samples;
+);
+
+//-----------------------------------------------------------------------
+// Complete Measurement
+//-----------------------------------------------------------------------
+
+function CompleteMeasurement()
+(
+    measuring = 0;
+
+    PublishMeasurements();
+
+    gmem[REG_COMMAND] = CMD_IDLE;
+    gmem[REG_STATE]   = STATE_COMPLETED;
+);
+
+//-----------------------------------------------------------------------
+// Initialization
+//-----------------------------------------------------------------------
 
 @init
 
+ResetProtocol();
 
-isMeasuring = 0;
-
-gmem[REG_STATE] = 99;
-
-// Initialize protocol
-
-gmem[REG_STATE]      = STATE_IDLE;
-gmem[REG_RMS]        = 0;
-gmem[REG_PEAK]       = 0;
-gmem[REG_LINEARITY]  = 0;
-gmem[REG_SAMPLES]    = 0;
-
-//--------------------------------------------------
-// Processing
-//--------------------------------------------------
+//-----------------------------------------------------------------------
+// Audio Processing
+//-----------------------------------------------------------------------
 
 @sample
 
-command = gmem[REG_COMMAND];
+ProcessCommand();
 
-gmem[10] = command;
-gmem[REG_STATE] = command;
-//--------------------------------------------------
-// Pass audio unchanged
-//--------------------------------------------------
+measuring ?
+(
+    AnalyzeSample();
+
+    PublishMeasurements();
+
+    samples >= TARGET_SAMPLES ?
+    (
+        CompleteMeasurement();
+    );
+);
+
+//-----------------------------------------------------------------------
+// Audio Pass-through
+//-----------------------------------------------------------------------
 
 spl0 = spl0;
 spl1 = spl1;
+

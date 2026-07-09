@@ -2,11 +2,13 @@
 -- ACP Studio
 -- Analyzer.lua
 --
--- Component     : CMP-302
--- Layer         : Core
--- Purpose       : Analyzer Controller
--- Specification : SPT-120 v2.0
+-- Analysis Session Analyzer
 ----------------------------------------------------------------------
+
+local Logger = require("Core.Logger")
+
+local Analyzer = {}
+Analyzer.__index = Analyzer
 
 ----------------------------------------------------------------------
 -- Dependencies
@@ -15,37 +17,36 @@
 local Protocol = require("Core.IPC.SharedMemoryProtocol")
 
 ----------------------------------------------------------------------
--- Module
-----------------------------------------------------------------------
-
-local Analyzer = {}
-Analyzer.__index = Analyzer
-
-----------------------------------------------------------------------
 -- Constants
 ----------------------------------------------------------------------
 
 local JSFX_NAME = "JS: ACP_Analyzer"
 
 ----------------------------------------------------------------------
--- Private
+-- Constructor
 ----------------------------------------------------------------------
 
-----------------------------------------------------------------------
--- Reset Measurements
-----------------------------------------------------------------------
+function Analyzer.New()
 
-local function ResetMeasurements(self)
+    local self = setmetatable({}, Analyzer)
 
-    self.measurements.rms = 0
-    self.measurements.peak = 0
-    self.measurements.linearity = 0
-    self.measurements.samples = 0
+    self.ready = false
+    self.track = nil
+    self.state = Protocol.STATE.IDLE
+
+    self.measurements = {
+        rms = 0,
+        peak = 0,
+        linearity = 0,
+        samples = 0
+    }
+
+    return self
 
 end
 
 ----------------------------------------------------------------------
--- Get Selected Track
+-- Private
 ----------------------------------------------------------------------
 
 local function GetSelectedTrack()
@@ -64,52 +65,34 @@ local function EnsureAnalyzerFX(track)
         return false
     end
 
+    ------------------------------------------------------------
+    -- Already loaded ?
+    ------------------------------------------------------------
+
     local fxCount = reaper.TrackFX_GetCount(track)
 
     for i = 0, fxCount - 1 do
 
-        local ok, fxName =
-            reaper.TrackFX_GetFXName(track, i, "")
+        local retval, fxName = reaper.TrackFX_GetFXName(track, i, "")
 
-        if ok and fxName:find("ACP_Analyzer", 1, true) then
+        if retval and fxName:find("ACP_Analyzer", 1, true) then
             return true
         end
 
     end
 
-    local index =
-        reaper.TrackFX_AddByName(
-            track,
-            JSFX_NAME,
-            false,
-            1
-        )
+    ------------------------------------------------------------
+    -- Add JSFX
+    ------------------------------------------------------------
+
+    local index = reaper.TrackFX_AddByName(
+        track,
+        JSFX_NAME,
+        false,
+        1
+    )
 
     return index >= 0
-
-end
-
-----------------------------------------------------------------------
--- Constructor
-----------------------------------------------------------------------
-
-function Analyzer.New()
-
-    local self = setmetatable({}, Analyzer)
-
-    self.ready = false
-    self.track = nil
-    self.state = Protocol.STATE.IDLE
-
-    self.measurements =
-    {
-        rms        = 0,
-        peak       = 0,
-        linearity  = 0,
-        samples    = 0
-    }
-
-    return self
 
 end
 
@@ -132,7 +115,6 @@ function Analyzer:Initialize()
     Protocol.Initialize()
 
     self.ready = true
-    self.state = Protocol.STATE.IDLE
 
     return true
 
@@ -144,10 +126,6 @@ end
 
 function Analyzer:Reset()
 
-    if not self.ready then
-        return false
-    end
-
     Protocol.Write(
         Protocol.REGISTERS.COMMAND,
         Protocol.COMMAND.RESET
@@ -155,7 +133,10 @@ function Analyzer:Reset()
 
     self.state = Protocol.STATE.IDLE
 
-    ResetMeasurements(self)
+    self.measurements.rms = 0
+    self.measurements.peak = 0
+    self.measurements.linearity = 0
+    self.measurements.samples = 0
 
     return true
 
@@ -167,10 +148,6 @@ end
 
 function Analyzer:Start()
 
-    if not self.ready then
-        return false
-    end
-
     Protocol.Write(
         Protocol.REGISTERS.COMMAND,
         Protocol.COMMAND.START
@@ -180,22 +157,39 @@ function Analyzer:Start()
 
 end
 
-----------------------------------------------------------------------
--- Update
-----------------------------------------------------------------------
-
 function Analyzer:Update()
-
-    if not self.ready then
-        return false
-    end
 
     self.state =
         Protocol.Read(
             Protocol.REGISTERS.STATE
         )
 
+    Logger.ConsoleInfo(
+        "COMMAND = " ..
+        tostring(Protocol.Read(100))
+    )
+
+    Logger.ConsoleInfo(
+        "MEASURING = " ..
+        tostring(Protocol.Read(101))
+    )
+
+    Logger.ConsoleInfo(
+        "STATE = " ..
+        tostring(Protocol.Read(102))
+    )
+
     return true
+
+end
+
+----------------------------------------------------------------------
+-- Completed
+----------------------------------------------------------------------
+
+function Analyzer:IsCompleted()
+
+    return self.state == Protocol.STATE.COMPLETED
 
 end
 
@@ -205,77 +199,29 @@ end
 
 function Analyzer:Read()
 
-    if not self.ready then
-        return nil
-    end
-
     self.measurements.rms =
-        Protocol.Read(
-            Protocol.REGISTERS.RMS
-        )
+        Protocol.Read(Protocol.REGISTERS.RMS)
 
     self.measurements.peak =
-        Protocol.Read(
-            Protocol.REGISTERS.PEAK
-        )
+        Protocol.Read(Protocol.REGISTERS.PEAK)
 
     self.measurements.linearity =
-        Protocol.Read(
-            Protocol.REGISTERS.LINEARITY
-        )
+        Protocol.Read(Protocol.REGISTERS.LINEARITY)
 
     self.measurements.samples =
-        Protocol.Read(
-            Protocol.REGISTERS.SAMPLES
-        )
+        Protocol.Read(Protocol.REGISTERS.SAMPLES)
 
     return self.measurements
 
 end
 
 ----------------------------------------------------------------------
--- State Queries
-----------------------------------------------------------------------
-
-function Analyzer:IsIdle()
-
-    return self.state == Protocol.STATE.IDLE
-
-end
-
-function Analyzer:IsMeasuring()
-
-    return self.state == Protocol.STATE.MEASURING
-
-end
-
-function Analyzer:IsCompleted()
-
-    return self.state == Protocol.STATE.COMPLETED
-
-end
-
-----------------------------------------------------------------------
--- Controller State
+-- Ready
 ----------------------------------------------------------------------
 
 function Analyzer:IsReady()
 
     return self.ready
-
-end
-
-----------------------------------------------------------------------
--- Destroy
-----------------------------------------------------------------------
-
-function Analyzer:Destroy()
-
-    self.ready = false
-    self.track = nil
-    self.state = Protocol.STATE.IDLE
-
-    ResetMeasurements(self)
 
 end
 
