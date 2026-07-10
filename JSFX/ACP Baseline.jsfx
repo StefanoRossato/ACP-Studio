@@ -1,0 +1,13 @@
+desc:ACP Baseline
+
+options:gmem=ACP_STUDIO
+
+@init
+
+counter = 0;
+gmem[254] = 0;
+
+@sample
+
+counter += 1;
+gmem[254] = counter;

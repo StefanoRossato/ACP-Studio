@@ -232,6 +232,19 @@ function Analyzer:Update()
     "DEBUG_CMD = " ..
     tostring(Protocol.Read(252))
     )
+
+    Logger.ConsoleInfo(
+    "SAMPLES = " ..
+    tostring(
+        Protocol.Read(
+            Protocol.REGISTERS.SAMPLES
+        )
+    )
+)
+Logger.ConsoleInfo(
+    "MARKER = " ..
+    tostring(Protocol.Read(254))
+)
     
     return true
 

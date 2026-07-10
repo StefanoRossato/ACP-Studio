@@ -1,10 +1,7 @@
-desc:ACP GMem Test
+desc:ACP Studio - Analyzer TEST
 
-options:gmem=ACP_STUDIO
+slider1:test=0<0,1000000,1>
 
 @sample
 
-gmem[253] += 1;
-
-// Copia COMMAND nel registro di debug
-gmem[252] = gmem[0];
+slider1 += 1;
