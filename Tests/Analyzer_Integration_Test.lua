@@ -1,22 +1,25 @@
 ----------------------------------------------------------------------
 -- ACP Studio
--- Analyzer_Test.lua
+-- Analyzer_Integration_Test.lua
 --
--- Component     : CMP-303
--- Layer         : Tests
--- Purpose       : Analyzer Integration Test Harness
--- Specification : SPT-120 v2.0
+-- Component     : TST-400
+-- Layer         : Tests / Integration
+-- Purpose       : Analyzer integration validation
+-- Specification : BT-002
 ----------------------------------------------------------------------
+
 dofile(
     debug.getinfo(1, "S").source:match("@?(.*[/\\])") ..
     "TestSetup.lua"
 )
+
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
 
 local Logger   = require("Core.Logger")
 local Analyzer = require("Core.Analysis.Analyzer")
+
 ----------------------------------------------------------------------
 -- Configuration
 ----------------------------------------------------------------------
@@ -29,6 +32,7 @@ local TIMEOUT_SECONDS = 10
 
 local analyzer  = nil
 local startTime = 0
+local lastState = nil
 
 ----------------------------------------------------------------------
 -- Header
@@ -43,10 +47,10 @@ Logger.ConsoleInfo(
 Logger.Separator()
 
 ----------------------------------------------------------------------
--- Initialize Test
+-- Setup
 ----------------------------------------------------------------------
 
-local function InitializeTest()
+local function Setup()
 
     analyzer = Analyzer.New()
 
@@ -104,15 +108,55 @@ local function InitializeTest()
 
     startTime = reaper.time_precise()
 
+    lastState = nil
+
     return true
 
 end
 
 ----------------------------------------------------------------------
--- Print Results
+-- Teardown
 ----------------------------------------------------------------------
 
-local function PrintResults()
+local function Teardown()
+
+    if analyzer then
+
+        analyzer:Destroy()
+
+        analyzer = nil
+
+    end
+
+    startTime = 0
+    lastState = nil
+
+end
+
+----------------------------------------------------------------------
+-- Print State
+----------------------------------------------------------------------
+
+local function PrintState()
+
+    if analyzer.state == lastState then
+        return
+    end
+
+    Logger.ConsoleInfo(
+        "STATE -> " ..
+        tostring(analyzer.state)
+    )
+
+    lastState = analyzer.state
+
+end
+
+----------------------------------------------------------------------
+-- Print Measurements
+----------------------------------------------------------------------
+
+local function PrintMeasurements()
 
     local measurements = analyzer:Read()
 
@@ -163,44 +207,24 @@ local function PrintResults()
 end
 
 ----------------------------------------------------------------------
--- Cleanup
+-- Execute
 ----------------------------------------------------------------------
 
-local function Cleanup()
-
-    if analyzer then
-
-        analyzer:Destroy()
-
-        analyzer = nil  
-
-    end
-
-    startTime = 0
-
-end
-
-----------------------------------------------------------------------
--- Run Test
-----------------------------------------------------------------------
-
-local function Run()
+local function Execute()
 
     ------------------------------------------------------------------
     -- Update
     ------------------------------------------------------------------
-    -- debug
-    Logger.ConsoleInfo("RUN")
+
     if not analyzer:Update() then
 
         Logger.Separator()
-
 
         Logger.ConsoleError(
             "Update FAILED"
         )
 
-        Cleanup()
+        Teardown()
 
         Logger.ConsoleError(
             "TEST FAILED"
@@ -209,18 +233,22 @@ local function Run()
         return
 
     end
-    -- debug
-    -- Logger.ConsoleInfo("STATE = " .. tostring(analyzer.state))
-    
+
+    ------------------------------------------------------------------
+    -- State
+    ------------------------------------------------------------------
+
+    PrintState()
+
     ------------------------------------------------------------------
     -- Completed
     ------------------------------------------------------------------
 
     if analyzer:IsCompleted() then
 
-        if not PrintResults() then
+        if not PrintMeasurements() then
 
-            Cleanup()
+            Teardown()
 
             Logger.ConsoleError(
                 "TEST FAILED"
@@ -234,7 +262,7 @@ local function Run()
             "TEST PASSED"
         )
 
-        Cleanup()
+        Teardown()
 
         return
 
@@ -252,7 +280,7 @@ local function Run()
             "TEST FAILED (Timeout)"
         )
 
-        Cleanup()
+        Teardown()
 
         return
 
@@ -262,7 +290,7 @@ local function Run()
     -- Continue
     ------------------------------------------------------------------
 
-    reaper.defer(Run)
+    reaper.defer(Execute)
 
 end
 
@@ -270,8 +298,8 @@ end
 -- Main
 ----------------------------------------------------------------------
 
-if InitializeTest() then
+if Setup() then
 
-    Run()
+    Execute()
 
 end

@@ -1,4 +1,4 @@
-desc:ACP Studio - Analyzer TEST
+desc:ACP Studio - Runtime TEST
 
 slider1:test=0<0,1000000,1>
 

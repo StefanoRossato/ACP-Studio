@@ -20,3 +20,26 @@
 - Refactored ACP_Analyzer.jsfx
 - Defined GMEM layout
 - Stabilized project foundation
+
+## baseline-0.1.7 - BT-001 Baseline DSP
+
+### Added
+
+* Implemented `ACP_Baseline.jsfx`.
+* Implemented the Baseline DSP Runtime architecture.
+* Added deterministic runtime execution pipeline.
+* Added runtime state machine.
+* Added Shared Memory communication.
+* Added heartbeat counter.
+* Added sample counter.
+* Added transparent audio pass-through.
+* Implemented `RuntimeMonitor.lua`.
+* Added `DIAG-001 Runtime Monitor` engineering specification.
+
+### Validation
+
+* Validated Shared Memory communication between JSFX and Lua.
+* Validated runtime state publication.
+* Validated heartbeat and sample counter operation.
+* Validated transparent audio pass-through.
+* BT-001 certification completed.

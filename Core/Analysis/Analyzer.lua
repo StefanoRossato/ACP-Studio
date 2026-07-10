@@ -2,17 +2,20 @@
 -- ACP Studio
 -- Analyzer.lua
 --
--- Component     : CMP-302
--- Layer         : Core
--- Purpose       : Analyzer Controller
--- Specification : SPT-120 v2.0
+-- Component     : CMP-400
+-- Layer         : Core / Analysis
+-- Purpose       : Analyzer controller
+-- Specification : BT-002
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
-local Logger   = require("Core.Logger")
-local Protocol = require("Core.IPC.SharedMemoryProtocol")
+
+local SharedMemory     = require("Core.IPC.SharedMemory")
+local Registers        = require("Core.IPC.Registers")
+local RuntimeCommands  = require("Core.IPC.RuntimeCommands")
+local RuntimeStates    = require("Core.IPC.RuntimeStates")
 
 ----------------------------------------------------------------------
 -- Module
@@ -25,10 +28,9 @@ Analyzer.__index = Analyzer
 -- Constants
 ----------------------------------------------------------------------
 
--- local JSFX_NAME = "JS: ACP_Analyzer"
-local JSFX_NAME = "JS: ACP Studio - Analyzer TEST"
+local JSFX_NAME = "JS: ACP Studio - Runtime TEST"
 ----------------------------------------------------------------------
--- Private
+-- Private Functions
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -66,18 +68,18 @@ local function EnsureAnalyzerFX(track)
 
     local fxCount = reaper.TrackFX_GetCount(track)
 
-    for i = 0, fxCount - 1 do
+    for index = 0, fxCount - 1 do
 
-        local ok, fxName =
-            reaper.TrackFX_GetFXName(track, i, "")
+        local ok, name =
+            reaper.TrackFX_GetFXName(track, index, "")
 
-        if ok and fxName:find("ACP_Analyzer", 1, true) then
+        if ok and name:find("ACP Studio - Analyzer", 1, true) then
             return true
         end
 
     end
 
-    local index =
+    local fxIndex =
         reaper.TrackFX_AddByName(
             track,
             JSFX_NAME,
@@ -85,7 +87,7 @@ local function EnsureAnalyzerFX(track)
             1
         )
 
-    return index >= 0
+    return fxIndex >= 0
 
 end
 
@@ -99,10 +101,10 @@ function Analyzer.New()
 
     self.ready = false
     self.track = nil
-    self.state = Protocol.STATE.IDLE
 
-    self.measurements =
-    {
+    self.state = RuntimeStates.IDLE
+
+    self.measurements = {
         rms        = 0,
         peak       = 0,
         linearity  = 0,
@@ -112,6 +114,10 @@ function Analyzer.New()
     return self
 
 end
+
+----------------------------------------------------------------------
+-- Initialize
+----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
 -- Initialize
@@ -129,13 +135,11 @@ function Analyzer:Initialize()
         return false
     end
 
-    Protocol.Initialize()
-    
-    -- debug
-    Logger.ConsoleInfo("DEBUG = " .. tostring(Protocol.Read(254)))
+    SharedMemory.Initialize()
 
     self.ready = true
-    self.state = Protocol.STATE.IDLE
+
+    self:Update()
 
     return true
 
@@ -151,12 +155,10 @@ function Analyzer:Reset()
         return false
     end
 
-    Protocol.Write(
-        Protocol.REGISTERS.COMMAND,
-        Protocol.COMMAND.RESET
+    SharedMemory.Write(
+        Registers.COMMAND,
+        RuntimeCommands.RESET
     )
-
-    self.state = Protocol.STATE.IDLE
 
     ResetMeasurements(self)
 
@@ -165,7 +167,7 @@ function Analyzer:Reset()
 end
 
 ----------------------------------------------------------------------
--- Start Analysis
+-- Start
 ----------------------------------------------------------------------
 
 function Analyzer:Start()
@@ -174,9 +176,28 @@ function Analyzer:Start()
         return false
     end
 
-    Protocol.Write(
-        Protocol.REGISTERS.COMMAND,
-        Protocol.COMMAND.START
+    SharedMemory.Write(
+        Registers.COMMAND,
+        RuntimeCommands.START
+    )
+
+    return true
+
+end
+
+----------------------------------------------------------------------
+-- Stop
+----------------------------------------------------------------------
+
+function Analyzer:Stop()
+
+    if not self.ready then
+        return false
+    end
+
+    SharedMemory.Write(
+        Registers.COMMAND,
+        RuntimeCommands.STOP
     )
 
     return true
@@ -189,63 +210,14 @@ end
 
 function Analyzer:Update()
 
-    if not self.ready then
+    if not self.ready or not self.track then
         return false
     end
 
-    Logger.ConsoleInfo("BEFORE READ")
-
-    self.state =
-        Protocol.Read(
-            Protocol.REGISTERS.STATE
-        )
-
-    Logger.ConsoleInfo(
-    "CMD = " ..
-    tostring(
-        Protocol.Read(
-            Protocol.REGISTERS.COMMAND
-        )
-        )
+    self.state = SharedMemory.Read(
+        Registers.STATE
     )
 
-    Logger.ConsoleInfo(
-    "STATE = " ..
-    tostring(
-        Protocol.Read(
-            Protocol.REGISTERS.STATE
-        )
-        )
-    )
-
-    Logger.ConsoleInfo(
-    "SAMPLES LOOP = " ..
-    tostring(Protocol.Read(253))
-    )
-
-    Logger.ConsoleInfo(
-    "LOOP = " ..
-    tostring(Protocol.Read(253))
-    )
-
-    Logger.ConsoleInfo(
-    "DEBUG_CMD = " ..
-    tostring(Protocol.Read(252))
-    )
-
-    Logger.ConsoleInfo(
-    "SAMPLES = " ..
-    tostring(
-        Protocol.Read(
-            Protocol.REGISTERS.SAMPLES
-        )
-    )
-)
-Logger.ConsoleInfo(
-    "MARKER = " ..
-    tostring(Protocol.Read(254))
-)
-    
     return true
 
 end
@@ -261,23 +233,23 @@ function Analyzer:Read()
     end
 
     self.measurements.rms =
-        Protocol.Read(
-            Protocol.REGISTERS.RMS
+        SharedMemory.Read(
+            Registers.RMS
         )
 
     self.measurements.peak =
-        Protocol.Read(
-            Protocol.REGISTERS.PEAK
+        SharedMemory.Read(
+            Registers.PEAK
         )
 
     self.measurements.linearity =
-        Protocol.Read(
-            Protocol.REGISTERS.LINEARITY
+        SharedMemory.Read(
+            Registers.LINEARITY
         )
 
     self.measurements.samples =
-        Protocol.Read(
-            Protocol.REGISTERS.SAMPLES
+        SharedMemory.Read(
+            Registers.SAMPLES
         )
 
     return self.measurements
@@ -290,24 +262,24 @@ end
 
 function Analyzer:IsIdle()
 
-    return self.state == Protocol.STATE.IDLE
+    return self.state == RuntimeStates.IDLE
 
 end
 
-function Analyzer:IsMeasuring()
+function Analyzer:IsRunning()
 
-    return self.state == Protocol.STATE.MEASURING
+    return self.state == RuntimeStates.RUNNING
 
 end
 
 function Analyzer:IsCompleted()
 
-    return self.state == Protocol.STATE.COMPLETED
+    return self.state == RuntimeStates.COMPLETED
 
 end
 
 ----------------------------------------------------------------------
--- Controller State
+-- Controller Queries
 ----------------------------------------------------------------------
 
 function Analyzer:IsReady()
@@ -324,7 +296,7 @@ function Analyzer:Destroy()
 
     self.ready = false
     self.track = nil
-    self.state = Protocol.STATE.IDLE
+    self.state = nil
 
     ResetMeasurements(self)
 
