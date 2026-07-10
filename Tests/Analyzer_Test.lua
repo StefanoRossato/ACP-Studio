@@ -7,14 +7,16 @@
 -- Purpose       : Analyzer Integration Test Harness
 -- Specification : SPT-120 v2.0
 ----------------------------------------------------------------------
-
+dofile(
+    debug.getinfo(1, "S").source:match("@?(.*[/\\])") ..
+    "TestSetup.lua"
+)
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
 
 local Logger   = require("Core.Logger")
-local Analyzer = require("Core.Analyzer")
-
+local Analyzer = require("Core.Analysis.Analyzer")
 ----------------------------------------------------------------------
 -- Configuration
 ----------------------------------------------------------------------
@@ -187,10 +189,12 @@ local function Run()
     ------------------------------------------------------------------
     -- Update
     ------------------------------------------------------------------
-
+    -- debug
+    Logger.ConsoleInfo("RUN")
     if not analyzer:Update() then
 
         Logger.Separator()
+
 
         Logger.ConsoleError(
             "Update FAILED"
@@ -205,7 +209,9 @@ local function Run()
         return
 
     end
-
+    -- debug
+    -- Logger.ConsoleInfo("STATE = " .. tostring(analyzer.state))
+    
     ------------------------------------------------------------------
     -- Completed
     ------------------------------------------------------------------

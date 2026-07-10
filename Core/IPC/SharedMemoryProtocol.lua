@@ -16,7 +16,7 @@ local SharedMemoryProtocol = {}
 
 SharedMemoryProtocol.VERSION = 1
 
-SharedMemoryProtocol.MEMORY_NAME = "ACP_ANALYZER"
+SharedMemoryProtocol.MEMORY_NAME = "ACP_STUDIO"
 
 -----------------------------------------------------------------------
 -- Register Map

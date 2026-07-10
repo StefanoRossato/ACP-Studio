@@ -11,7 +11,7 @@
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
-
+local Logger   = require("Core.Logger")
 local Protocol = require("Core.IPC.SharedMemoryProtocol")
 
 ----------------------------------------------------------------------
@@ -25,8 +25,8 @@ Analyzer.__index = Analyzer
 -- Constants
 ----------------------------------------------------------------------
 
-local JSFX_NAME = "JS: ACP_Analyzer"
-
+-- local JSFX_NAME = "JS: ACP_Analyzer"
+local JSFX_NAME = "JS: ACP Studio - Analyzer TEST"
 ----------------------------------------------------------------------
 -- Private
 ----------------------------------------------------------------------
@@ -130,6 +130,9 @@ function Analyzer:Initialize()
     end
 
     Protocol.Initialize()
+    
+    -- debug
+    Logger.ConsoleInfo("DEBUG = " .. tostring(Protocol.Read(254)))
 
     self.ready = true
     self.state = Protocol.STATE.IDLE
@@ -190,11 +193,46 @@ function Analyzer:Update()
         return false
     end
 
+    Logger.ConsoleInfo("BEFORE READ")
+
     self.state =
         Protocol.Read(
             Protocol.REGISTERS.STATE
         )
 
+    Logger.ConsoleInfo(
+    "CMD = " ..
+    tostring(
+        Protocol.Read(
+            Protocol.REGISTERS.COMMAND
+        )
+        )
+    )
+
+    Logger.ConsoleInfo(
+    "STATE = " ..
+    tostring(
+        Protocol.Read(
+            Protocol.REGISTERS.STATE
+        )
+        )
+    )
+
+    Logger.ConsoleInfo(
+    "SAMPLES LOOP = " ..
+    tostring(Protocol.Read(253))
+    )
+
+    Logger.ConsoleInfo(
+    "LOOP = " ..
+    tostring(Protocol.Read(253))
+    )
+
+    Logger.ConsoleInfo(
+    "DEBUG_CMD = " ..
+    tostring(Protocol.Read(252))
+    )
+    
     return true
 
 end

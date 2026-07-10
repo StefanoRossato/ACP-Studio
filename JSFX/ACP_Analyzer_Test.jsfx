@@ -1,0 +1,10 @@
+desc:ACP GMem Test
+
+options:gmem=ACP_STUDIO
+
+@sample
+
+gmem[253] += 1;
+
+// Copia COMMAND nel registro di debug
+gmem[252] = gmem[0];

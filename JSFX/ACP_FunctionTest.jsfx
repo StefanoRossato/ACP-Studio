@@ -1,0 +1,10 @@
+desc:Function Test
+
+@init
+
+function ResetProtocol()
+(
+    x = 123;
+);
+
+ResetProtocol();
