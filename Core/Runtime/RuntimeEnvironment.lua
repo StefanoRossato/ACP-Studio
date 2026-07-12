@@ -68,13 +68,11 @@ end
 -- Ensure Runtime Plugin
 -----------------------------------------------------------------------
 
------------------------------------------------------------------------
--- Ensure Runtime Plugin
------------------------------------------------------------------------
-
 local function EnsureRuntimePlugin()
 
-    State.runtimeFX = nil
+    if not State.track then
+        return false
+    end
 
     local fxCount =
         reaper.TrackFX_GetCount(State.track)

@@ -61,3 +61,18 @@
 ### Changed
 
 - BT-002 Bootstrap infrastructure completed.
+
+## [Unreleased]
+
+### Added
+
+- BT-002 Runtime Command Interface.
+- Runtime commands: RESET, START and STOP.
+- Command-driven runtime state machine.
+- Runtime command decoder.
+- Experimental Validation workflow added to DEV-001 Development Workflow.
+
+### Changed
+
+- Runtime execution changed from automatic startup to explicit command control.
+- JSFX development workflow now requires isolated experimental validation before production integration.

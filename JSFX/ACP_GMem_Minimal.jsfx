@@ -1,7 +1,0 @@
-desc:ACP GMem Minimal
-
-options:gmem=ACP_STUDIO
-
-@sample
-
-gmem[1] = 123;

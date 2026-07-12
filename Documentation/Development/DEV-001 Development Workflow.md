@@ -186,6 +186,24 @@ Documentation uses the following lifecycle.
 | Approved | Frozen specification |
 | Certified | Implementation verified against specification |
 
+### 6.1 Experimental Validation
+
+When a development task depends on uncertain behavior of Lua, JSFX, REAPER APIs or any external runtime, implementation shall not begin directly in production code.
+
+A minimal isolated experiment shall be created to validate the assumption before modifying ACP Studio production code.
+
+Only experimentally validated behavior may be integrated into the production codebase.
+
+---
+
+#### Rules
+
+- One hypothesis per experiment.
+- One experiment per file.
+- Experiments shall remain outside the production codebase.
+- Experimental files shall never be committed.
+- Production code shall contain only validated behavior.
+
 ---
 
 # 7. Commit Guidelines
