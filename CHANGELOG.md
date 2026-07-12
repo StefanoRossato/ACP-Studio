@@ -43,3 +43,10 @@
 * Validated heartbeat and sample counter operation.
 * Validated transparent audio pass-through.
 * BT-001 certification completed.
+
+### Documentation
+
+* Approved `ENG-OPEN Engineering Open Issues`.
+* Defined the Engineering Open Issue data model.
+* Defined the Engineering Issue Management process.
+* Established the Engineering Data Model Review process.
