@@ -57,3 +57,7 @@
 * Defined the Engineering Recovery process.
 * Established the Engineering Recovery Process Model.
 * Defined the Project Recovery workflow.
+
+### Changed
+
+- BT-002 Bootstrap infrastructure completed.

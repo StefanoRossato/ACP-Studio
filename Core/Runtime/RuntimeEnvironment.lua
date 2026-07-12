@@ -13,8 +13,8 @@ local RuntimeEnvironment = {}
 -----------------------------------------------------------------------
 -- Constants
 -----------------------------------------------------------------------
-
 local RUNTIME_TRACK_NAME = "ACP Runtime"
+local RUNTIME_PLUGIN_NAME = "ACP Baseline"
 
 -----------------------------------------------------------------------
 -- Private State
@@ -68,7 +68,35 @@ end
 -- Ensure Runtime Plugin
 -----------------------------------------------------------------------
 
+-----------------------------------------------------------------------
+-- Ensure Runtime Plugin
+-----------------------------------------------------------------------
+
 local function EnsureRuntimePlugin()
+
+    State.runtimeFX = nil
+
+    local fxCount =
+        reaper.TrackFX_GetCount(State.track)
+
+    for fxIndex = 0, fxCount - 1 do
+
+        local _, fxName =
+            reaper.TrackFX_GetFXName(
+                State.track,
+                fxIndex,
+                ""
+            )
+
+        if fxName:find(RUNTIME_PLUGIN_NAME, 1, true) then
+
+            State.runtimeFX = fxIndex
+
+            return true
+
+        end
+
+    end
 
     return false
 

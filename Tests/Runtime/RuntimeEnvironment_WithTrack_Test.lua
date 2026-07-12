@@ -6,12 +6,12 @@ dofile(
 local Environment = require("Core.Runtime.RuntimeEnvironment")
 
 
-assert(Environment.Initialize())
+RuntimeEnvironment.Initialize()
 
-assert(Environment.GetRuntimeTrack() == nil)
+RuntimeEnvironment.Validate()
 
-assert(Environment.Validate() == false) -- il plugin manca ancora
+RuntimeEnvironment.IsReady() == true
 
-assert(Environment.GetRuntimeTrack() ~= nil)
+RuntimeEnvironment.GetRuntimeTrack() ~= nil
 
-assert(Environment.IsReady() == false)
+RuntimeEnvironment.GetRuntimePlugin() ~= nil

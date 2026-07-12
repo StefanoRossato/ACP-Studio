@@ -2,9 +2,9 @@
 -- ACP Studio
 -- Bootstrap.lua
 --
--- Component     : Test Bootstrap
--- Layer         : Tests
--- Purpose       : Test infrastructure bootstrap
+-- Component     : Bootstrap
+-- Layer         : Test Infrastructure
+-- Purpose       : Initialize the ACP Studio test infrastructure.
 -- Specification : TST-001
 ----------------------------------------------------------------------
 
@@ -67,8 +67,20 @@ local function ConfigurePackagePath()
         return false
     end
 
-    State.packagePath =
+    local repositoryPath =
         State.repositoryRoot .. "/?.lua"
+
+    local repositoryInitPath =
+        State.repositoryRoot .. "/?/init.lua"
+
+    if not package.path:find(repositoryPath, 1, true) then
+
+        package.path =
+            package.path
+            .. ";" .. repositoryPath
+            .. ";" .. repositoryInitPath
+
+    end
 
     return true
 
