@@ -50,3 +50,10 @@
 * Defined the Engineering Open Issue data model.
 * Defined the Engineering Issue Management process.
 * Established the Engineering Data Model Review process.
+
+### Documentation
+
+* Approved `DEV-002 Engineering Recovery`.
+* Defined the Engineering Recovery process.
+* Established the Engineering Recovery Process Model.
+* Defined the Project Recovery workflow.
