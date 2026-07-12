@@ -67,6 +67,9 @@ local function ConfigurePackagePath()
         return false
     end
 
+    State.packagePath =
+        State.repositoryRoot .. "/?.lua"
+
     return true
 
 end

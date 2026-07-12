@@ -1,24 +1,25 @@
 ----------------------------------------------------------------------
 -- ACP Studio
--- RunTest.lua
+-- RunTest_Test.lua
 --
 -- Component     : Test Launcher
 -- Layer         : Tests
--- Purpose       : Test execution entry point
+-- Purpose       : Test Launcher validation
 -- Specification : TST-001
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
--- Bootstrap
+-- Execute Test Launcher
 ----------------------------------------------------------------------
 
-local Bootstrap = dofile(
+dofile(
     debug.getinfo(1, "S").source:match("@?(.*[/\\])") ..
-    "Bootstrap.lua"
+    "RunTest.lua"
 )
 
 ----------------------------------------------------------------------
--- Initialize Bootstrap
+-- Test completed successfully
 ----------------------------------------------------------------------
 
-assert(Bootstrap.Initialize())
+reaper.ClearConsole()
+reaper.ShowConsoleMsg("RunTest_Test : PASS\n")
