@@ -16,6 +16,7 @@ local SharedMemory     = require("Core.IPC.SharedMemory")
 local Registers        = require("Core.IPC.Registers")
 local RuntimeCommands  = require("Core.IPC.RuntimeCommands")
 local RuntimeStates    = require("Core.IPC.RuntimeStates")
+local Logger           = require("Core.Logger")
 
 ----------------------------------------------------------------------
 -- Module
@@ -86,6 +87,12 @@ local function EnsureAnalyzerFX(track)
             false,
             1
         )
+        local fx = reaper.TrackFX_GetCount(track) - 1
+
+    Logger.ConsoleInfo(
+        "FX Enabled = " ..
+        tostring(reaper.TrackFX_GetEnabled(track, fx))
+    )
 
     return fxIndex >= 0
 

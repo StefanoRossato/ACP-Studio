@@ -377,6 +377,8 @@ category, provided they do not conflict with this standard.
 The document structure shall remain consistent within each document
 category to promote readability, navigation and long-term maintenance.
 
+Software module organization is defined by ENG-002 Module Layout Standard.
+
 -------------------------------------------------------------------------------
 11. Typography Rules
 -------------------------------------------------------------------------------
@@ -545,6 +547,8 @@ defined by an approved Engineering Standard.
 
 The maintenance of document templates shall be governed by this
 Engineering Standard.
+
+Software module templates shall conform to ENG-002 Module Layout Standard.
 
 -------------------------------------------------------------------------------
 19. Conformance

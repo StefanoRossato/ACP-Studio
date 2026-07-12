@@ -19,7 +19,7 @@ dofile(
 
 local Logger   = require("Core.Logger")
 local Analyzer = require("Core.Analysis.Analyzer")
-
+l
 ----------------------------------------------------------------------
 -- Configuration
 ----------------------------------------------------------------------
@@ -99,8 +99,17 @@ local function Setup()
         )
 
         return false
-
     end
+
+    Logger.ConsoleInfo(
+    "RMS = " ..
+    tostring(reaper.gmem_read(2)))
+
+    Logger.ConsoleInfo("COMMAND = " ..tostring(reaper.gmem_read(0)))
+    Logger.ConsoleInfo(
+    "RMS(DEBUG) = " ..
+    tostring(reaper.gmem_read(2))
+    )
 
     Logger.ConsoleInfo(
         "Start OK"
@@ -218,6 +227,8 @@ local function Execute()
 
     if not analyzer:Update() then
 
+        
+
         Logger.Separator()
 
         Logger.ConsoleError(
@@ -233,7 +244,14 @@ local function Execute()
         return
 
     end
-
+    Logger.ConsoleInfo(
+    string.format(
+        "STATE=%d COMMAND=%.0f GMEM255=%.0f",
+        analyzer.state,
+        reaper.gmem_read(0),
+        reaper.gmem_read(255)
+    )
+)
     ------------------------------------------------------------------
     -- State
     ------------------------------------------------------------------

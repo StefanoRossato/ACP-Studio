@@ -15,7 +15,6 @@ local RuntimeCommands = {}
 -----------------------------------------------------------------------
 
 RuntimeCommands.NONE  = 0
-
 RuntimeCommands.RESET = 1
 RuntimeCommands.START = 2
 RuntimeCommands.STOP  = 3
