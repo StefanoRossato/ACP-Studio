@@ -52,6 +52,30 @@ function RuntimeObserver:Update(model)
         Registers.STATE
     )
 
+    model:SetRMS(
+        SharedMemory.Read(
+            Registers.RMS
+        )
+    )
+
+    model:SetPeak(
+    SharedMemory.Read(
+        Registers.PEAK
+        )
+    )
+
+    model:SetCrestFactor(
+    SharedMemory.Read(
+        Registers.LINEARITY
+        )
+    )
+
+    model:SetSampleCount(
+    SharedMemory.Read(
+        Registers.SAMPLES
+        )
+    )
+
     model:SetState(state)
 
     return model

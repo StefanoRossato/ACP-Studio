@@ -97,14 +97,37 @@ local function TestUpdate(observer, model)
         RuntimeStates.RUNNING
     )
 
+    SharedMemory.Write(
+        Registers.RMS,
+        -18.0
+    )
+
+    SharedMemory.Write(
+        Registers.PEAK,
+        -6.0
+    )
+
+    SharedMemory.Write(
+        Registers.LINEARITY,
+        12.0
+    )
+
+    SharedMemory.Write(
+        Registers.SAMPLES,
+        1024
+    )
+
     Log("Calling RuntimeObserver.Update()...")
 
     local updatedModel = observer:Update(model)
-
+    
+    assert(model:GetState() == RuntimeStates.RUNNING,"State synchronization failed.")
+    assert(model:GetRMS() == -18.0,"RMS synchronization failed.")
+    assert(model:GetPeak() == -6.0,"Peak synchronization failed.")
+    assert(model:GetCrestFactor() == 12.0,"Crest Factor synchronization failed.")
+    assert(model:GetSampleCount() == 1024,"Sample Count synchronization failed.")
 
     assert(updatedModel == model, "Unexpected model returned.")
-
-    assert(model:GetState() == RuntimeStates.RUNNING,"State synchronization failed.")
 
     Log("PASS - RuntimeObserver.Update() completed")
 
