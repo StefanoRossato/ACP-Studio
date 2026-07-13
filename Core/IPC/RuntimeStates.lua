@@ -5,6 +5,8 @@
 -- Component     : CMP-303
 -- Layer         : Core / IPC
 -- Purpose       : Runtime state definitions
+-- Status        : Certified
+-- Version       : 1.0
 -- Specification : BT-002
 -----------------------------------------------------------------------
 

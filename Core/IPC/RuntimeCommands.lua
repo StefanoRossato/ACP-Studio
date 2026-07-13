@@ -5,6 +5,8 @@
 -- Component     : CMP-302
 -- Layer         : Core / IPC
 -- Purpose       : Runtime command definitions
+-- Status        : Certified
+-- Version       : 1.0
 -- Specification : BT-002
 -----------------------------------------------------------------------
 

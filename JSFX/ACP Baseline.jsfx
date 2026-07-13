@@ -1,3 +1,15 @@
+//======================================================================
+// ACP Studio
+// ACP_Baseline.jsfx
+//
+// Component     : CMP-400
+// Layer         : DSP Runtime
+// Purpose       : Baseline runtime implementation
+// Status        : Certified
+// Version       : 1.0
+// Specification : BT-002
+//======================================================================
+
 desc:ACP Studio - Baseline DSP Runtime
 
 options:gmem=ACP_STUDIO

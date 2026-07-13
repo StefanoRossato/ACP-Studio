@@ -76,3 +76,17 @@
 
 - Runtime execution changed from automatic startup to explicit command control.
 - JSFX development workflow now requires isolated experimental validation before production integration.
+
+### Engineering
+
+- ENG-001 Documentation Standard completely redesigned.
+- Introduced the official ACP Studio documentation standard.
+- Standardized the official engineering document header.
+- Introduced the documentation workflow and lifecycle.
+- Formalized documentation review and certification rules.
+
+- DEV-001 Engineering Workflow completely redesigned.
+- Introduced the official ACP Studio engineering workflow.
+- Introduced Architecture Review.
+- Introduced Repository Cleanup.
+- Standardized the engineering lifecycle.

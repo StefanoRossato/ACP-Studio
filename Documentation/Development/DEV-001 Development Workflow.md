@@ -1,258 +1,254 @@
 ----------------------------------------------------------------------
 ACP Studio
-
-Document ID   : DEV-001
-Document      : Development Workflow
-Category      : Development Guide
-Version       : 1.0
-Status        : Approved
-
-Review Status : Approved
-Review Date   : 2026-07-10
-
-Author        : ACP Studio Project
+DEV-001 Engineering Workflow
 ----------------------------------------------------------------------
 
-# 1. Purpose
+Document ID
+    DEV-001
 
-This document defines the official software development workflow adopted by the ACP Studio project.
+Category
+    Engineering
 
-Its purpose is to standardize the engineering process used to design, implement, validate and certify every project component.
+Status
+    Certified
 
-The workflow described in this document applies to all ACP Studio software components, including Lua modules, JSFX plug-ins, infrastructure tools and technical documentation.
+Version
+    3.0
 
----
+----------------------------------------------------------------------
 
-# 2. Engineering Principles
+Purpose
 
-ACP Studio development follows the following engineering principles.
+Define the official engineering workflow governing the development,
+validation, certification, and release of ACP Studio components.
 
-## Specification First
+----------------------------------------------------------------------
 
-Every software component begins with an approved specification.
+1. Engineering Requirements
 
-Implementation shall never start before the specification has been reviewed and approved.
+Every ACP Studio component shall satisfy the following engineering
+requirements.
 
----
+• Every component shall originate from an approved specification.
 
-## Single Responsibility
+• Every component shall implement a single well-defined responsibility.
 
-Each component shall implement one well-defined responsibility.
+• Every implementation shall be experimentally validated.
 
-Large features shall be decomposed into smaller independent components whenever possible.
+• Every implementation shall comply with the ACP Studio engineering
+  architecture and coding standards.
 
----
+• Every repository state submitted for certification shall contain
+  only production-ready components.
 
-## Incremental Development
+• Every repository commit shall represent a certified engineering
+  baseline.
 
-Software shall be developed incrementally.
+----------------------------------------------------------------------
 
-Each implementation step introduces one functional change only.
+2. Engineering Workflow
 
-Every increment shall be validated before continuing.
+Every ACP Studio component shall follow the engineering workflow
+defined below.
 
----
+    Specification
+          │
+          ▼
+    Implementation
+          │
+          ▼
+    Experimental Validation
+          │
+          ▼
+    Architecture Review
+          │
+          ▼
+    Repository Cleanup
+          │
+          ▼
+    Certification
+          │
+          ▼
+    Commit
+          │
+          ▼
+    Tag (Milestone Only)
 
-## Validation Before Certification
+Engineering phases shall be completed in the defined order.
 
-Every component shall be tested before being considered complete.
+----------------------------------------------------------------------
 
-Certification is granted only after successful validation.
+3. Engineering Phases
 
----
+3.1 Specification
 
-## Repository First
+Objective
 
-The Git repository is the only authoritative source of the project.
+Define the functional and architectural requirements of the component.
 
-The REAPER runtime shall never be modified manually.
+Activities
 
-All runtime environments shall be generated through the deployment pipeline.
+Produce an approved engineering specification defining behaviour,
+interfaces, responsibilities, and acceptance criteria.
 
----
+Output
 
-# 3. Development Lifecycle
+Approved specification.
 
-Every ACP Studio component follows the same lifecycle.
+----------------------------------------------------------------------
 
-```
-Specification
+3.2 Implementation
 
-↓
+Objective
 
-Review
+Implement the approved specification.
 
-↓
+Activities
 
-Approved
+Develop the component according to the approved specification and
+ACP Studio engineering standards.
 
-↓
+Output
 
-Implementation
+Working implementation.
 
-↓
+----------------------------------------------------------------------
 
-Validation
+3.3 Experimental Validation
 
-↓
+Objective
 
-Certification
+Verify that the implementation satisfies the approved specification.
 
-↓
+Activities
 
-Commit
+Execute experimental validation, analyse the observed behaviour,
+and resolve implementation defects before certification.
 
-↓
+Output
 
-Deployment
+Experimentally validated implementation.
 
-↓
+----------------------------------------------------------------------
 
-Runtime Validation
-```
+3.4 Architecture Review
 
-Each phase must be completed before the next phase begins.
+Objective
 
----
+Verify compliance with ACP Studio engineering standards.
 
-# 4. Daily Development Workflow
+Activities
 
-The recommended daily workflow is:
+Review the implementation to verify architectural consistency,
+component responsibilities, dependencies, documentation, naming,
+and coding standards.
 
-```
-Update Repository
+Output
 
-↓
+Architecture approved.
 
-Implement One Increment
+----------------------------------------------------------------------
 
-↓
+3.5 Repository Cleanup
 
-Validate
+Objective
 
-↓
+Prepare the repository for certification.
 
-Run verify.sh
+Activities
 
-↓
+Remove temporary and obsolete artifacts and verify repository
+consistency prior to certification.
 
-Run deploy.sh
+Output
 
-↓
+Clean repository.
 
-Runtime Validation
+----------------------------------------------------------------------
 
-↓
+3.6 Certification
 
-Commit
-```
+Objective
 
-Only one logical change should be implemented before each validation cycle.
+Confirm that the component satisfies all engineering requirements.
 
----
+Activities
 
-# 5. Definition of Done
+Verify completion of the engineering workflow and approve the
+component for inclusion in the certified baseline.
 
-A software component is considered completed only when all of the following conditions are satisfied.
+Output
 
-- Specification completed.
-- Implementation completed.
-- Validation passed.
-- Documentation updated.
-- Deployment verified.
-- Runtime validated.
-- Git commit completed.
+Certified component.
 
-Only then may the component be considered **Certified**.
+----------------------------------------------------------------------
 
----
+3.7 Commit
 
-# 6. Component Status
+Objective
 
-Software components use the following lifecycle.
+Record a certified engineering baseline.
 
-| Status | Description |
-|----------|-------------|
-| TODO | Work not started |
-| DRAFT | Implementation in progress |
-| CERTIFIED | Fully validated and completed |
+Activities
 
-Documentation uses the following lifecycle.
+Commit the certified repository state.
 
-| Status | Description |
-|----------|-------------|
-| Draft | Document under development |
-| In Review | Technical review in progress |
-| Approved | Frozen specification |
-| Certified | Implementation verified against specification |
+Output
 
-### 6.1 Experimental Validation
+Repository history updated.
 
-When a development task depends on uncertain behavior of Lua, JSFX, REAPER APIs or any external runtime, implementation shall not begin directly in production code.
+----------------------------------------------------------------------
 
-A minimal isolated experiment shall be created to validate the assumption before modifying ACP Studio production code.
+3.8 Tag
 
-Only experimentally validated behavior may be integrated into the production codebase.
+Objective
 
----
+Identify an official project milestone.
 
-#### Rules
+Activities
 
-- One hypothesis per experiment.
-- One experiment per file.
-- Experiments shall remain outside the production codebase.
-- Experimental files shall never be committed.
-- Production code shall contain only validated behavior.
+Create the official milestone tag for the certified baseline.
 
----
+Output
 
-# 7. Commit Guidelines
+Certified project milestone.
 
-Each commit shall represent one logical development increment.
+----------------------------------------------------------------------
 
-A commit should:
+4. Repository Requirements
 
-- Implement one responsibility.
-- Be independently testable.
-- Preserve a working project state.
+Before certification, the repository shall satisfy the following
+requirements.
 
-Large multi-purpose commits should be avoided.
+• No temporary files.
+• No obsolete source code.
+• No experimental artifacts.
+• No duplicated responsibilities.
+• No unresolved TODO entries.
+• No unresolved FIXME entries.
+• Documentation updated.
+• CHANGELOG updated.
 
----
+----------------------------------------------------------------------
 
-# 8. Development Rules
+5. Development Rules
 
-The following rules shall always be respected.
+The following rules are mandatory.
 
-- One component at a time.
-- One responsibility at a time.
-- One validation at a time.
-- One commit at a time.
-- Never skip validation.
-- Never deploy uncertified components.
+• Engineering phases shall not be skipped.
 
----
+• Certification shall not begin before successful Experimental
+  Validation.
 
-# 9. Summary
+• Repository Cleanup shall be completed before Certification.
 
-The ACP Studio development workflow establishes a disciplined engineering process focused on simplicity, incremental implementation and reproducibility.
+• Experimental code shall not be committed.
 
-Following this workflow guarantees that every software component evolves through specification, implementation, validation and certification while preserving a stable and reproducible development environment.
+• Certified baselines shall not be modified without an approved
+  specification.
 
-The ACP Studio development philosophy can be summarized as:
+• Milestone tags shall identify certified repository baselines.
 
-```
-One Component
+----------------------------------------------------------------------
 
-↓
-
-One Responsibility
-
-↓
-
-One Validation
-
-↓
-
-One Commit
-```
+End of Document
