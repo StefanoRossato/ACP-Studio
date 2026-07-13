@@ -90,3 +90,12 @@
 - Introduced Architecture Review.
 - Introduced Repository Cleanup.
 - Standardized the engineering lifecycle.
+
+### Documentation
+
+- README completely redesigned.
+- Introduced a project overview for new contributors.
+- Added technology stack information.
+- Documented the certified project foundation.
+- Added the official engineering workflow overview.
+- Updated the project mission and current development status.
