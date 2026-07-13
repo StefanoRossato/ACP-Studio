@@ -148,3 +148,10 @@
 - Introduced Certified Templates engineering process.
 - Added TestSkeleton.lua as the first certified ACP Studio template.
 - Validated the Certified Template workflow through RuntimeController_Test.lua generation.
+
+### Added
+
+- Implemented RuntimeSession.
+- Added RuntimeSession lifecycle interface.
+- Added RuntimeSession_Test.
+- Certified BT-003 WP-8 Runtime Session.

@@ -1,12 +1,14 @@
 ----------------------------------------------------------------------
 -- ACP Studio
 -- RuntimeController.lua
---
--- Component     : Runtime Controller
--- Layer         : Core/Runtime
--- Purpose       : Runtime orchestration
--- Specification : BT-003 Runtime Analysis Engine
 ----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Module
+----------------------------------------------------------------------
+
+local RuntimeController = {}
+RuntimeController.__index = RuntimeController
 
 ----------------------------------------------------------------------
 -- Dependencies
@@ -16,26 +18,47 @@ local RuntimeModel    = require("Core.Runtime.RuntimeModel")
 local RuntimeObserver = require("Core.Runtime.RuntimeObserver")
 
 ----------------------------------------------------------------------
--- RuntimeController
+-- Constants
 ----------------------------------------------------------------------
 
-local RuntimeController = {}
-RuntimeController.__index = RuntimeController
-
 ----------------------------------------------------------------------
--- Constructor
+-- Construction
 ----------------------------------------------------------------------
 
 function RuntimeController.New()
 
     local self = setmetatable({}, RuntimeController)
 
+    self.Model = RuntimeModel.New()
+    self.Observer = RuntimeObserver.New()
+
     return self
 
 end
 
 ----------------------------------------------------------------------
--- Module
+-- Private Methods
+----------------------------------------------------------------------
+
+
+----------------------------------------------------------------------
+-- Public Interface
+----------------------------------------------------------------------
+
+function RuntimeController:Update()
+
+    self.Observer:Update(self.Model)
+
+end
+
+function RuntimeController:GetModel()
+
+    return self.Model
+
+end
+
+----------------------------------------------------------------------
+-- Module Export
 ----------------------------------------------------------------------
 
 return RuntimeController

@@ -91,18 +91,23 @@ Test Skeleton.
 Every ACP Studio test module shall follow the standard structure
 defined by the certified Test Skeleton.
 
-The standard structure shall provide a consistent organization for
-all ACP Studio `*_Test.lua` modules.
+The standard structure shall consist of the following sections:
 
-Only the certified Test Skeleton may define the standard structure of
-ACP Studio test modules.
+- Test Setup
+- Module
+- Dependencies
+- Constants
+- Construction
+- Private Methods
+- Public Interface
+- Module Export
+
+Production test modules shall preserve the standard section order
+defined by the certified Test Skeleton.
 
 Structural modifications identified during test module development
 shall be applied to the certified Test Skeleton before being adopted
 by production test modules.
-
-Production test modules shall not introduce structural variations
-that are inconsistent with the certified Test Skeleton.
 
 ---
 
@@ -159,18 +164,14 @@ to all ACP Studio test modules.
 The Test Skeleton shall not define test-specific behavior or
 validation logic.
 
+The Test Skeleton shall define the standard entry point of every
+ACP Studio test module through the `Run()` function.
+
+The `Run()` function shall represent the public entry point of the
+test module.
+
 The Test Skeleton shall be maintained as a certified engineering
 artifact.
-
-Every production test module shall be generated from the certified
-Test Skeleton.
-
-The Test Skeleton shall evolve through controlled revisions and
-experimental validation.
-
-Structural improvements identified during production test module
-development shall be applied to the Test Skeleton before being
-adopted by production test modules.
 
 The certified Test Skeleton is the reference implementation of the
 ACP Studio Test Template Standard.
@@ -229,6 +230,13 @@ duplicated.
 
 Certified templates shall be periodically reviewed to ensure
 continued compatibility with the ACP Studio test infrastructure.
+
+The certified Test Skeleton shall evolve through controlled revisions
+derived from validated production test modules.
+
+Structural improvements identified during production test module
+development shall be incorporated into the certified Test Skeleton
+before being adopted by future test modules.
 
 ---
 

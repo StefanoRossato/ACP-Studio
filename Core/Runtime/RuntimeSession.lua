@@ -1,39 +1,25 @@
 ----------------------------------------------------------------------
 -- ACP Studio
--- TestSkeleton.lua
+-- RuntimeSession.lua
 --
--- Template      : Test Module Skeleton
--- Category      : Certified Template
--- Purpose       : Certified template for ACP Studio *_Test.lua modules
--- Standard      : TST-001 Test Template Standard
+-- Component     : Runtime Session
+-- Layer         : Core/Runtime
+-- Purpose       : Runtime lifecycle orchestration
+-- Specification : BT-003 Runtime Analysis Engine
 ----------------------------------------------------------------------
-
-----------------------------------------------------------------------
--- ACP Studio
--- <FileName>
---
--- Component     : <Component>
--- Layer         : <Layer>
--- Purpose       : <Purpose>
--- Specification : <Specification>
-----------------------------------------------------------------------
-
-----------------------------------------------------------------------
--- Test Setup
-----------------------------------------------------------------------
-
-dofile(
-    debug.getinfo(1, "S").source:match("@?(.*[/\\])")
-    .. "../TestSetup.lua"
-)
 
 ----------------------------------------------------------------------
 -- Module
 ----------------------------------------------------------------------
 
+local RuntimeSession = {}
+RuntimeSession.__index = RuntimeSession
+
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
+
+local RuntimeController = require("Core.Runtime.RuntimeController")
 
 ----------------------------------------------------------------------
 -- Constants
@@ -43,6 +29,18 @@ dofile(
 -- Construction
 ----------------------------------------------------------------------
 
+function RuntimeSession.New()
+
+    local self = setmetatable({}, RuntimeSession)
+
+    self.Controller = RuntimeController.New()
+
+    return self
+
+end
+
+
+
 ----------------------------------------------------------------------
 -- Private Methods
 ----------------------------------------------------------------------
@@ -51,14 +49,35 @@ dofile(
 -- Public Interface
 ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+-- Public Interface
+----------------------------------------------------------------------
 
--- Test entry point.
-local function Run()
+function RuntimeSession:Initialize()
+
+    return self
 
 end
 
+function RuntimeSession:Update()
+
+    self.Controller:Update()
+
+end
+
+function RuntimeSession:Terminate()
+
+    return self
+
+end
+
+function RuntimeSession:GetController()
+
+    return self.Controller
+
+end
 ----------------------------------------------------------------------
 -- Module Export
 ----------------------------------------------------------------------
 
-Run()
+return RuntimeSession
