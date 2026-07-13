@@ -1,9 +1,12 @@
 #!/bin/bash
+echo "ERROR: This script is obsolete."
+exit 1
 
 echo "================================="
 echo " ACP Studio - Clean Runtime"
 echo "================================="
 echo
+
 
 REAPER_DIR="$HOME/Library/Application Support/REAPER"
 

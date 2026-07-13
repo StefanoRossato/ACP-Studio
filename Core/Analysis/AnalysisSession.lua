@@ -31,6 +31,7 @@ end
 -- Public Interface
 ----------------------------------------------------------------------
 
+
 function AnalysisSession:Initialize()
     self.state = "INITIALIZED"
 end
@@ -40,9 +41,19 @@ function AnalysisSession:Start()
 end
 
 function AnalysisSession:Stop()
+    self.state = State.STOPPED
 end
 
 function AnalysisSession:Terminate()
+    self.state = State.TERMINATED
+end
+
+
+function AnalysisSession:Terminate()
+end
+
+function AnalysisSession:GetState()
+    return self.state
 end
 
 return AnalysisSession

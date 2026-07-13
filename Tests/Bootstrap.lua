@@ -35,23 +35,14 @@ local State = {
 -- Resolve Repository Root
 ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+-- Resolve Repository Root
+----------------------------------------------------------------------
+
 local function ResolveRepositoryRoot()
 
-    local source =
-        debug.getinfo(1, "S").source
-
-    if source:sub(1, 1) == "@" then
-        source = source:sub(2)
-    end
-
-    local root =
-        source:gsub("[/\\]Tests[/\\]Bootstrap%.lua$", "")
-
-    if root == source then
-        return false
-    end
-
-    State.repositoryRoot = root
+    State.repositoryRoot =
+        reaper.GetResourcePath() .. "/Scripts/ACP Studio"
 
     return true
 

@@ -106,3 +106,10 @@
 - Approved ENG-001 Documentation Standard v4.0.
 - Updated DEV-001, BT-003, CMP-001, and TST-001 to the new documentation standard.
 - Formalized document identification and versioning rules.
+
+### Added
+
+- Implemented Test Monitor runtime observation infrastructure.
+- Added Runtime attachment API.
+- Added Runtime state snapshot rendering.
+- Added experimental validation for Runtime observation.

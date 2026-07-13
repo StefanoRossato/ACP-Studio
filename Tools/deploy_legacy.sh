@@ -1,5 +1,6 @@
 #!/bin/bash
-
+echo "ERROR: This script is obsolete."
+exit 1
 #----------------------------------------------------------------------
 # ACP Studio
 #
@@ -7,6 +8,8 @@
 # Tool      : deploy.sh
 # Purpose   : Deploy ACP Studio runtime to REAPER
 #----------------------------------------------------------------------
+
+
 
 set -e
 
