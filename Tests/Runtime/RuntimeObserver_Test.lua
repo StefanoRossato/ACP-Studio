@@ -26,7 +26,11 @@ dofile(
 ----------------------------------------------------------------------
 
 local RuntimeObserver = require("Core.Runtime.RuntimeObserver")
-local RuntimeModel = require("Core.Runtime.RuntimeModel")
+local RuntimeModel    = require("Core.Runtime.RuntimeModel")
+
+local SharedMemory    = require("Core.IPC.SharedMemory")
+local Registers       = require("Core.IPC.Registers")
+local RuntimeStates   = require("Core.IPC.RuntimeStates")
 
 ----------------------------------------------------------------------
 -- Constants
@@ -39,6 +43,12 @@ local RuntimeModel = require("Core.Runtime.RuntimeModel")
 ----------------------------------------------------------------------
 -- Private Methods
 ----------------------------------------------------------------------
+
+local function ClearLog()
+
+    reaper.ClearConsole()
+
+end
 
 local function Log(message)
 
@@ -80,12 +90,21 @@ end
 
 local function TestUpdate(observer, model)
 
+    SharedMemory.Initialize()
+
+    SharedMemory.Write(
+        Registers.STATE,
+        RuntimeStates.RUNNING
+    )
+
     Log("Calling RuntimeObserver.Update()...")
 
     local updatedModel = observer:Update(model)
 
-    assert(updatedModel ~= nil, "Update returned nil.")
+
     assert(updatedModel == model, "Unexpected model returned.")
+
+    assert(model:GetState() == RuntimeStates.RUNNING,"State synchronization failed.")
 
     Log("PASS - RuntimeObserver.Update() completed")
 
@@ -96,6 +115,8 @@ end
 ----------------------------------------------------------------------
 
 local function Run()
+
+    ClearLog()
 
     Log("")
     Log("========================================")

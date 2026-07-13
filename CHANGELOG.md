@@ -129,3 +129,7 @@
 ### Engineering
 
 - BT-003: Added the RuntimeObserver component and certified the initial RuntimeObserver integration interface.
+
+### Engineering
+
+- BT-003: RuntimeObserver now synchronizes the Runtime State from Shared Memory into the RuntimeModel.

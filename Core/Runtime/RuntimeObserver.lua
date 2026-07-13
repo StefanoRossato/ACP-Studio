@@ -19,6 +19,9 @@ RuntimeObserver.__index = RuntimeObserver
 -- Dependencies
 ----------------------------------------------------------------------
 
+local SharedMemory = require("Core.IPC.SharedMemory")
+local Registers    = require("Core.IPC.Registers")
+
 ----------------------------------------------------------------------
 -- Constants
 ----------------------------------------------------------------------
@@ -44,6 +47,12 @@ end
 ----------------------------------------------------------------------
 
 function RuntimeObserver:Update(model)
+
+    local state = SharedMemory.Read(
+        Registers.STATE
+    )
+
+    model:SetState(state)
 
     return model
 
