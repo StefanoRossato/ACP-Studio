@@ -48,8 +48,10 @@ end
 
 function RuntimeObserver:Update(model)
 
-    local state = SharedMemory.Read(
-        Registers.STATE
+    model:SetState(
+        SharedMemory.Read(
+            Registers.STATE
+        )
     )
 
     model:SetRMS(
@@ -59,24 +61,22 @@ function RuntimeObserver:Update(model)
     )
 
     model:SetPeak(
-    SharedMemory.Read(
-        Registers.PEAK
+        SharedMemory.Read(
+            Registers.PEAK
         )
     )
 
     model:SetCrestFactor(
-    SharedMemory.Read(
-        Registers.LINEARITY
+        SharedMemory.Read(
+            Registers.LINEARITY
         )
     )
 
     model:SetSampleCount(
-    SharedMemory.Read(
-        Registers.SAMPLES
+        SharedMemory.Read(
+            Registers.SAMPLES
         )
     )
-
-    model:SetState(state)
 
     return model
 

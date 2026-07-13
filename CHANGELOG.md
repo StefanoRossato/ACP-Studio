@@ -137,3 +137,7 @@
 ### Engineering
 
 - BT-003: Completed RuntimeObserver synchronization between Shared Memory and RuntimeModel.
+
+### Engineering
+
+- BT-003: Completed RuntimeObserver synchronization for all Runtime registers and finalized the Runtime Analysis pipeline.

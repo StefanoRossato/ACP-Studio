@@ -38,6 +38,11 @@ local RuntimeModel = require("Core.Runtime.RuntimeModel")
 ----------------------------------------------------------------------
 -- Private Methods
 ----------------------------------------------------------------------
+local function ClearLog()
+
+    reaper.ClearConsole()
+
+end
 
 local function Log(message)
 
@@ -100,6 +105,8 @@ end
 
 local function TestReset(model)
 
+    ClearLog()
+
     Log("Resetting RuntimeModel...")
 
     model:Reset()
@@ -120,6 +127,8 @@ end
 ----------------------------------------------------------------------
 
 local function Run()
+
+    ClearLog()
 
     Log("")
     Log("========================================")
