@@ -1,23 +1,23 @@
 ACP Studio
-ENG-001 Documentation Standard
-------------------------------
+TST-001 Test Monitor
+--------------------
 
 Document ID
-ENG-001
+TST-001
 
 Status
-Certified
+Draft
 
 Version
-4.0
+1.0
 
 ---
 
 Purpose
 
-Define the official documentation standard governing the creation,
-maintenance, revision, certification, and lifecycle of ACP Studio
-engineering documentation.
+Define the architecture, requirements, and implementation of the ACP
+Studio Test Monitor infrastructure used for runtime observation and
+experimental validation.
 
 ---
 
@@ -43,11 +43,11 @@ requirements.
 Every engineering document shall follow the documentation workflow
 defined below.
 
-```
+```text
 Specification
       │
       ▼
-Draft
+    Draft
       │
       ▼
 Experimental
@@ -67,6 +67,7 @@ Revision
       ▼
 Publication
 ```
+
 Documentation phases shall be completed in the defined order.
 
 ---
@@ -75,13 +76,12 @@ Documentation phases shall be completed in the defined order.
 
 Every engineering document shall use the following structure.
 
-
-```
+```text
 Document Header
 
       ▼
 
-    Purpose
+Purpose
 
       ▼
 
@@ -166,16 +166,16 @@ Examples shall support the specification but shall not define it.
 
 Every engineering document shall follow the lifecycle defined below.
 
-```
+```text
 Draft
-      │
-      ▼
+  │
+  ▼
 Experimental
-      │
-      ▼
+  │
+  ▼
 Certified
-      │
-      ▼
+  │
+  ▼
 Deprecated
 ```
 
@@ -192,7 +192,9 @@ Every engineering document shall have a unique document identifier.
 
 Document identifiers shall use the following format.
 
+```text
 XXX-000
+```
 
 The alphabetical prefix identifies the document family.
 
@@ -213,7 +215,7 @@ The following rules are mandatory.
 
 • Every document shall comply with this standard.
 
-• Every document version shall use the Major.Minor format.
+• Document versions shall use the Major.Minor format.
 
 • Every document revision shall be versioned.
 

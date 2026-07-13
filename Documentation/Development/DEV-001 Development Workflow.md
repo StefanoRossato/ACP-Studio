@@ -1,28 +1,24 @@
-----------------------------------------------------------------------
 ACP Studio
 DEV-001 Engineering Workflow
-----------------------------------------------------------------------
+----------------------------
 
 Document ID
-    DEV-001
-
-Category
-    Engineering
+DEV-001
 
 Status
-    Certified
+Certified
 
 Version
-    3.0
+4.0
 
-----------------------------------------------------------------------
+---
 
 Purpose
 
 Define the official engineering workflow governing the development,
-validation, certification, and release of ACP Studio components.
+validation, certification, and maintenance of ACP Studio software.
 
-----------------------------------------------------------------------
+---
 
 1. Engineering Requirements
 
