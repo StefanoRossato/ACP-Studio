@@ -141,3 +141,10 @@
 ### Engineering
 
 - BT-003: Completed RuntimeObserver synchronization for all Runtime registers and finalized the Runtime Analysis pipeline.
+
+### Documentation
+
+- Added TST-001 Test Template Standard.
+- Introduced Certified Templates engineering process.
+- Added TestSkeleton.lua as the first certified ACP Studio template.
+- Validated the Certified Template workflow through RuntimeController_Test.lua generation.
