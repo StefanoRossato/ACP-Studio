@@ -781,3 +781,51 @@ the ACP Studio Engineering Documentation System.
 Future revisions shall remain compliant with ENG-001 Documentation
 Standard.
 
+-------------------------------------------------------------------------------
+13. Engineering Open Issues
+-------------------------------------------------------------------------------
+
+The following Engineering Open Issues are currently recorded within the
+ACP Studio Engineering Open Issues Register.
+
+-------------------------------------------------------------------------------
+EOI-001
+-------------------------------------------------------------------------------
+
+Title
+
+Unified Test Logging Infrastructure
+
+Engineering Origin
+
+BT-003 – WP-5 Runtime Analysis Model
+
+Description
+
+Current engineering tests report execution results directly to the
+REAPER console using ShowConsoleMsg().
+
+Production components use the ACP Studio Logger, which writes
+diagnostic information to ACP.log.
+
+The engineering project currently lacks a unified logging
+infrastructure dedicated to the test framework.
+
+Future engineering evaluation shall determine whether test execution
+should adopt a dedicated Test Logger capable of providing consistent
+diagnostic output while maintaining compatibility with the existing
+engineering logging infrastructure.
+
+Engineering Impact
+
+The absence of a unified test logging infrastructure does not affect
+functional correctness but reduces consistency across engineering
+artifacts and limits future extensibility of the testing framework.
+
+Related Engineering Artifacts
+
+- ENG-001 Documentation Standard
+- DEV-001 Engineering Workflow
+- TST-001 Test Monitor
+- RuntimeModel_Test.lua
+- Logger.lua

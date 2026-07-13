@@ -116,4 +116,16 @@
 
 ### Engineering
 - ENG-001: Introduced the certified ACP Studio Module Skeleton standard, defining the mandatory structure for all Lua modules.
+
+### Engineering
+
 - DEV-001: Updated the Implementation phase to require the certified ACP Studio Module Skeleton before development begins.
+
+### Engineering
+
+- ENG-OPEN: Introduced the Engineering Open Issues Register.
+- ENG-OPEN: Added EOI-001 (Unified Test Logging Infrastructure).
+
+### Engineering
+
+- BT-003: Added the RuntimeObserver component and certified the initial RuntimeObserver integration interface.
