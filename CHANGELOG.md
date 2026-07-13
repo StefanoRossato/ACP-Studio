@@ -113,3 +113,7 @@
 - Added Runtime attachment API.
 - Added Runtime state snapshot rendering.
 - Added experimental validation for Runtime observation.
+
+### Engineering
+- ENG-001: Introduced the certified ACP Studio Module Skeleton standard, defining the mandatory structure for all Lua modules.
+- DEV-001: Updated the Implementation phase to require the certified ACP Studio Module Skeleton before development begins.

@@ -97,37 +97,101 @@ overall structure remains consistent.
 
 ---
 
-4. Document Header
+## 4. Engineering Structure Standards
+
+This section defines the mandatory structural standards adopted throughout the ACP Studio engineering project.
+
+### 4.1 Lua Module Skeleton
+
+Additional top-level sections shall require a revision of this standard.
+
+Every Lua source file shall follow the certified ACP Studio Module Skeleton.
+
+The section order is mandatory and shall not be modified.
+
+Every module shall contain the following sections:
+
+```text
+----------------------------------------------------------------------
+-- Header
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Module
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Dependencies
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Constants
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Construction
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Private Methods
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Public Interface
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+-- Module Export
+----------------------------------------------------------------------
+```
+
+All sections shall always be present, even if temporarily empty.
+
+Development shall consist of progressively populating the predefined sections while preserving the original structure.
+
+The Module Skeleton provides the following engineering benefits:
+
+* Consistent source file organization.
+* Predictable code navigation.
+* Reduced review effort.
+* Uniform engineering standards across the entire project.
+
+---
+
+### 4.2 Document Header
 
 Every engineering document shall use the following header.
 
 ---
 
 ACP Studio
-XXX-000 Document Title
-----------------------
 
-Document ID
+XXX-000 Document Title
+
+---
+
+**Document ID**
+
 XXX-000
 
-Status
+**Status**
+
 Draft | Experimental | Certified | Deprecated
 
-Version
+**Version**
+
 1.0
 
 ---
 
-Purpose
+**Purpose**
 
 Describe the purpose of the document.
 
 ---
 
-The document header shall be identical for every ACP Studio
-engineering document.
+The document header shall be identical for every ACP Studio engineering document.
 
----
 
 5. Document Sections
 

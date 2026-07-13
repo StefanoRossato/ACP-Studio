@@ -101,8 +101,14 @@ Implement the approved specification.
 
 Activities
 
+Create the component using the certified ACP Studio Module Skeleton
+before implementation begins.
+
 Develop the component according to the approved specification and
 ACP Studio engineering standards.
+
+Populate the predefined module sections progressively while
+preserving the ACP Studio Module Skeleton throughout development.
 
 Output
 
