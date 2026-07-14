@@ -1,10 +1,10 @@
 ----------------------------------------------------------------------
 -- ACP Studio
--- RuntimeMonitor_Test.lua
+-- ObservabilityPipeline_Test.lua
 --
--- Component     : RuntimeMonitor
--- Layer         : Runtime
--- Purpose       : Validate RuntimeMonitor
+-- Component     : Observability Pipeline
+-- Layer         : Integration
+-- Purpose       : Validate the complete Observability pipeline
 -- Specification : OBS-001 Runtime Observability
 ----------------------------------------------------------------------
 
@@ -21,10 +21,17 @@ dofile(
 -- Module
 ----------------------------------------------------------------------
 
-local RuntimeModel = require("Core.Runtime.RuntimeModel")
-local ObservationProvider = require("Core.Observation.ObservationProvider")
-local ObservationCollector = require("Core.Observation.ObservationCollector")
-local RuntimeMonitor = require("Core.Runtime.RuntimeMonitor")
+local RuntimeModel =
+    require("Core.Runtime.RuntimeModel")
+
+local ObservationProvider =
+    require("Core.Observability.ObservationProvider")
+
+local ObservationCollector =
+    require("Core.Observability.ObservationCollector")
+
+local RuntimeMonitor =
+    require("Core.Runtime.RuntimeMonitor")
 
 ----------------------------------------------------------------------
 -- Dependencies
@@ -37,12 +44,6 @@ local RuntimeMonitor = require("Core.Runtime.RuntimeMonitor")
 ----------------------------------------------------------------------
 -- Construction
 ----------------------------------------------------------------------
-
-local monitor
-local model
-local provider
-local collector
-local monitor
 
 ----------------------------------------------------------------------
 -- Private Methods
@@ -68,41 +69,84 @@ local function TestCase()
 
     Log("Creating RuntimeModel...")
 
-    model = RuntimeModel.New()
+    local model = RuntimeModel.New()
 
     assert(model ~= nil)
 
     Log("PASS - RuntimeModel created")
 
+
     Log("Creating ObservationProvider...")
 
-    provider = ObservationProvider.New(model)
+    local provider = ObservationProvider.New(model)
 
     assert(provider ~= nil)
 
     Log("PASS - ObservationProvider created")
 
+
     Log("Creating ObservationCollector...")
 
-    collector = ObservationCollector.New(provider)
+    local collector = ObservationCollector.New(provider)
 
     assert(collector ~= nil)
 
     Log("PASS - ObservationCollector created")
 
+
     Log("Creating RuntimeMonitor...")
 
-    monitor = RuntimeMonitor.New()
+    local monitor = RuntimeMonitor.New()
 
     assert(monitor ~= nil)
 
     Log("PASS - RuntimeMonitor created")
+
+
+    ------------------------------------------------------------------
+    -- QUI
+    ------------------------------------------------------------------
+
+    Log("Updating RuntimeModel...")
+
+    model:SetState(1)
+    model:SetRMS(-18.0)
+    model:SetPeak(-6.0)
+    model:SetCrestFactor(12.0)
+    model:SetSampleCount(1024)
+    model:SetTimestamp(100)
+
+    Log("PASS - RuntimeModel updated")
+
+    Log("Collecting snapshot...")
+
+    local snapshot = collector:Collect()
+
+    assert(snapshot ~= nil)
+
+    Log("PASS - Snapshot collected")
 
     Log("Initializing RuntimeMonitor...")
 
     monitor:Initialize()
 
     Log("PASS - RuntimeMonitor initialized")
+
+    Log("Displaying snapshot...")
+
+    monitor:Display(snapshot)
+
+    Log("PASS - Snapshot displayed")
+
+    ------------------------------------------------------------------
+    -- DOPO verranno questi
+    ------------------------------------------------------------------
+
+    -- monitor:Initialize()
+
+    -- local snapshot = collector:Collect()
+
+    -- monitor:Display(snapshot)
 
 end
 
@@ -116,13 +160,13 @@ local function Run()
 
     Log("")
     Log("========================================")
-    Log("RuntimeMonitor Test")
+    Log("Observability Pipeline Test")
     Log("========================================")
 
     TestCase()
 
     Log("========================================")
-    Log("RuntimeMonitor Test PASSED")
+    Log("Observability Pipeline Test PASSED")
     Log("========================================")
 
 end
