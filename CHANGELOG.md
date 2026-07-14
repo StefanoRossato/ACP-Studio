@@ -212,3 +212,15 @@ Architecture
 
 Engineering
 - OBS-001 Architecture approved (v1.0.0).
+
+### OBS-001 - Runtime Observability
+
+Added
+- ObservationCollector component.
+- ObservationCollector unit test.
+
+Architecture
+- Completed the observation pipeline.
+- Introduced ObservationCollector as the component responsible
+  for creating immutable ObservationSnapshot instances from the
+  current RuntimeModel state exposed by ObservationProvider.

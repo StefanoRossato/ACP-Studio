@@ -89,27 +89,30 @@ pipeline.
                     Runtime Subsystem
                     =================
 
-      Shared Memory
-            │
-            ▼
-      RuntimeObserver
-            │
-            ▼
-       RuntimeModel
-            │
-════════════╪══════════════════════════════════════════════
-            │
-            ▼
-              Observability Infrastructure
-              ============================
+        Shared Memory
+              │
+              ▼
+        RuntimeObserver
+              │
+              ▼
+         RuntimeModel
+              │
+══════════════╪══════════════════════════════════════════════
+              │
+              ▼
+          Observability Infrastructure
+          ============================
 
       ObservationProvider
-            │
-            ▼
+              │
+              ▼
+      ObservationCollector
+              │
+              ▼
       ObservationSnapshot
-            │
-            ▼
-       Engineering Tools
+              │
+              ▼
+        Engineering Tools
 
 5. Component Responsibilities
 
@@ -132,6 +135,12 @@ ObservationProvider
 
 Provides read-only access to the RuntimeModel through a stable and
 implementation-independent interface.
+
+ObservationCollector
+
+Collects the current observable runtime state through the
+ObservationProvider and produces immutable ObservationSnapshot
+instances.
 
 ObservationSnapshot
 
