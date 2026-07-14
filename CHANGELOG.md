@@ -176,3 +176,10 @@
 - Defined the Developer Environment as a dedicated engineering subsystem.
 - Introduced Engineering Observability as a fundamental architectural principle.
 - Suspended `BT-004 Analysis Engine Foundation` pending completion of the Developer Environment architecture.
+
+### Added
+
+- Certified MOD-001 Module Template Standard.
+- Added certified ModuleSkeleton.lua.
+- Certified TST-002 Test Template Standard.
+- Updated and certified TestSkeleton.lua.

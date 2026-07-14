@@ -1,22 +1,11 @@
-```lua
 ----------------------------------------------------------------------
 -- ACP Studio
--- TestSkeleton.lua
+-- ObservationProvider_Test.lua
 --
--- Template      : Test Module Skeleton
--- Category      : Certified Template
--- Purpose       : Certified template for ACP Studio *_Test.lua modules
--- Standard      : TST-001 Test Template Standard
-----------------------------------------------------------------------
-
-----------------------------------------------------------------------
--- ACP Studio
--- <FileName>
---
--- Component     : <Component>
--- Layer         : <Layer>
--- Purpose       : <Purpose>
--- Specification : <Specification>
+-- Component     : Observation Provider Test
+-- Layer         : Tests/Runtime
+-- Purpose       : Validate ObservationProvider behavior
+-- Specification : OBS-001
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -35,6 +24,9 @@ dofile(
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
+
+local RuntimeModel        = require("Core.Runtime.RuntimeModel")
+local ObservationProvider = require("Core.Runtime.ObservationProvider")
 
 ----------------------------------------------------------------------
 -- Constants
@@ -64,9 +56,45 @@ end
 -- Test Cases
 ----------------------------------------------------------------------
 
-local function TestCase()
+local function TestConstruction()
 
-    -- Implementation ----------------------------------------------------------
+    Log("Creating RuntimeModel...")
+
+    local model = RuntimeModel.New()
+
+    assert(model, "RuntimeModel creation failed.")
+
+    Log("PASS - RuntimeModel created")
+
+    Log("Creating ObservationProvider...")
+
+    local provider = ObservationProvider.New(model)
+
+    assert(provider, "ObservationProvider creation failed.")
+
+    Log("PASS - ObservationProvider created")
+
+    return provider, model
+
+end
+
+local function TestObservationAccess(provider, model)
+
+    Log("Validating observation access...")
+
+    assert(provider:GetState() == model:GetState(),
+        "State mismatch.")
+
+    assert(provider:GetTimestamp() == model:GetTimestamp(),
+        "Timestamp mismatch.")
+
+    assert(provider:GetSequence() == model:GetSequence(),
+        "Sequence mismatch.")
+
+    assert(provider:GetData() == model:GetData(),
+        "Data mismatch.")
+
+    Log("PASS - Observation access validated")
 
 end
 
@@ -80,13 +108,15 @@ local function Run()
 
     Log("")
     Log("========================================")
-    Log("<Test Name>")
+    Log("ObservationProvider Test")
     Log("========================================")
 
-    TestConstruction()
+    local provider, model = TestConstruction()
+
+    TestObservationAccess(provider, model)
 
     Log("========================================")
-    Log("<Test Name> PASSED")
+    Log("ObservationProvider Test PASSED")
     Log("========================================")
 
 end
