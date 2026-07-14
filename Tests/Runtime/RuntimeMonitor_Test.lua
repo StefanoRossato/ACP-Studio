@@ -73,6 +73,20 @@ local function TestCase()
 
     Log("PASS - Initialize() completed")
 
+    local snapshot = {
+
+        State = "RUNNING",
+        Heartbeat = 42,
+        SampleCounter = 48000
+
+    }
+
+    Log("Calling Display()...")
+
+    monitor:Display(snapshot)
+
+    Log("PASS - Display() completed")
+
 end
 
 ----------------------------------------------------------------------

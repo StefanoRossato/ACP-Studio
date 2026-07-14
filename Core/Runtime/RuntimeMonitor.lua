@@ -25,6 +25,20 @@ function RuntimeMonitor:Initialize()
 
 end
 
+function RuntimeMonitor:Display(snapshot)
+
+    if snapshot == nil then
+        return
+    end
+
+    for key, value in pairs(snapshot) do
+        reaper.ShowConsoleMsg(
+            string.format("%-24s : %s\n", key, tostring(value))
+        )
+    end
+
+end
+
 --------------------------------------------------------------------------------
 -- Private Methods
 --------------------------------------------------------------------------------
