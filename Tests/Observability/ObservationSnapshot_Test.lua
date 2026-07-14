@@ -1,22 +1,11 @@
-```lua
 ----------------------------------------------------------------------
 -- ACP Studio
--- TestSkeleton.lua
+-- ObservationSnapshot_Test.lua
 --
--- Template      : Test Module Skeleton
--- Category      : Certified Template
--- Purpose       : Certified template for ACP Studio *_Test.lua modules
--- Standard      : TST-001 Test Template Standard
-----------------------------------------------------------------------
-
-----------------------------------------------------------------------
--- ACP Studio
--- <FileName>
---
--- Component     : <Component>
--- Layer         : <Layer>
--- Purpose       : <Purpose>
--- Specification : <Specification>
+-- Component     : ObservationSnapshot
+-- Layer         : Runtime Observability
+-- Purpose       : Unit test for ObservationSnapshot
+-- Specification : OBS-001
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -32,6 +21,7 @@ dofile(
 -- Module
 ----------------------------------------------------------------------
 
+local ObservationSnapshot = require("Core.Observability.ObservationSnapshot")
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
@@ -66,7 +56,39 @@ end
 
 local function TestCase()
 
-    -- Implementation ----------------------------------------------------------
+    Log("Creating ObservationSnapshot...")
+
+    local snapshot = ObservationSnapshot.New({
+
+        state       = "RUNNING",
+        rms         = -18.0,
+        peak        = -3.0,
+        crestFactor = 15.0,
+        sampleCount = 48000,
+        timestamp   = 100
+
+    })
+
+    assert(snapshot ~= nil)
+    Log("PASS - ObservationSnapshot created")
+
+    assert(snapshot:GetState() == "RUNNING")
+    Log("PASS - GetState()")
+
+    assert(snapshot:GetRMS() == -18.0)
+    Log("PASS - GetRMS()")
+
+    assert(snapshot:GetPeak() == -3.0)
+    Log("PASS - GetPeak()")
+
+    assert(snapshot:GetCrestFactor() == 15.0)
+    Log("PASS - GetCrestFactor()")
+
+    assert(snapshot:GetSampleCount() == 48000)
+    Log("PASS - GetSampleCount()")
+
+    assert(snapshot:GetTimestamp() == 100)
+    Log("PASS - GetTimestamp()")
 
 end
 
@@ -80,13 +102,13 @@ local function Run()
 
     Log("")
     Log("========================================")
-    Log("<Test Name>")
+    Log("ObservationSnapshot Test")
     Log("========================================")
 
     TestCase()
 
     Log("========================================")
-    Log("<Test Name> PASSED")
+    Log("ObservationSnapshot Test PASSED")
     Log("========================================")
 
 end

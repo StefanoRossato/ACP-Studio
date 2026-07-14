@@ -1,23 +1,28 @@
 ------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Module: ObservationProvider
+-- Module: ObservationSnapshot
 -- Description:
---   Provides read-only access to RuntimeModel observation data.
+--   Immutable snapshot of Runtime observation data.
 ------------------------------------------------------------------------------
 
-local ObservationProvider = {}
-ObservationProvider.__index = ObservationProvider
+local ObservationSnapshot = {}
+ObservationSnapshot.__index = ObservationSnapshot
 
 ------------------------------------------------------------------------------
 -- Constructor
 ------------------------------------------------------------------------------
 
-function ObservationProvider.New(runtimeModel)
+function ObservationSnapshot.New(data)
 
-    local self = setmetatable({}, ObservationProvider)
+    local self = setmetatable({}, ObservationSnapshot)
 
-    self._runtimeModel = runtimeModel
+    self._state       = data.state
+    self._rms         = data.rms
+    self._peak        = data.peak
+    self._crestFactor = data.crestFactor
+    self._sampleCount = data.sampleCount
+    self._timestamp   = data.timestamp
 
     return self
 
@@ -27,9 +32,9 @@ end
 -- State
 ------------------------------------------------------------------------------
 
-function ObservationProvider:GetState()
+function ObservationSnapshot:GetState()
 
-    return self._runtimeModel:GetState()
+    return self._state
 
 end
 
@@ -37,9 +42,9 @@ end
 -- RMS
 ------------------------------------------------------------------------------
 
-function ObservationProvider:GetRMS()
+function ObservationSnapshot:GetRMS()
 
-    return self._runtimeModel:GetRMS()
+    return self._rms
 
 end
 
@@ -47,9 +52,9 @@ end
 -- Peak
 ------------------------------------------------------------------------------
 
-function ObservationProvider:GetPeak()
+function ObservationSnapshot:GetPeak()
 
-    return self._runtimeModel:GetPeak()
+    return self._peak
 
 end
 
@@ -57,9 +62,9 @@ end
 -- Crest Factor
 ------------------------------------------------------------------------------
 
-function ObservationProvider:GetCrestFactor()
+function ObservationSnapshot:GetCrestFactor()
 
-    return self._runtimeModel:GetCrestFactor()
+    return self._crestFactor
 
 end
 
@@ -67,9 +72,9 @@ end
 -- Sample Count
 ------------------------------------------------------------------------------
 
-function ObservationProvider:GetSampleCount()
+function ObservationSnapshot:GetSampleCount()
 
-    return self._runtimeModel:GetSampleCount()
+    return self._sampleCount
 
 end
 
@@ -77,11 +82,11 @@ end
 -- Timestamp
 ------------------------------------------------------------------------------
 
-function ObservationProvider:GetTimestamp()
+function ObservationSnapshot:GetTimestamp()
 
-    return self._runtimeModel:GetTimestamp()
+    return self._timestamp
 
 end
 
 ------------------------------------------------------------------------------
-return ObservationProvider
+return ObservationSnapshot

@@ -183,3 +183,32 @@
 - Added certified ModuleSkeleton.lua.
 - Certified TST-002 Test Template Standard.
 - Updated and certified TestSkeleton.lua.
+
+### OBS-001 - Runtime Observability
+
+Added
+- OBS-001 Observability Infrastructure Architecture.
+- ObservationProvider component.
+- ObservationSnapshot component.
+- ObservationProvider unit test.
+- ObservationSnapshot unit test.
+
+Changed
+- ObservationProvider aligned with RuntimeModel public interface.
+- ObservationSnapshot aligned with RuntimeModel public interface.
+- Observability modules moved to Core/Observability.
+- Observability tests organized under Tests/Observability.
+
+Architecture
+- Introduced the Observability Infrastructure architecture.
+- Established RuntimeModel as the authoritative source of
+  observable runtime information.
+- Defined the Runtime/Observability subsystem boundary.
+- Established read-only observability architecture.
+- Defined observation pipeline:
+  RuntimeObserver → RuntimeModel →
+  ObservationProvider → ObservationSnapshot →
+  Engineering Tools.
+
+Engineering
+- OBS-001 Architecture approved (v1.0.0).
