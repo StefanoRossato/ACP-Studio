@@ -166,3 +166,13 @@
   design rules and architectural compliance requirements.
 - Established ANL-001 as the normative architectural reference for
   all Analysis Engine implementations.
+
+  ### Documentation
+
+- Added `ArchitectureSkeleton.md` certified architecture document template.
+- Added `ARC-001 Architecture Skeleton Standard`.
+- Certified the Architecture Skeleton documentation standard (v1.0.0).
+- Started `DSH-001 Developer Environment Architecture`.
+- Defined the Developer Environment as a dedicated engineering subsystem.
+- Introduced Engineering Observability as a fundamental architectural principle.
+- Suspended `BT-004 Analysis Engine Foundation` pending completion of the Developer Environment architecture.
