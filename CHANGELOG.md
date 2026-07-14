@@ -155,3 +155,14 @@
 - Added RuntimeSession lifecycle interface.
 - Added RuntimeSession_Test.
 - Certified BT-003 WP-8 Runtime Session.
+
+## [Unreleased]
+
+### Documentation
+
+- Approved ANL-001 Analysis Engine Architecture.
+- Defined the architectural foundation of the Analysis Engine.
+- Formalized the component architecture, lifecycle, data flow,
+  design rules and architectural compliance requirements.
+- Established ANL-001 as the normative architectural reference for
+  all Analysis Engine implementations.
