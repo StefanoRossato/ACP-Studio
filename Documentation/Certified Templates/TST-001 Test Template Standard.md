@@ -2,7 +2,7 @@
 
 ACP Studio
 
-Document        : TST-002
+Document        : TST-001
 Title           : Test Template Standard
 
 Category        : Certified Standard
@@ -78,6 +78,14 @@ RuntimeObserver_Test.lua
 Every test module shall load the common ACP Studio TestSetup.lua.
 
 The Test Setup section shall precede every other implementation section.
+
+Every production module shall be imported using the ACP Studio
+module loading convention:
+
+    require("Core.<Layer>.<Module>")
+
+The certified TestSkeleton.lua shall provide this declaration as the
+standard module import template.
 
 ---
 

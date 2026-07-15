@@ -311,3 +311,26 @@ OBS-002 Runtime Metrics completed and certified.
 
 The Runtime Observability infrastructure now supports immutable runtime models, runtime metrics, deep-copy snapshots and an end-to-end validated observability pipeline.
 
+## [OBS-003] - Observation Recorder
+
+### Added
+
+* Implemented `ObservationRecorder`.
+* Added support for recording `ObservationSnapshot` instances.
+* Introduced history management through `Record()`, `Get()`, `GetAll()`, `GetCount()`, and `Clear()`.
+* Added and certified `ObservationRecorder_Test`.
+
+### Improved
+
+* Updated `TestSkeleton.lua` to reflect the official ACP Studio module loading convention.
+* Consolidated the Test Template Standard into `TST-001`.
+* Removed the obsolete `TST-002` standard to eliminate duplicated documentation.
+
+### Certified
+
+* ObservationRecorder
+* ObservationRecorder_Test
+* TestSkeleton.lua (updated)
+* TST-001 Test Template Standard (revised)
+
+

@@ -1,4 +1,3 @@
-```lua
 ----------------------------------------------------------------------
 -- ACP Studio
 -- TestSkeleton.lua
@@ -31,6 +30,19 @@ dofile(
 ----------------------------------------------------------------------
 -- Module
 ----------------------------------------------------------------------
+
+-- Example:
+--
+-- local <Module> =
+--     require("Core.<Layer>.<Module>")
+--
+-- Examples:
+--
+-- local RuntimeModel =
+--     require("Core.Runtime.RuntimeModel")
+--
+-- local ObservationCollector =
+--     require("Core.Observability.ObservationCollector")
 
 ----------------------------------------------------------------------
 -- Dependencies
