@@ -8,7 +8,7 @@ Title           : Module Template Standard
 Category        : Certified Standard
 Status          : Certified
 
-Version         : 1.0.0
+Version         : 2.0.0
 
 Author          : ACP Studio
 
@@ -17,27 +17,27 @@ Dependencies    : ENG-001 Documentation Standard
 
 ---
 
-1. Purpose
+# 1. Purpose
 
 ---
 
-This document defines the official structure for Lua modules used in ACP Studio.
+This document defines the official template for Lua modules developed within ACP Studio.
 
-Its purpose is to ensure consistency, readability and maintainability across the codebase.
+Its purpose is to ensure architectural consistency, readability, maintainability and uniform organization across the entire codebase.
 
 ---
 
-2. Scope
+# 2. Scope
 
 ---
 
 This standard applies to every Lua module developed for ACP Studio.
 
-All new modules shall be created from the certified ModuleSkeleton.lua template.
+All new Lua modules shall be derived from the certified `ModuleSkeleton.lua` template.
 
 ---
 
-3. Module Structure
+# 3. Module Structure
 
 ---
 
@@ -45,83 +45,122 @@ Every module shall follow the structure below.
 
 1. Header
 2. Module Declaration
-3. Constructor
-4. Public Methods
-5. Private Methods
-6. End of Module
-7. Return Statement
+3. Constants
+4. Private State
+5. Private Functions
+6. Public API
+7. End of Module
 
 The order of these sections shall not be modified.
 
----
-
-4. Naming Conventions
+Sections may remain empty when not required but shall not be removed.
 
 ---
 
-The module name shall match the filename.
+# 4. Header
+
+---
+
+Every module shall begin with the standard ACP Studio header.
+
+The header shall contain:
+
+* Module
+* Layer
+* Purpose
+* Specification
+
+These fields uniquely identify the architectural role of the module.
+
+---
+
+# 5. Module Declaration
+
+---
+
+The module shall be declared as a local table.
 
 Example:
 
-RuntimeObserver.lua
+```lua
+local ModuleName = {}
+```
 
-contains
+The use of `__index` is optional.
 
-RuntimeObserver
-
----
-
-5. Constructor
+It shall only be introduced when the module represents an object-oriented construct such as a Value Object or Entity.
 
 ---
 
-Every module shall expose a constructor named:
-
-New()
-
-The constructor shall create and return a new module instance.
+# 6. Constants
 
 ---
 
-6. Public Methods
+The Constants section contains module-private constant definitions.
+
+If no constants are required, the section shall remain empty.
 
 ---
 
-Public methods shall use the Lua method syntax.
-
-Example:
-
-function Module:Method()
+# 7. Private State
 
 ---
 
-7. Private Methods
+The Private State section contains the internal state of the module.
+
+Modules requiring internal state shall store it within the State table.
 
 ---
 
-Private methods shall be grouped in the dedicated section.
-
-If no private methods are required, the section shall remain empty.
+# 8. Private Functions
 
 ---
 
-8. Comments
+All non-exported functions shall be grouped within the Private Functions section.
+
+Each function shall be preceded by a descriptive section header.
 
 ---
 
-Section separators shall use the standard ACP Studio separator format.
-
-Logical comments inside sections shall use the standard ACP Studio compact separator format.
-
-These conventions are defined by the certified ModuleSkeleton.lua template.
+# 9. Public API
 
 ---
 
-9. Certified Template
+The public API shall expose only the functionality required by the module responsibility.
+
+The template does not require any predefined public functions.
+
+Functions such as:
+
+* `New()`
+* `Initialize()`
+* `Create()`
+* `Destroy()`
+
+shall only be implemented when required by the module responsibility.
 
 ---
 
-ModuleSkeleton.lua is the official template for all ACP Studio Lua modules.
+# 10. Design Principles
+
+---
+
+The Module Template shall:
+
+* remain minimal;
+* avoid unnecessary placeholder code;
+* support both static modules and object-oriented modules;
+* expose only the API required by the module responsibility;
+* maintain a consistent structure throughout ACP Studio;
+* remain implementation agnostic;
+
+---
+
+# 11. Certified Template
+
+---
+
+`ModuleSkeleton.lua` is the official template for all ACP Studio Lua modules.
 
 All new modules shall be derived from this template.
 

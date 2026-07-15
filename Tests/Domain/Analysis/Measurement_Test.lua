@@ -1,11 +1,11 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Test          : <TestName>
--- Component     : <Component>
--- Layer         : <Layer>
--- Purpose       : <Purpose>
--- Specification : <Specification>
+-- Test          : Measurement_Test
+-- Component     : Measurement
+-- Layer         : Domain
+-- Purpose       : Certify the Measurement Value Object.
+-- Specification : ADS-002
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -42,7 +42,11 @@ local function LoadBootstrap()
             file:close()
 
             local repositoryRoot =
-                path:gsub(separator .. "Tests$", "")
+                path:match("^(.*)[/\\]Tests$")
+
+            assert(
+                repositoryRoot,
+                "Unable to resolve repository root.")
 
             return
                 dofile(candidate),
@@ -77,9 +81,6 @@ local function InitializeTestEnvironment()
     Bootstrap, RepositoryRoot =
         LoadBootstrap()
 
-    reaper.ShowConsoleMsg(
-        "Repository Root = [" .. RepositoryRoot .. "]\n")
-
     assert(
         Bootstrap.Initialize(RepositoryRoot),
         "Unable to initialize test infrastructure.")
@@ -92,10 +93,9 @@ InitializeTestEnvironment()
 -- Module
 --------------------------------------------------------------------------------
 
--- Example:
---
--- local RuntimeModel =
---     require("Core.Runtime.RuntimeModel")
+local Measurement =
+     require("Core.Domain.Analysis.Measurement")
+
 
 --------------------------------------------------------------------------------
 -- Test Dependencies
@@ -148,10 +148,96 @@ end
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
+-- Test Construction
+--------------------------------------------------------------------------------
+
+local function TestConstruction()
+
+    Log("Checking construction...")
+
+    local measurement =
+        Measurement.New(-18.0, "RMS", "dBFS")
+
+    Assert(
+        measurement ~= nil,
+        "Measurement created")
+
+end
+
+--------------------------------------------------------------------------------
+-- Test Value
+--------------------------------------------------------------------------------
+
+local function TestValue()
+
+    local measurement =
+        Measurement.New(-18.0, "RMS", "dBFS")
+
+    Assert(
+        measurement:GetValue() == -18.0,
+        "Value stored")
+
+end
+
+--------------------------------------------------------------------------------
+-- Test Type
+--------------------------------------------------------------------------------
+
+local function TestType()
+
+    local measurement =
+        Measurement.New(-18.0, "RMS", "dBFS")
+
+    Assert(
+        measurement:GetType() == "RMS",
+        "Type stored")
+
+end
+
+--------------------------------------------------------------------------------
+-- Test Unit
+--------------------------------------------------------------------------------
+
+local function TestUnit()
+
+    local measurement =
+        Measurement.New(-18.0, "RMS", "dBFS")
+
+    Assert(
+        measurement:GetUnit() == "dBFS",
+        "Unit stored")
+
+end
+
+--------------------------------------------------------------------------------
+-- Test Equality
+--------------------------------------------------------------------------------
+
+local function TestEquality()
+
+    local left =
+        Measurement.New(-18.0, "RMS", "dBFS")
+
+    local right =
+        Measurement.New(-18.0, "RMS", "dBFS")
+
+    Assert(
+        left:Equals(right),
+        "Equal measurements")
+
+end
+
+--------------------------------------------------------------------------------
 -- Test Case
 --------------------------------------------------------------------------------
 
 local function TestCase()
+
+    TestConstruction()
+    TestValue()
+    TestType()
+    TestUnit()
+    TestEquality()
 
 end
 
@@ -169,13 +255,14 @@ local function Run()
 
     Log("")
     Log("========================================")
-    Log("<Test Name>")
+    Log("Measurement Capability Test")
+    Log("ADS-002")
     Log("========================================")
 
     TestCase()
 
     Log("========================================")
-    Log("<Test Name> PASSED")
+    Log("Measurement Capability Test PASSED")
     Log("========================================")
 
 end

@@ -7,7 +7,7 @@ Title           : Domain Model Architecture
 Category        : Architecture
 Status          : Approved
 
-Version         : 1.0.0
+Version         : 2.1.0
 
 Author          : ACP Studio
 
@@ -18,194 +18,314 @@ Dependencies    : ARC-001 Architecture Skeleton Standard
 
 # 1. Purpose
 
-The purpose of the Domain Model is to provide a technology-independent representation of the business entities managed by ACP Studio.
+The purpose of the Domain Model is to provide a technology-independent
+representation of the ACP Studio business domain.
 
-The Domain layer defines the concepts that compose the ACP Studio problem domain and establishes a common language shared by all business components.
+The Domain layer defines the language, concepts, relationships and rules
+governing the business model of ACP Studio.
 
-By isolating business entities from external systems, the Domain Model ensures architectural consistency, improves maintainability, and enables the framework to evolve independently from implementation details.
+By isolating business concepts from runtime infrastructure and external
+technologies, the Domain Model provides a stable architectural foundation
+for the entire framework.
+
+------------------------------------------------------------------------------
 
 # 2. Scope
 
-This document defines the architectural principles governing the Domain layer of ACP Studio.
+This document defines the architecture of the ACP Studio Domain layer.
 
 Specifically, it defines:
 
-- the purpose and responsibilities of the Domain layer;
-- the role of Domain Entities;
-- the relationship between Domain and Infrastructure;
-- the architectural rules that every Domain Entity shall follow;
-- the lifecycle of Domain Entities within ACP Studio.
+- the purpose of the Domain layer;
+- the architecture of the Domain Model;
+- the domain component types;
+- the relationships between domain components;
+- the interaction between Domain and Infrastructure;
+- the design principles governing all domain components;
+- the lifecycle of domain capabilities.
 
-This document does not define the implementation or behavior of individual Domain Entities.
+The implementation of every domain component is defined by its dedicated
+Capability Specification.
 
-The specification of each Domain Entity shall be provided by a dedicated Specification document.
+------------------------------------------------------------------------------
 
-# 3. Domain Layer
+# 3. Domain Architecture
 
-The Domain layer represents the business model of ACP Studio.
+The Domain layer represents the business knowledge of ACP Studio.
 
-It defines the entities that describe the concepts manipulated by the framework, independently of the technologies used to acquire, process, or persist them.
+It contains only technology-independent business concepts.
 
-The Domain layer provides a stable and consistent representation of the ACP Studio problem domain and serves as the foundation for all business logic.
+The Domain layer defines:
 
-Domain Entities are pure business objects.
+- what ACP Studio knows;
+- how business concepts relate to each other;
+- the consistency rules governing the business domain.
 
-They represent the state of a business concept at a specific point in time and expose only domain-oriented behavior.
+The Domain Model is completely isolated from:
 
-The Domain layer shall remain completely independent from external systems, runtime infrastructure, and implementation-specific APIs.
+- Runtime;
+- Infrastructure;
+- REAPER APIs;
+- Shared Memory;
+- JSFX;
+- persistence;
+- external systems.
 
-# 4. Responsibilities
+Infrastructure defines how information is acquired.
 
-The Domain layer is responsible for representing the business concepts of ACP Studio.
+Domain Services define how domain operations are coordinated.
 
-Its purpose is to provide a stable and technology-independent model that can be used consistently throughout the framework.
+------------------------------------------------------------------------------
 
-The Domain layer is responsible for:
+# 4. Domain Component Types
 
-- representing business entities;
-- exposing domain-oriented properties;
-- exposing domain-oriented behavior;
-- maintaining a consistent business representation;
-- providing a stable abstraction of the ACP Studio domain.
+The Domain Model is composed of four architectural component types.
 
-The Domain layer is not responsible for:
+## Aggregate Root
 
-- interacting with external systems;
-- accessing REAPER APIs;
-- creating or locating Domain Entities;
-- managing runtime execution;
-- collecting runtime observations;
-- performing infrastructure operations.
+The Aggregate Root owns the consistency of a domain aggregate.
 
-These responsibilities belong to their respective architectural layers.
+All interactions with an aggregate shall occur through its Aggregate Root.
 
-# 5. Domain Entity Principles
+An Aggregate Root may own Entities and Value Objects.
 
-A Domain Entity represents a single business concept within the ACP Studio domain.
+------------------------------------------------------------------------------
 
-Every Domain Entity shall comply with the following principles.
+## Entity
 
-### Single Responsibility
+An Entity represents a business concept with its own identity.
 
-A Domain Entity shall represent one and only one business concept.
+Entities may aggregate one or more Value Objects.
 
-### Technology Independence
+Entities preserve business consistency but do not own the aggregate lifecycle.
 
-A Domain Entity shall remain completely independent from external technologies, APIs, and implementation details.
+------------------------------------------------------------------------------
 
-### Snapshot Representation
+## Value Object
 
-A Domain Entity represents the state of a business concept at a specific point in time.
+A Value Object represents a single immutable business value.
 
-It shall not synchronize itself with external systems.
+Value Objects have no identity.
 
-### Domain-Oriented Interface
+Equality is determined exclusively by their domain state.
 
-A Domain Entity shall expose only domain-oriented properties and behavior.
+------------------------------------------------------------------------------
 
-Its public interface shall not expose technology-specific concepts.
+## Domain Service
 
-### Minimal Public API
+A Domain Service coordinates business operations.
 
-A Domain Entity shall expose only the operations required by the business domain.
+A Domain Service owns no business state.
 
-Unnecessary functionality shall not be introduced.
+Its responsibility is limited to domain coordination.
 
-### Independent Testability
+------------------------------------------------------------------------------
 
-Every Domain Entity shall be independently testable through dedicated unit tests.
+# 5. Analysis Domain Model
 
-# 6. Relationship with Infrastructure
+The current Analysis domain is organized according to the following
+Domain-Driven Design model.
 
-The Domain layer is isolated from external systems.
+```text
+Analysis Domain
+│
+├── Aggregate Root
+│
+│   AnalysisSession
+│
+├── Entity
+│
+│   MeasurementResult
+│
+├── Value Objects
+│
+│   AnalysisState
+│   Measurement
+│
+└── Domain Service
 
-All interactions with external technologies shall be performed by the Infrastructure layer.
+    AnalysisService
+```
 
-Infrastructure is responsible for acquiring data from external systems and translating it into Domain Entities.
+The relationships between the domain components are illustrated below.
 
-The Domain layer shall not be aware of:
+```text
+AnalysisSession
+        │
+        ├── State
+        │       │
+        │       ▼
+        │   AnalysisState
+        │
+        └── Result
+                │
+                ▼
+        MeasurementResult
+                │
+                ├── RMS
+                │
+                └── Peak
+                        │
+                        ▼
+                    Measurement
 
-- how data is acquired;
-- where data originates;
-- which external technologies are involved.
+AnalysisService
+        │
+        └── Coordinates AnalysisSession lifecycle
+```
 
-The relationship between the two layers is illustrated below.
+The Analysis Session is the Aggregate Root of the Analysis domain.
 
-External System
+All access to the Analysis domain shall occur through the Analysis Session
+aggregate.
+
+------------------------------------------------------------------------------
+
+# 6. Architectural Principles
+
+Every Domain Component shall comply with the following principles.
+
+## Single Responsibility
+
+Each component shall represent exactly one business concept.
+
+------------------------------------------------------------------------------
+
+## Technology Independence
+
+No component shall depend on Runtime, Infrastructure or implementation
+details.
+
+------------------------------------------------------------------------------
+
+## Immutability
+
+Value Objects shall be immutable.
+
+Aggregates shall preserve business consistency through immutable state.
+
+------------------------------------------------------------------------------
+
+## Domain-Oriented Interface
+
+Public APIs shall expose only business concepts.
+
+Technology-specific concepts shall never appear in the Domain layer.
+
+------------------------------------------------------------------------------
+
+## Minimal Public API
+
+Only operations required by the business domain shall be exposed.
+
+------------------------------------------------------------------------------
+
+## Independent Testability
+
+Every domain component shall be independently testable.
+
+------------------------------------------------------------------------------
+
+# 7. Relationship with Infrastructure
+
+The Domain layer is isolated from Infrastructure.
+
+Infrastructure is responsible for:
+
+- acquiring external information;
+- translating external data into domain components;
+- coordinating runtime interaction.
+
+The Domain layer is responsible only for representing business concepts.
+
+```text
+External Systems
         │
         ▼
 Infrastructure
         │
         ▼
-Domain Entity
+Domain
+```
 
-Infrastructure depends on the Domain layer.
+Infrastructure depends on Domain.
 
-The Domain layer shall never depend on Infrastructure.
+Domain shall never depend on Infrastructure.
 
-# 7. Entity Lifecycle
+------------------------------------------------------------------------------
 
-A Domain Entity is created by the Infrastructure layer and consumed by business components.
+# 8. Domain Capability Lifecycle
 
-The lifecycle of a Domain Entity consists of four stages:
+Every Domain Component shall follow the ACP Studio engineering workflow.
 
-1. Acquisition of data from an external system.
-2. Translation into a Domain Entity.
-3. Consumption by business components.
-4. Disposal when no longer required.
-
-The lifecycle is illustrated below.
-
-External System
+```text
+Architecture
         │
         ▼
-Infrastructure
+Capability Specification
         │
         ▼
-Domain Entity
+Approved
         │
         ▼
-Business Components
+Implementation
+        │
+        ▼
+Capability Test
+        │
+        ▼
+Certified
+```
 
-A Domain Entity shall never acquire or refresh its own state.
+Implementation shall never precede its Capability Specification.
 
-Any update requires the creation of a new Domain Entity by the Infrastructure layer.
+Certification shall always verify compliance with the approved specification.
 
-# 8. Design Rules
+------------------------------------------------------------------------------
 
-Every Domain Entity shall comply with the following design rules.
+# 9. Design Rules
 
-Compliance with these rules is mandatory for all Domain Entities.
+Compliance with the following rules is mandatory.
 
-- Represent a single business concept.
-- Be independent from external technologies.
-- Expose only domain-oriented properties and behavior.
-- Provide a minimal and stable public interface.
-- Be created exclusively by the Infrastructure layer.
-- Never interact directly with external systems.
-- Never manage its own lifecycle.
-- Never modify or refresh its own state.
-- Be independently testable.
-- Be documented through a dedicated Specification.
-- Avoid introducing speculative functionality.
+Every Domain Component shall:
 
-# 9. Certification Requirements
+- represent exactly one business concept;
+- remain independent from Infrastructure;
+- expose only business-oriented APIs;
+- provide a minimal public interface;
+- remain immutable whenever applicable;
+- avoid speculative functionality;
+- be specified before implementation;
+- be documented through a dedicated Capability Specification;
+- be validated through dedicated unit tests.
+
+------------------------------------------------------------------------------
+
+# 10. Certification Requirements
 
 The Domain Model Architecture is considered certified when:
 
-- the architectural principles defined in this document have been approved;
-- every Domain Entity complies with the design rules defined by DOM-001;
-- every Domain Entity is documented through a dedicated Specification;
-- every Domain Entity is validated by dedicated unit tests;
-- the interaction between Infrastructure and Domain has been verified through integration testing.
+- the architectural principles defined by DOM-001 have been approved;
+- every Domain Component complies with DOM-001;
+- every Domain Component is documented through its Capability Specification;
+- every Domain Component is validated through dedicated unit tests;
+- the interaction between Infrastructure and Domain has been verified through
+  integration testing.
 
-Compliance with this document is mandatory for all future Domain Entities.
+Compliance with DOM-001 is mandatory for all future Domain Components.
 
-# 10. Future Evolution
+------------------------------------------------------------------------------
 
-The Domain Model Architecture establishes the foundation for all future Domain Entities.
+# 11. Future Evolution
 
-New Domain Entities shall be introduced only in response to concrete architectural or functional requirements.
+The Domain Model shall evolve incrementally.
 
-The Domain layer shall evolve incrementally, preserving the architectural principles defined by this document.
+New Domain Components shall be introduced only in response to concrete
+business requirements.
 
+The architectural principles defined by DOM-001 shall remain stable
+throughout the evolution of ACP Studio.
+
+------------------------------------------------------------------------------
+End of Document
+------------------------------------------------------------------------------

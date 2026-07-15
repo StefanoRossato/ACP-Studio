@@ -370,3 +370,32 @@ Added:
 Certification:
 
 - ADS-004 capability certified
+
+## [Unreleased]
+
+### Added
+
+#### Domain Architecture
+
+- Reworked **DOM-001 Domain Model Architecture** to version 2.1.0.
+- Introduced the Domain Component model:
+  - Aggregate Root
+  - Entity
+  - Value Object
+  - Domain Service
+- Documented the complete Analysis Domain architecture.
+- Formalized the Domain Capability lifecycle.
+- Standardized the relationship between Domain and Infrastructure.
+
+#### Analysis Domain Specifications
+
+- Added **ADS-001 – Analysis Session Aggregate**.
+- Added **ADS-002 – Measurement**.
+- Added **ADS-003 – Measurement Result**.
+- Added **ADS-004 – Analysis State**.
+- Added **ADS-005 – Analysis Service**.
+
+### Changed
+
+- Standardized all Domain Capability specifications using the common capability template.
+- Completed the architectural design of **WP-DOM-001**.

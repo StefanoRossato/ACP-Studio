@@ -1,49 +1,34 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Module      : ModuleSkeleton
--- Description : Lua module template.
+-- Module        : ModuleName
+-- Layer         : LayerName
+-- Purpose       : Brief description of the module responsibility.
+-- Specification : XXX-000
 --------------------------------------------------------------------------------
 
-local ModuleSkeleton = {}
-ModuleSkeleton.__index = ModuleSkeleton
+local ModuleName = {}
 
 --------------------------------------------------------------------------------
--- Constructor
+-- Constants
 --------------------------------------------------------------------------------
 
-function ModuleSkeleton.New()
-
-    local self = setmetatable({}, ModuleSkeleton)
-
-    -- Initialization ----------------------------------------------------------
-
-    return self
-
-end
-
 --------------------------------------------------------------------------------
--- Public Methods
+-- Private State
 --------------------------------------------------------------------------------
 
-function ModuleSkeleton:Initialize()
-
-    -- Implementation ----------------------------------------------------------
-
-end
+local State = {}
 
 --------------------------------------------------------------------------------
--- Private Methods
+-- Private Functions
 --------------------------------------------------------------------------------
 
-function ModuleSkeleton:PrivateMethod()
-
-    -- Implementation ----------------------------------------------------------
-
-end
+--------------------------------------------------------------------------------
+-- Public API
+--------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 -- End of Module
 --------------------------------------------------------------------------------
 
-return ModuleSkeleton
+return ModuleName

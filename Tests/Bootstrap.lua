@@ -1,75 +1,56 @@
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- ACP Studio
--- Bootstrap.lua
 --
--- Component     : Bootstrap
+-- Module        : Bootstrap
 -- Layer         : Test Infrastructure
--- Purpose       : Initialize the ACP Studio test infrastructure.
+-- Purpose       : Initialize the ACP Studio test environment.
 -- Specification : TST-001
-----------------------------------------------------------------------
-
-----------------------------------------------------------------------
--- Module
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local Bootstrap = {}
 
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Constants
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Private State
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
 local State = {
 
-    initialized   = false,
+    initialized = false,
     repositoryRoot = nil
 
 }
-----------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
 -- Private Functions
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
-----------------------------------------------------------------------
--- Resolve Repository Root
-----------------------------------------------------------------------
-
-----------------------------------------------------------------------
--- Resolve Repository Root
-----------------------------------------------------------------------
-
-local function ResolveRepositoryRoot()
-
-    State.repositoryRoot =
-        reaper.GetResourcePath() .. "/Scripts/ACP Studio"
-
-    return true
-
-end
-
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Configure Package Path
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function ConfigurePackagePath()
 
-    if not State.repositoryRoot then
-        return false
-    end
+    local paths = {
 
-    local repositoryPath =
-        State.repositoryRoot .. "/?.lua"
-
-    local repositoryInitPath =
+        State.repositoryRoot .. "/?.lua",
         State.repositoryRoot .. "/?/init.lua"
 
-    if not package.path:find(repositoryPath, 1, true) then
+    }
 
-        package.path =
-            package.path
-            .. ";" .. repositoryPath
-            .. ";" .. repositoryInitPath
+    for _, modulePath in ipairs(paths) do
+
+        if not package.path:find(modulePath, 1, true) then
+
+            package.path =
+                package.path
+                .. ";"
+                .. modulePath
+
+        end
 
     end
 
@@ -77,34 +58,56 @@ local function ConfigurePackagePath()
 
 end
 
-----------------------------------------------------------------------
--- Load Test Setup
-----------------------------------------------------------------------
-
-local function LoadTestSetup()
-
-end
-
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- Prepare Environment
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function PrepareEnvironment()
 
+    return true
+
 end
-----------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Initialize Infrastructure
+--------------------------------------------------------------------------------
+
+local function InitializeInfrastructure()
+
+    assert(
+        ConfigurePackagePath(),
+        "Unable to configure package path.")
+
+    assert(
+        PrepareEnvironment(),
+        "Unable to prepare test environment.")
+
+    return true
+
+end
+
+--------------------------------------------------------------------------------
 -- Public API
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
-function Bootstrap.Initialize()
+--------------------------------------------------------------------------------
+-- Initialize
+--------------------------------------------------------------------------------
 
-    if not ResolveRepositoryRoot() then
-        return false
+function Bootstrap.Initialize(repositoryRoot)
+
+    assert(
+        type(repositoryRoot) == "string"
+        and repositoryRoot ~= "",
+        "A valid repository root is required.")
+
+    if State.initialized then
+        return true
     end
 
-    if not ConfigurePackagePath() then
-        return false
-    end
+    State.repositoryRoot = repositoryRoot
+
+    InitializeInfrastructure()
 
     State.initialized = true
 
@@ -112,21 +115,28 @@ function Bootstrap.Initialize()
 
 end
 
+--------------------------------------------------------------------------------
+-- Is Initialized
+--------------------------------------------------------------------------------
+
 function Bootstrap.IsInitialized()
 
     return State.initialized
 
 end
 
-
-
------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Get Repository Root
+--------------------------------------------------------------------------------
 
 function Bootstrap.GetRepositoryRoot()
 
     return State.repositoryRoot
 
 end
------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- End of Module
+--------------------------------------------------------------------------------
 
 return Bootstrap
