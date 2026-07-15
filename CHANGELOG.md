@@ -486,3 +486,22 @@ Runtime, Infrastructure and REAPER.
 - Application Layer architecture is now formally specified and approved.
 - Domain and Application architectural boundaries are fully documented.
 
+## [Unreleased]
+
+### Added
+
+#### Application Layer
+
+- Added APS-001 — Analysis Application Service capability specification.
+- Defined the responsibilities of the Analysis Application Service.
+- Specified the application service execution model.
+- Defined the public API for application workflow execution.
+- Established application workflow rules.
+- Documented design principles for application services.
+- Defined certification criteria for the Analysis Application Service.
+
+### Architecture
+
+- Application Layer capability model is now formally specified.
+- Application service responsibilities are clearly separated from Domain services.
+- Application workflow orchestration is fully documented.
