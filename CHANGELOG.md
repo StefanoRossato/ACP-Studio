@@ -527,3 +527,25 @@ Runtime, Infrastructure and REAPER.
 - Verified public API availability.
 - Verified application workflow execution.
 - Verified AnalysisSession creation.
+
+## [Unreleased]
+
+### Added
+
+#### Runtime Layer
+
+- Added RTS-001 — Analysis Executor capability specification.
+- Implemented AnalysisExecutor.
+- Introduced the Runtime execution entry point.
+- Implemented the Execute(session) public API.
+- Integrated the Runtime Layer with the Analysis Domain model.
+- Added the AnalysisExecutor capability test.
+- Certified the initial Analysis Executor implementation.
+
+### Tests
+
+- Added RTS-001 Capability Test.
+- Verified module loading.
+- Verified public API availability.
+- Verified analysis execution entry point.
+- Verified MeasurementResult creation.
