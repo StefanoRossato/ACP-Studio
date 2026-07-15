@@ -333,4 +333,23 @@ The Runtime Observability infrastructure now supports immutable runtime models, 
 * TestSkeleton.lua (updated)
 * TST-001 Test Template Standard (revised)
 
+## [Unreleased]
 
+### Added
+
+#### DOM-001 — Domain Model Architecture
+
+Introduced the Domain Model architectural foundation.
+
+Established the Domain layer as the technology-independent representation of ACP Studio business entities.
+
+Defined:
+
+- Domain layer responsibilities;
+- Domain Entity architectural principles;
+- relationship between Domain and Infrastructure;
+- Domain Entity lifecycle;
+- Domain design rules;
+- certification requirements for future Domain Entities.
+
+This architecture establishes the foundation for all future Domain Entities and formalizes the separation between business concepts and external technologies.
