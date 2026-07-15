@@ -88,7 +88,10 @@ components while preserving aggregate consistency.
 AnalysisService.CreateSession()
 ```
 
-Creates a new Analysis Session.
+Creates a new Analysis Session initialized with:
+
+- AnalysisState.Created
+- MeasurementResult.Empty()
 
 ------------------------------------------------------------------------------
 
@@ -132,6 +135,8 @@ AnalysisService.Cancel(session)
 
 Transitions the Analysis Session to the Cancelled state.
 
+Each operation returns a new immutable Analysis Session representing the updated domain state.
+
 ------------------------------------------------------------------------------
 
 # 5. Domain Rules
@@ -139,6 +144,7 @@ Transitions the Analysis Session to the Cancelled state.
 The Analysis Service shall enforce the following rules.
 
 - Every Analysis Session shall begin in the Created state.
+- Every newly created Analysis Session shall contain an empty Measurement Result.
 - Only valid lifecycle transitions shall be accepted.
 - A completed Analysis Session shall contain a valid Measurement Result.
 - Failed and Cancelled sessions shall preserve aggregate consistency.

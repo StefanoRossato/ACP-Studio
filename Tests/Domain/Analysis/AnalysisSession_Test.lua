@@ -1,11 +1,11 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Test          : AnalysisState Capability Test
--- Component     : AnalysisState
+-- Test          : AnalysisSession Capability Test
+-- Component     : AnalysisSession
 -- Layer         : Domain
--- Purpose       : Verify the AnalysisState domain capability.
--- Specification : ADS-004
+-- Purpose       : Verify the AnalysisSession domain aggregate.
+-- Specification : ADS-001
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -86,11 +86,20 @@ end
 InitializeTestEnvironment()
 
 --------------------------------------------------------------------------------
--- Module
+-- Modules
 --------------------------------------------------------------------------------
+
+local Measurement =
+    require("Core.Domain.Analysis.Measurement")
+
+local MeasurementResult =
+    require("Core.Domain.Analysis.MeasurementResult")
 
 local AnalysisState =
     require("Core.Domain.Analysis.AnalysisState")
+
+local AnalysisSession =
+    require("Core.Domain.Analysis.AnalysisSession")
 
 --------------------------------------------------------------------------------
 -- Helpers
@@ -128,119 +137,100 @@ end
 
 local function TestCase()
 
-    Log("Checking valid states...")
+    Log("Creating domain objects...")
 
-    local created =
-        AnalysisState.New("Created")
+    local rms =
+        Measurement.New(-18.0, "RMS", "dB")
 
-    local running =
-        AnalysisState.New("Running")
+    local peak =
+        Measurement.New(-6.0, "Peak", "dB")
 
-    local completed =
+    local result =
+        MeasurementResult.New(
+            rms,
+            peak,
+            100)
+
+    local state =
         AnalysisState.New("Completed")
 
-    local failed =
-        AnalysisState.New("Failed")
+    Assert(state ~= nil, "AnalysisState created")
+    Assert(result ~= nil, "MeasurementResult created")
 
-    local cancelled =
-        AnalysisState.New("Cancelled")
+    Log("Creating AnalysisSession...")
 
-    Assert(created:GetValue() == "Created", "Created")
-    Assert(running:GetValue() == "Running", "Running")
-    Assert(completed:GetValue() == "Completed", "Completed")
-    Assert(failed:GetValue() == "Failed", "Failed")
-    Assert(cancelled:GetValue() == "Cancelled", "Cancelled")
+    local session =
+        AnalysisSession.New(
+            state,
+            result)
 
-    Log("Checking invalid states...")
+    Assert(session ~= nil, "AnalysisSession created")
 
-    Assert(
-        not pcall(function()
-            AnalysisState.New(nil)
-        end),
-        "nil rejected")
+    Log("Checking getters...")
 
     Assert(
-        not pcall(function()
-            AnalysisState.New("")
-        end),
-        "empty string rejected")
+        session:GetState():Equals(state),
+        "GetState")
 
     Assert(
-        not pcall(function()
-            AnalysisState.New("Invalid")
-        end),
-        "invalid state rejected")
+        session:GetResult():Equals(result),
+        "GetResult")
 
     Log("Checking equality...")
 
-    Assert(
-        created:Equals(
-            AnalysisState.New("Created")),
-        "Equal states")
+    local equal =
+        AnalysisSession.New(
+            AnalysisState.New("Completed"),
+            MeasurementResult.New(
+                Measurement.New(-18.0, "RMS", "dB"),
+                Measurement.New(-6.0, "Peak", "dB"),
+                100))
 
     Assert(
-        not created:Equals(running),
-        "Different states")
+        session:Equals(equal),
+        "Equal objects")
+
+    local differentState =
+        AnalysisSession.New(
+            AnalysisState.New("Running"),
+            MeasurementResult.New(
+                Measurement.New(-18.0, "RMS", "dB"),
+                Measurement.New(-6.0, "Peak", "dB"),
+                100))
 
     Assert(
-        not created:Equals({}),
+        not session:Equals(differentState),
+        "Different state")
+
+    local differentResult =
+        AnalysisSession.New(
+            AnalysisState.New("Completed"),
+            MeasurementResult.New(
+                Measurement.New(-20.0, "RMS", "dB"),
+                Measurement.New(-6.0, "Peak", "dB"),
+                100))
+
+    Assert(
+        not session:Equals(differentResult),
+        "Different result")
+
+    Assert(
+        not session:Equals({}),
         "Invalid comparison")
 
-    Log("Checking lifecycle validation...")
+    Log("Checking invalid construction...")
 
     Assert(
-        created:IsValid("Created"),
-        "Valid state")
+        not pcall(function()
+            AnalysisSession.New(nil, result)
+        end),
+        "nil state rejected")
 
     Assert(
-        not created:IsValid("Unknown"),
-        "Invalid state")
-
-    Log("Checking valid transitions...")
-
-    Assert(
-        created:CanTransition(
-            "Created",
-            "Running"),
-        "Created -> Running")
-
-    Assert(
-        running:CanTransition(
-            "Running",
-            "Completed"),
-        "Running -> Completed")
-
-    Assert(
-        running:CanTransition(
-            "Running",
-            "Failed"),
-        "Running -> Failed")
-
-    Assert(
-        running:CanTransition(
-            "Running",
-            "Cancelled"),
-        "Running -> Cancelled")
-
-    Log("Checking invalid transitions...")
-
-    Assert(
-        not completed:CanTransition(
-            "Completed",
-            "Running"),
-        "Completed -> Running")
-
-    Assert(
-        not failed:CanTransition(
-            "Failed",
-            "Completed"),
-        "Failed -> Completed")
-
-    Assert(
-        not cancelled:CanTransition(
-            "Cancelled",
-            "Running"),
-        "Cancelled -> Running")
+        not pcall(function()
+            AnalysisSession.New(state, nil)
+        end),
+        "nil result rejected")
 
 end
 
@@ -254,14 +244,14 @@ local function Run()
 
     Log("")
     Log("========================================")
-    Log("AnalysisState Capability Test")
-    Log("ADS-004")
+    Log("AnalysisSession Capability Test")
+    Log("ADS-001")
     Log("========================================")
 
     TestCase()
 
     Log("========================================")
-    Log("AnalysisState Capability Test PASSED")
+    Log("AnalysisSession Capability Test PASSED")
     Log("========================================")
 
 end

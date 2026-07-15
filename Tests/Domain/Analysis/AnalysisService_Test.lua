@@ -1,11 +1,11 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Test          : AnalysisState Capability Test
--- Component     : AnalysisState
+-- Test          : AnalysisService Capability Test
+-- Component     : AnalysisService
 -- Layer         : Domain
--- Purpose       : Verify the AnalysisState domain capability.
--- Specification : ADS-004
+-- Purpose       : Verify the AnalysisService domain capability.
+-- Specification : ADS-005
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
@@ -86,11 +86,17 @@ end
 InitializeTestEnvironment()
 
 --------------------------------------------------------------------------------
--- Module
+-- Modules
 --------------------------------------------------------------------------------
 
-local AnalysisState =
-    require("Core.Domain.Analysis.AnalysisState")
+local Measurement =
+    require("Core.Domain.Analysis.Measurement")
+
+local MeasurementResult =
+    require("Core.Domain.Analysis.MeasurementResult")
+
+local AnalysisService =
+    require("Core.Domain.Analysis.AnalysisService")
 
 --------------------------------------------------------------------------------
 -- Helpers
@@ -128,119 +134,92 @@ end
 
 local function TestCase()
 
-    Log("Checking valid states...")
+    Log("Creating Analysis Session...")
 
-    local created =
-        AnalysisState.New("Created")
+    local session =
+        AnalysisService.CreateSession()
+
+    Assert(
+        session:GetState():GetValue() == "Created",
+        "CreateSession")
+
+    Assert(
+        session:GetResult():Equals(
+            MeasurementResult.Empty()),
+        "Empty MeasurementResult")
+
+    Log("Starting Analysis Session...")
 
     local running =
-        AnalysisState.New("Running")
+        AnalysisService.Start(session)
+
+    Assert(
+        running:GetState():GetValue() == "Running",
+        "Start")
+
+    Log("Completing Analysis Session...")
+
+    local result =
+        MeasurementResult.New(
+
+            Measurement.New(
+                -18.0,
+                "RMS",
+                "dB"),
+
+            Measurement.New(
+                -6.0,
+                "Peak",
+                "dB"),
+
+            100
+
+        )
 
     local completed =
-        AnalysisState.New("Completed")
+        AnalysisService.Complete(
+            running,
+            result)
+
+    Assert(
+        completed:GetState():GetValue() == "Completed",
+        "Complete")
+
+    Assert(
+        completed:GetResult():Equals(result),
+        "Completed Result")
+
+    Log("Checking invalid transition...")
+
+    Assert(
+
+        not pcall(function()
+
+            AnalysisService.Start(completed)
+
+        end),
+
+        "Invalid transition rejected"
+
+    )
+
+    Log("Checking Fail...")
 
     local failed =
-        AnalysisState.New("Failed")
+        AnalysisService.Fail(running)
+
+    Assert(
+        failed:GetState():GetValue() == "Failed",
+        "Fail")
+
+    Log("Checking Cancel...")
 
     local cancelled =
-        AnalysisState.New("Cancelled")
-
-    Assert(created:GetValue() == "Created", "Created")
-    Assert(running:GetValue() == "Running", "Running")
-    Assert(completed:GetValue() == "Completed", "Completed")
-    Assert(failed:GetValue() == "Failed", "Failed")
-    Assert(cancelled:GetValue() == "Cancelled", "Cancelled")
-
-    Log("Checking invalid states...")
+        AnalysisService.Cancel(running)
 
     Assert(
-        not pcall(function()
-            AnalysisState.New(nil)
-        end),
-        "nil rejected")
-
-    Assert(
-        not pcall(function()
-            AnalysisState.New("")
-        end),
-        "empty string rejected")
-
-    Assert(
-        not pcall(function()
-            AnalysisState.New("Invalid")
-        end),
-        "invalid state rejected")
-
-    Log("Checking equality...")
-
-    Assert(
-        created:Equals(
-            AnalysisState.New("Created")),
-        "Equal states")
-
-    Assert(
-        not created:Equals(running),
-        "Different states")
-
-    Assert(
-        not created:Equals({}),
-        "Invalid comparison")
-
-    Log("Checking lifecycle validation...")
-
-    Assert(
-        created:IsValid("Created"),
-        "Valid state")
-
-    Assert(
-        not created:IsValid("Unknown"),
-        "Invalid state")
-
-    Log("Checking valid transitions...")
-
-    Assert(
-        created:CanTransition(
-            "Created",
-            "Running"),
-        "Created -> Running")
-
-    Assert(
-        running:CanTransition(
-            "Running",
-            "Completed"),
-        "Running -> Completed")
-
-    Assert(
-        running:CanTransition(
-            "Running",
-            "Failed"),
-        "Running -> Failed")
-
-    Assert(
-        running:CanTransition(
-            "Running",
-            "Cancelled"),
-        "Running -> Cancelled")
-
-    Log("Checking invalid transitions...")
-
-    Assert(
-        not completed:CanTransition(
-            "Completed",
-            "Running"),
-        "Completed -> Running")
-
-    Assert(
-        not failed:CanTransition(
-            "Failed",
-            "Completed"),
-        "Failed -> Completed")
-
-    Assert(
-        not cancelled:CanTransition(
-            "Cancelled",
-            "Running"),
-        "Cancelled -> Running")
+        cancelled:GetState():GetValue() == "Cancelled",
+        "Cancel")
 
 end
 
@@ -254,14 +233,14 @@ local function Run()
 
     Log("")
     Log("========================================")
-    Log("AnalysisState Capability Test")
-    Log("ADS-004")
+    Log("AnalysisService Capability Test")
+    Log("ADS-005")
     Log("========================================")
 
     TestCase()
 
     Log("========================================")
-    Log("AnalysisState Capability Test PASSED")
+    Log("AnalysisService Capability Test PASSED")
     Log("========================================")
 
 end

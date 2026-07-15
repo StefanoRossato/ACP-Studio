@@ -33,7 +33,9 @@ The Analysis State is responsible for:
 - representing the current state of an analysis session;
 - preserving lifecycle consistency;
 - providing immutable access to the current state;
-- comparing analysis states for equality.
+- comparing analysis states for equality;
+- validating lifecycle states;
+- validating lifecycle transitions.
 
 The Analysis State is not responsible for:
 
@@ -124,6 +126,26 @@ Returns `true` when both Analysis States represent the same lifecycle state.
 
 ------------------------------------------------------------------------------
 
+### IsValid
+
+```lua
+AnalysisState:IsValid(state)
+```
+
+Returns `true` when the specified lifecycle state is valid.
+
+------------------------------------------------------------------------------
+
+### CanTransition
+
+```lua
+AnalysisState:CanTransition(fromState, toState)
+```
+
+Returns `true` when the specified lifecycle transition is allowed.
+
+------------------------------------------------------------------------------
+
 # 6. Invariants
 
 An Analysis State shall always satisfy the following rules.
@@ -147,6 +169,8 @@ The Analysis State shall:
 - preserve domain consistency;
 - represent a single domain value.
 
+The Analysis State shall centralize lifecycle validation rules for the Analysis domain.
+
 ------------------------------------------------------------------------------
 
 # 8. Certification Criteria
@@ -157,6 +181,7 @@ The Analysis State is certified when:
 - invalid states are rejected;
 - valid lifecycle transitions are accepted;
 - invalid lifecycle transitions are rejected;
+- lifecycle state validation behaves correctly;
 - equality comparison behaves correctly;
 - immutability is preserved.
 

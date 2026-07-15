@@ -25,6 +25,8 @@ This document defines the Measurement Result entity used by the ACP Studio Analy
 
 A Measurement Result aggregates the measurements produced by an analysis and provides a single immutable representation of the analysis outcome.
 
+The Measurement Result also provides an immutable empty instance representing an analysis that has not yet produced measurements.
+
 ---
 
 # 2. Responsibilities
@@ -74,6 +76,8 @@ MeasurementResult
 ```
 
 Each Measurement shall be valid according to ADS-002.
+
+The empty Measurement Result shall aggregate valid Measurement instances and represent the absence of completed analysis.   
 
 ---
 
@@ -132,6 +136,18 @@ MeasurementResult:Equals(other)
 
 Returns `true` when both Measurement Results represent the same domain state.
 
+------------------------------------------------------------------------------
+
+### Empty
+
+```lua
+MeasurementResult.Empty()
+```
+
+Creates an immutable empty Measurement Result.
+
+The empty Measurement Result represents a valid domain object before an analysis has completed.
+
 ---
 
 # 5. Invariants
@@ -144,6 +160,7 @@ A Measurement Result shall always satisfy the following rules.
 * Peak shall be a valid Measurement.
 * Timestamp shall be a non-negative integer.
 * The object shall be immutable after construction.
+* The empty Measurement Result shall be a valid immutable Measurement Result.
 
 ---
 
@@ -159,6 +176,8 @@ The Measurement Result shall:
 * preserve domain consistency;
 * aggregate only immutable domain value objects.
 
+The Measurement Result shall avoid null domain objects by providing an immutable empty instance.
+
 ---
 
 # 7. Certification Criteria
@@ -172,7 +191,8 @@ The Measurement Result is certified when:
 * all getters return the expected values;
 * equality comparison behaves correctly;
 * immutability is preserved;
-* equality shall be value-based.
+* equality shall be value-based;
+* the empty Measurement Result behaves correctly.
 
 ---
 

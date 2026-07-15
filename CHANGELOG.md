@@ -420,3 +420,48 @@ Certification:
 * Verified timestamp validation.
 * Certified **ADS-003 — MeasurementResult**.
 
+## [Unreleased]
+
+### Added
+
+#### ADS-005 — Analysis Service
+- Implemented immutable AnalysisService domain capability.
+- Added lifecycle coordination for Analysis Sessions.
+- Implemented CreateSession().
+- Implemented Start().
+- Implemented Complete().
+- Implemented Fail().
+- Implemented Cancel().
+- Added AnalysisService capability test.
+- Certified ADS-005.
+
+### Changed
+
+#### ADS-003 — Measurement Result
+- Added MeasurementResult.Empty() factory method.
+- Introduced immutable empty Measurement Result.
+- Eliminated null MeasurementResult from the Domain Model.
+- Updated specification and capability tests.
+
+#### ADS-004 — Analysis State
+- Refactored AnalysisState as immutable Value Object.
+- Added GetValue().
+- Added Equals().
+- Updated capability specification.
+- Re-certified ADS-004.
+
+### Certified
+
+Completed WP-DOM-001 — Analysis Domain Model.
+
+Certified capabilities:
+
+- ADS-001 — Analysis Session
+- ADS-002 — Measurement
+- ADS-003 — Measurement Result
+- ADS-004 — Analysis State
+- ADS-005 — Analysis Service
+
+The Analysis Domain Layer is now fully implemented, immutable,
+stateless where appropriate, and completely independent from
+Runtime, Infrastructure and REAPER.

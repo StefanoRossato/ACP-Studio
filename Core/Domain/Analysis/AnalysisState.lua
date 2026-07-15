@@ -1,9 +1,10 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Module      : AnalysisState
--- Description : Defines the valid states and transition rules for an
---               Analysis Session.
+-- Module        : AnalysisState
+-- Layer         : Domain
+-- Purpose       : Analysis lifecycle state value object.
+-- Specification : ADS-004
 --------------------------------------------------------------------------------
 
 local AnalysisState = {}
@@ -15,11 +16,11 @@ AnalysisState.__index = AnalysisState
 
 local VALID_STATES = {
 
-    Created    = true,
-    Running    = true,
-    Completed  = true,
-    Failed     = true,
-    Cancelled  = true
+    Created   = true,
+    Running   = true,
+    Completed = true,
+    Failed    = true,
+    Cancelled = true
 
 }
 
@@ -51,18 +52,51 @@ local VALID_TRANSITIONS = {
 -- Constructor
 --------------------------------------------------------------------------------
 
-function AnalysisState.New()
+function AnalysisState.New(state)
 
-    local self = setmetatable({}, AnalysisState)
+    assert(
+        type(state) == "string" and state ~= "",
+        "State must be a non-empty string.")
 
-    -- Initialization ----------------------------------------------------------
+    assert(
+        VALID_STATES[state],
+        "Invalid analysis state.")
+
+    local self =
+        setmetatable({}, AnalysisState)
+
+    --------------------------------------------------------------------------
+    -- Initialization
+    --------------------------------------------------------------------------
+
+    self._value = state
 
     return self
 
 end
 
 --------------------------------------------------------------------------------
--- Public Methods
+-- Public API
+--------------------------------------------------------------------------------
+
+function AnalysisState:GetValue()
+
+    return self._value
+
+end
+
+--------------------------------------------------------------------------------
+
+function AnalysisState:Equals(other)
+
+    if getmetatable(other) ~= AnalysisState then
+        return false
+    end
+
+    return self._value == other._value
+
+end
+
 --------------------------------------------------------------------------------
 
 function AnalysisState:IsValid(state)
@@ -83,7 +117,8 @@ function AnalysisState:CanTransition(fromState, toState)
         return false
     end
 
-    local transitions = VALID_TRANSITIONS[fromState]
+    local transitions =
+        VALID_TRANSITIONS[fromState]
 
     if transitions == nil then
         return false
@@ -92,10 +127,6 @@ function AnalysisState:CanTransition(fromState, toState)
     return transitions[toState] == true
 
 end
-
---------------------------------------------------------------------------------
--- Private Methods
---------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 -- End of Module

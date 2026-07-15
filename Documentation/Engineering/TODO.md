@@ -90,6 +90,34 @@ A centralized configuration will eliminate repository-specific constants while p
 
 ---
 
+## ENG-TODO — ModuleSkeleton v2
+
+Evaluate the introduction of a dedicated "Factory Methods" section in the
+ModuleSkeleton standard.
+
+Current structure:
+
+Constructor
+Public Methods
+
+Proposed structure:
+
+Constructor
+Factory Methods
+Public Methods
+
+Rationale
+
+Some immutable Domain Objects expose named factory methods
+(e.g. MeasurementResult.Empty()) that conceptually differ from both
+constructors and ordinary public methods.
+
+Separating factory methods improves readability and better reflects
+DDD design patterns.
+
+Priority: Low
+Category: Engineering Standard
+
 ------------------------------------------------------------------------------
 End of Document
 ------------------------------------------------------------------------------
