@@ -4,8 +4,8 @@
 --
 -- Component     : Observability Pipeline
 -- Layer         : Integration
--- Purpose       : Validate the complete Observability pipeline
--- Specification : OBS-001 Runtime Observability
+-- Purpose       : Validate the complete Observability pipeline.
+-- Specification : OBS-002 Runtime Metrics
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -21,6 +21,10 @@ dofile(
 -- Module
 ----------------------------------------------------------------------
 
+----------------------------------------------------------------------
+-- Dependencies
+----------------------------------------------------------------------
+
 local RuntimeModel =
     require("Core.Runtime.RuntimeModel")
 
@@ -32,10 +36,6 @@ local ObservationCollector =
 
 local RuntimeMonitor =
     require("Core.Runtime.RuntimeMonitor")
-
-----------------------------------------------------------------------
--- Dependencies
-----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
 -- Constants
@@ -67,6 +67,10 @@ end
 
 local function TestCase()
 
+    --------------------------------------------------------------------------
+    -- RuntimeModel
+    --------------------------------------------------------------------------
+
     Log("Creating RuntimeModel...")
 
     local model = RuntimeModel.New()
@@ -75,6 +79,9 @@ local function TestCase()
 
     Log("PASS - RuntimeModel created")
 
+    --------------------------------------------------------------------------
+    -- ObservationProvider
+    --------------------------------------------------------------------------
 
     Log("Creating ObservationProvider...")
 
@@ -84,6 +91,9 @@ local function TestCase()
 
     Log("PASS - ObservationProvider created")
 
+    --------------------------------------------------------------------------
+    -- ObservationCollector
+    --------------------------------------------------------------------------
 
     Log("Creating ObservationCollector...")
 
@@ -93,6 +103,9 @@ local function TestCase()
 
     Log("PASS - ObservationCollector created")
 
+    --------------------------------------------------------------------------
+    -- RuntimeMonitor
+    --------------------------------------------------------------------------
 
     Log("Creating RuntimeMonitor...")
 
@@ -102,21 +115,31 @@ local function TestCase()
 
     Log("PASS - RuntimeMonitor created")
 
-
-    ------------------------------------------------------------------
-    -- QUI
-    ------------------------------------------------------------------
+    --------------------------------------------------------------------------
+    -- Update RuntimeModel
+    --------------------------------------------------------------------------
 
     Log("Updating RuntimeModel...")
 
-    model:SetState(1)
-    model:SetRMS(-18.0)
-    model:SetPeak(-6.0)
-    model:SetCrestFactor(12.0)
-    model:SetSampleCount(1024)
-    model:SetTimestamp(100)
+    model.State = 1
+
+    model.RMS = -18.0
+    model.Peak = -6.0
+    model.CrestFactor = 12.0
+
+    model.SampleCount = 1024
+    model.Timestamp = 100
+
+    model.Metrics.Heartbeat = 25
+    model.Metrics.SampleCounter = 48000
+    model.Metrics.FramesProcessed = 1000
+    model.Metrics.UpdateTimestamp = 100
 
     Log("PASS - RuntimeModel updated")
+
+    --------------------------------------------------------------------------
+    -- Collect Snapshot
+    --------------------------------------------------------------------------
 
     Log("Collecting snapshot...")
 
@@ -126,27 +149,15 @@ local function TestCase()
 
     Log("PASS - Snapshot collected")
 
-    Log("Initializing RuntimeMonitor...")
-
-    monitor:Initialize()
-
-    Log("PASS - RuntimeMonitor initialized")
+    --------------------------------------------------------------------------
+    -- Display Snapshot
+    --------------------------------------------------------------------------
 
     Log("Displaying snapshot...")
 
     monitor:Display(snapshot)
 
     Log("PASS - Snapshot displayed")
-
-    ------------------------------------------------------------------
-    -- DOPO verranno questi
-    ------------------------------------------------------------------
-
-    -- monitor:Initialize()
-
-    -- local snapshot = collector:Collect()
-
-    -- monitor:Display(snapshot)
 
 end
 

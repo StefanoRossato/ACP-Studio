@@ -1,11 +1,11 @@
 ----------------------------------------------------------------------
 -- ACP Studio
--- ObservationCollector_Test.lua
+-- RuntimeMetrics_Test.lua
 --
--- Component     : Observation Collector Test
--- Layer         : Tests/Observability
--- Purpose       : Validate ObservationCollector behavior.
--- Specification : OBS-002
+-- Component     : RuntimeMetrics
+-- Layer         : Observability
+-- Purpose       : Verify RuntimeMetrics construction and cloning.
+-- Specification : OBS-002 Runtime Metrics
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -21,20 +21,11 @@ dofile(
 -- Module
 ----------------------------------------------------------------------
 
+local RuntimeMetrics = require("Core.Runtime.RuntimeMetrics")
+
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
-
-local RuntimeModel = require("Core.Runtime.RuntimeModel")
-
-local ObservationProvider =
-    require("Core.Observability.ObservationProvider")
-
-local ObservationCollector =
-    require("Core.Observability.ObservationCollector")
-
-local ObservationSnapshot =
-    require("Core.Observability.ObservationSnapshot")
 
 ----------------------------------------------------------------------
 -- Constants
@@ -64,57 +55,32 @@ end
 -- Test Cases
 ----------------------------------------------------------------------
 
-local function TestCreation()
+local function TestCase()
 
-    Log("Creating RuntimeModel...")
+    --------------------------------------------------------------------------
+    -- Construction
+    --------------------------------------------------------------------------
 
-    local runtimeModel = RuntimeModel.New()
+    Log("Creating RuntimeMetrics...")
 
-    assert(runtimeModel ~= nil)
+    local metrics = RuntimeMetrics.New()
 
-    Log("PASS - RuntimeModel created")
+    assert(metrics ~= nil)
 
-    Log("Creating ObservationProvider...")
+    Log("PASS - RuntimeMetrics created")
 
-    local provider = ObservationProvider.New(runtimeModel)
+    --------------------------------------------------------------------------
+    -- Clone
+    --------------------------------------------------------------------------
 
-    assert(provider ~= nil)
+    Log("Cloning RuntimeMetrics...")
 
-    Log("PASS - ObservationProvider created")
+    local clone = metrics:Clone()
 
-    Log("Creating ObservationCollector...")
+    assert(clone ~= nil)
+    assert(clone ~= metrics)
 
-    local collector = ObservationCollector.New(provider)
-
-    assert(collector ~= nil)
-
-    Log("PASS - ObservationCollector created")
-
-    return runtimeModel, collector
-
-end
-
-local function TestCollect(runtimeModel, collector)
-
-    Log("Collecting snapshot...")
-
-    runtimeModel.State = 1
-    runtimeModel.RMS = -18.0
-    runtimeModel.Peak = -6.0
-    runtimeModel.CrestFactor = 12.0
-    runtimeModel.SampleCount = 1024
-    runtimeModel.Timestamp = 100
-
-    runtimeModel.Metrics.Heartbeat = 25
-    runtimeModel.Metrics.SampleCounter = 48000
-    runtimeModel.Metrics.FramesProcessed = 1000
-    runtimeModel.Metrics.UpdateTimestamp = 100
-
-    local snapshot = collector:Collect()
-
-    assert(snapshot ~= nil)
-
-    Log("PASS - Snapshot collected")
+    Log("PASS - RuntimeMetrics cloned")
 
 end
 
@@ -128,15 +94,13 @@ local function Run()
 
     Log("")
     Log("========================================")
-    Log("ObservationCollector Test")
+    Log("RuntimeMetrics Test")
     Log("========================================")
 
-    local runtimeModel, collector = TestCreation()
-
-    TestCollect(runtimeModel, collector)
+    TestCase()
 
     Log("========================================")
-    Log("ObservationCollector Test PASSED")
+    Log("RuntimeMetrics Test PASSED")
     Log("========================================")
 
 end

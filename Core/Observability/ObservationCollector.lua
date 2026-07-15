@@ -5,13 +5,21 @@
 -- Description : Creates immutable observation snapshots.
 --------------------------------------------------------------------------------
 
-local ObservationSnapshot = require("Core.Observability.ObservationSnapshot")
-
 local ObservationCollector = {}
 ObservationCollector.__index = ObservationCollector
 
 --------------------------------------------------------------------------------
--- Constructor
+-- Dependencies
+--------------------------------------------------------------------------------
+
+local ObservationSnapshot = require("Core.Observability.ObservationSnapshot")
+
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Construction
 --------------------------------------------------------------------------------
 
 function ObservationCollector.New(provider)
@@ -32,22 +40,19 @@ end
 
 function ObservationCollector:Collect()
 
-    return ObservationSnapshot.New({
+    -- Implementation ----------------------------------------------------------
 
-        state       = self._provider:GetState(),
-        rms         = self._provider:GetRMS(),
-        peak        = self._provider:GetPeak(),
-        crestFactor = self._provider:GetCrestFactor(),
-        sampleCount = self._provider:GetSampleCount(),
-        timestamp   = self._provider:GetTimestamp()
+    local model = self._provider:GetModel()
 
-    })
+    return ObservationSnapshot.New(model)
 
 end
 
 --------------------------------------------------------------------------------
 -- Private Methods
 --------------------------------------------------------------------------------
+
+
 
 --------------------------------------------------------------------------------
 -- End of Module

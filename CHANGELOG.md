@@ -273,3 +273,41 @@ Completed verification:
 - Unit tests
 - Integration pipeline test
 - End-to-end observation flow validation
+
+## [OBS-002] - Runtime Metrics - Certified
+
+### Added
+
+* Added `RuntimeMetrics` model.
+* Added runtime metrics support to the observability pipeline.
+* Added deep-clone support for runtime metrics.
+* Added immutable runtime metrics snapshots.
+* Added runtime metrics visualization in `RuntimeMonitor`.
+
+### Changed
+
+* Refactored `RuntimeModel` into a pure data model.
+* Removed getter/setter API from `RuntimeModel`.
+* Added `RuntimeMetrics` integration to `RuntimeModel`.
+* Refactored `ObservationProvider` to expose the complete runtime model.
+* Refactored `ObservationCollector` to collect complete runtime models.
+* Refactored `ObservationSnapshot` to clone the runtime model.
+* Refactored `RuntimeMonitor` to display the new runtime model structure.
+* Simplified the complete observability pipeline architecture.
+
+### Tests
+
+* Added `RuntimeMetrics_Test`.
+* Updated `RuntimeModel_Test`.
+* Updated `ObservationProvider_Test`.
+* Updated `ObservationCollector_Test`.
+* Updated `ObservationSnapshot_Test`.
+* Updated `RuntimeMonitor_Test`.
+* Updated `ObservabilityPipeline_Test`.
+
+### Certification
+
+OBS-002 Runtime Metrics completed and certified.
+
+The Runtime Observability infrastructure now supports immutable runtime models, runtime metrics, deep-copy snapshots and an end-to-end validated observability pipeline.
+

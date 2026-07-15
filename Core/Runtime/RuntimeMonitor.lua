@@ -1,8 +1,23 @@
+--------------------------------------------------------------------------------
+-- ACP Studio
+--
+-- Module      : RuntimeMonitor
+-- Description : Displays runtime observation snapshots.
+--------------------------------------------------------------------------------
+
 local RuntimeMonitor = {}
 RuntimeMonitor.__index = RuntimeMonitor
 
 --------------------------------------------------------------------------------
--- Constructor
+-- Dependencies
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Construction
 --------------------------------------------------------------------------------
 
 function RuntimeMonitor.New()
@@ -19,23 +34,85 @@ end
 -- Public Methods
 --------------------------------------------------------------------------------
 
-function RuntimeMonitor:Initialize()
+function RuntimeMonitor:Display(snapshot)
 
     -- Implementation ----------------------------------------------------------
-
-end
-
-function RuntimeMonitor:Display(snapshot)
 
     if snapshot == nil then
         return
     end
 
-    for key, value in pairs(snapshot) do
-        reaper.ShowConsoleMsg(
-            string.format("%-24s : %s\n", key, tostring(value))
-        )
+    local model = snapshot:GetModel()
+
+    if model == nil then
+        return
     end
+
+    reaper.ClearConsole()
+
+    reaper.ShowConsoleMsg("========================================\n")
+    reaper.ShowConsoleMsg("Runtime Monitor\n")
+    reaper.ShowConsoleMsg("========================================\n")
+
+    --------------------------------------------------------------------------
+    -- Runtime State
+    --------------------------------------------------------------------------
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "State", tostring(model.State))
+    )
+
+    --------------------------------------------------------------------------
+    -- Analysis
+    --------------------------------------------------------------------------
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "RMS", tostring(model.RMS))
+    )
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "Peak", tostring(model.Peak))
+    )
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "Crest Factor", tostring(model.CrestFactor))
+    )
+
+    --------------------------------------------------------------------------
+    -- Runtime Information
+    --------------------------------------------------------------------------
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "Sample Count", tostring(model.SampleCount))
+    )
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "Timestamp", tostring(model.Timestamp))
+    )
+
+    --------------------------------------------------------------------------
+    -- Metrics
+    --------------------------------------------------------------------------
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "Heartbeat",
+            tostring(model.Metrics.Heartbeat))
+    )
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "Sample Counter",
+            tostring(model.Metrics.SampleCounter))
+    )
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "Frames Processed",
+            tostring(model.Metrics.FramesProcessed))
+    )
+
+    reaper.ShowConsoleMsg(
+        string.format("%-24s : %s\n", "Update Timestamp",
+            tostring(model.Metrics.UpdateTimestamp))
+    )
 
 end
 
@@ -43,11 +120,7 @@ end
 -- Private Methods
 --------------------------------------------------------------------------------
 
-function RuntimeMonitor:PrivateMethod()
 
-    -- Implementation ----------------------------------------------------------
-
-end
 
 --------------------------------------------------------------------------------
 -- End of Module

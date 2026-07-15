@@ -2,10 +2,10 @@
 -- ACP Studio
 -- RuntimeMonitor_Test.lua
 --
--- Component     : RuntimeMonitor
--- Layer         : Runtime
--- Purpose       : Validate RuntimeMonitor
--- Specification : OBS-001 Runtime Observability
+-- Component     : Runtime Monitor Test
+-- Layer         : Tests/Observability
+-- Purpose       : Validate RuntimeMonitor behavior.
+-- Specification : OBS-002
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -21,14 +21,20 @@ dofile(
 -- Module
 ----------------------------------------------------------------------
 
-local RuntimeModel = require("Core.Runtime.RuntimeModel")
-local ObservationProvider = require("Core.Observation.ObservationProvider")
-local ObservationCollector = require("Core.Observation.ObservationCollector")
-local RuntimeMonitor = require("Core.Runtime.RuntimeMonitor")
-
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
+
+local RuntimeModel = require("Core.Runtime.RuntimeModel")
+
+local ObservationProvider =
+    require("Core.Observability.ObservationProvider")
+
+local ObservationCollector =
+    require("Core.Observability.ObservationCollector")
+
+local RuntimeMonitor =
+    require("Core.Runtime.RuntimeMonitor")
 
 ----------------------------------------------------------------------
 -- Constants
@@ -37,12 +43,6 @@ local RuntimeMonitor = require("Core.Runtime.RuntimeMonitor")
 ----------------------------------------------------------------------
 -- Construction
 ----------------------------------------------------------------------
-
-local monitor
-local model
-local provider
-local collector
-local monitor
 
 ----------------------------------------------------------------------
 -- Private Methods
@@ -64,19 +64,19 @@ end
 -- Test Cases
 ----------------------------------------------------------------------
 
-local function TestCase()
+local function TestCreation()
 
     Log("Creating RuntimeModel...")
 
-    model = RuntimeModel.New()
+    local runtimeModel = RuntimeModel.New()
 
-    assert(model ~= nil)
+    assert(runtimeModel ~= nil)
 
     Log("PASS - RuntimeModel created")
 
     Log("Creating ObservationProvider...")
 
-    provider = ObservationProvider.New(model)
+    local provider = ObservationProvider.New(runtimeModel)
 
     assert(provider ~= nil)
 
@@ -84,7 +84,7 @@ local function TestCase()
 
     Log("Creating ObservationCollector...")
 
-    collector = ObservationCollector.New(provider)
+    local collector = ObservationCollector.New(provider)
 
     assert(collector ~= nil)
 
@@ -92,17 +92,40 @@ local function TestCase()
 
     Log("Creating RuntimeMonitor...")
 
-    monitor = RuntimeMonitor.New()
+    local monitor = RuntimeMonitor.New()
 
     assert(monitor ~= nil)
 
     Log("PASS - RuntimeMonitor created")
 
-    Log("Initializing RuntimeMonitor...")
+    return runtimeModel, collector, monitor
 
-    monitor:Initialize()
+end
 
-    Log("PASS - RuntimeMonitor initialized")
+local function TestDisplay(runtimeModel, collector, monitor)
+
+    Log("Displaying snapshot...")
+
+    runtimeModel.State = 1
+    runtimeModel.RMS = -18.0
+    runtimeModel.Peak = -6.0
+    runtimeModel.CrestFactor = 12.0
+
+    runtimeModel.SampleCount = 1024
+    runtimeModel.Timestamp = 100
+
+    runtimeModel.Metrics.Heartbeat = 25
+    runtimeModel.Metrics.SampleCounter = 48000
+    runtimeModel.Metrics.FramesProcessed = 1000
+    runtimeModel.Metrics.UpdateTimestamp = 100
+
+    local snapshot = collector:Collect()
+
+    assert(snapshot ~= nil)
+
+    monitor:Display(snapshot)
+
+    Log("PASS - Snapshot displayed")
 
 end
 
@@ -119,7 +142,9 @@ local function Run()
     Log("RuntimeMonitor Test")
     Log("========================================")
 
-    TestCase()
+    local runtimeModel, collector, monitor = TestCreation()
+
+    TestDisplay(runtimeModel, collector, monitor)
 
     Log("========================================")
     Log("RuntimeMonitor Test PASSED")

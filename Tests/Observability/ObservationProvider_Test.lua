@@ -4,8 +4,8 @@
 --
 -- Component     : Observation Provider Test
 -- Layer         : Tests/Runtime
--- Purpose       : Validate ObservationProvider behavior
--- Specification : OBS-001
+-- Purpose       : Validate ObservationProvider behavior.
+-- Specification : OBS-002
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -25,8 +25,9 @@ dofile(
 -- Dependencies
 ----------------------------------------------------------------------
 
-local RuntimeModel        = require("Core.Runtime.RuntimeModel")
-local ObservationProvider = require("Core.Observability.ObservationProvider")
+local RuntimeModel = require("Core.Runtime.RuntimeModel")
+local ObservationProvider =
+    require("Core.Observability.ObservationProvider")
 
 ----------------------------------------------------------------------
 -- Constants
@@ -56,40 +57,38 @@ end
 -- Test Cases
 ----------------------------------------------------------------------
 
-local function TestConstruction()
+local function TestCreation()
 
     Log("Creating RuntimeModel...")
 
-    local model = RuntimeModel.New()
+    local runtimeModel = RuntimeModel.New()
 
-    assert(model, "RuntimeModel creation failed.")
+    assert(runtimeModel ~= nil)
 
     Log("PASS - RuntimeModel created")
 
     Log("Creating ObservationProvider...")
 
-    local provider = ObservationProvider.New(model)
+    local provider = ObservationProvider.New(runtimeModel)
 
-    assert(provider, "ObservationProvider creation failed.")
+    assert(provider ~= nil)
 
     Log("PASS - ObservationProvider created")
 
-    return provider, model
+    return runtimeModel, provider
 
 end
 
-local function TestObservationAccess(provider, model)
+local function TestGetModel(runtimeModel, provider)
 
-    Log("Validating observation access...")
+    Log("Retrieving RuntimeModel...")
 
-    assert(provider:GetState() == model:GetState(),
-        "State mismatch.")
+    local model = provider:GetModel()
 
-    assert(provider:GetTimestamp() == model:GetTimestamp(),
-        "Timestamp mismatch.")
+    assert(model ~= nil)
+    assert(model == runtimeModel)
 
-    
-    Log("PASS - Observation access validated")
+    Log("PASS - RuntimeModel retrieved")
 
 end
 
@@ -106,9 +105,9 @@ local function Run()
     Log("ObservationProvider Test")
     Log("========================================")
 
-    local provider, model = TestConstruction()
+    local runtimeModel, provider = TestCreation()
 
-    TestObservationAccess(provider, model)
+    TestGetModel(runtimeModel, provider)
 
     Log("========================================")
     Log("ObservationProvider Test PASSED")

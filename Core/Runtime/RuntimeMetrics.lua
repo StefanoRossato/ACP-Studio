@@ -1,32 +1,27 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Module      : ObservationSnapshot
--- Description : Immutable runtime observation snapshot.
+-- Module      : RuntimeMetrics
+-- Description : Runtime metrics model.
 --------------------------------------------------------------------------------
 
-local ObservationSnapshot = {}
-ObservationSnapshot.__index = ObservationSnapshot
+local RuntimeMetrics = {}
+RuntimeMetrics.__index = RuntimeMetrics
 
 --------------------------------------------------------------------------------
--- Dependencies
+-- Constructor
 --------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------
--- Constants
---------------------------------------------------------------------------------
+function RuntimeMetrics.New()
 
---------------------------------------------------------------------------------
--- Construction
---------------------------------------------------------------------------------
-
-function ObservationSnapshot.New(runtimeModel)
-
-    local self = setmetatable({}, ObservationSnapshot)
+    local self = setmetatable({}, RuntimeMetrics)
 
     -- Initialization ----------------------------------------------------------
 
-    self._model = runtimeModel:Clone()
+    self.Heartbeat = 0
+    self.SampleCounter = 0
+    self.FramesProcessed = 0
+    self.UpdateTimestamp = 0
 
     return self
 
@@ -36,11 +31,18 @@ end
 -- Public Methods
 --------------------------------------------------------------------------------
 
-function ObservationSnapshot:GetModel()
+function RuntimeMetrics:Clone()
 
     -- Implementation ----------------------------------------------------------
 
-    return self._model
+    local copy = RuntimeMetrics.New()
+
+    copy.Heartbeat = self.Heartbeat
+    copy.SampleCounter = self.SampleCounter
+    copy.FramesProcessed = self.FramesProcessed
+    copy.UpdateTimestamp = self.UpdateTimestamp
+
+    return copy
 
 end
 
@@ -54,4 +56,4 @@ end
 -- End of Module
 --------------------------------------------------------------------------------
 
-return ObservationSnapshot
+return RuntimeMetrics

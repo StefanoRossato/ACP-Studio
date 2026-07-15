@@ -4,8 +4,8 @@
 --
 -- Component     : Runtime Model Test
 -- Layer         : Tests/Runtime
--- Purpose       : Validate RuntimeModel behavior
--- Specification : BT-003
+-- Purpose       : Validate RuntimeModel behavior.
+-- Specification : OBS-002
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -38,6 +38,7 @@ local RuntimeModel = require("Core.Runtime.RuntimeModel")
 ----------------------------------------------------------------------
 -- Private Methods
 ----------------------------------------------------------------------
+
 local function ClearLog()
 
     reaper.ClearConsole()
@@ -50,15 +51,18 @@ local function Log(message)
 
 end
 
+----------------------------------------------------------------------
+-- Test Cases
+----------------------------------------------------------------------
+
 local function TestCreation()
 
     Log("Creating RuntimeModel...")
 
     local model = RuntimeModel.New()
 
-    if not model then
-        error("RuntimeModel creation failed.")
-    end
+    assert(model ~= nil)
+    assert(model.Metrics ~= nil)
 
     Log("PASS - RuntimeModel created")
 
@@ -70,12 +74,21 @@ local function TestInitialState(model)
 
     Log("Verifying initial state...")
 
-    assert(model:GetState() == 0)
-    assert(model:GetRMS() == 0.0)
-    assert(model:GetPeak() == 0.0)
-    assert(model:GetCrestFactor() == 0.0)
-    assert(model:GetSampleCount() == 0)
-    assert(model:GetTimestamp() == 0)
+    assert(model.State == 0)
+
+    assert(model.RMS == 0.0)
+    assert(model.Peak == 0.0)
+    assert(model.CrestFactor == 0.0)
+
+    assert(model.SampleCount == 0)
+    assert(model.Timestamp == 0)
+
+    assert(model.Metrics ~= nil)
+
+    assert(model.Metrics.Heartbeat == 0)
+    assert(model.Metrics.SampleCounter == 0)
+    assert(model.Metrics.FramesProcessed == 0)
+    assert(model.Metrics.UpdateTimestamp == 0)
 
     Log("PASS - Initial state verified")
 
@@ -85,38 +98,89 @@ local function TestUpdate(model)
 
     Log("Updating RuntimeModel...")
 
-    model:SetState(1)
-    model:SetRMS(-18.0)
-    model:SetPeak(-6.0)
-    model:SetCrestFactor(12.0)
-    model:SetSampleCount(1024)
-    model:SetTimestamp(100)
+    model.State = 1
 
-    assert(model:GetState() == 1, "Updated state mismatch.")
-    assert(model:GetRMS() == -18.0, "Updated RMS mismatch.")
-    assert(model:GetPeak() == -6.0, "Updated Peak mismatch.")
-    assert(model:GetCrestFactor() == 12.0, "Updated Crest Factor mismatch.")
-    assert(model:GetSampleCount() == 1024, "Updated Sample Count mismatch.")
-    assert(model:GetTimestamp() == 100, "Updated Timestamp mismatch.")
+    model.RMS = -18.0
+    model.Peak = -6.0
+    model.CrestFactor = 12.0
+
+    model.SampleCount = 1024
+    model.Timestamp = 100
+
+    model.Metrics.Heartbeat = 25
+    model.Metrics.SampleCounter = 48000
+    model.Metrics.FramesProcessed = 1000
+    model.Metrics.UpdateTimestamp = 100
+
+    assert(model.State == 1)
+
+    assert(model.RMS == -18.0)
+    assert(model.Peak == -6.0)
+    assert(model.CrestFactor == 12.0)
+
+    assert(model.SampleCount == 1024)
+    assert(model.Timestamp == 100)
+
+    assert(model.Metrics.Heartbeat == 25)
+    assert(model.Metrics.SampleCounter == 48000)
+    assert(model.Metrics.FramesProcessed == 1000)
+    assert(model.Metrics.UpdateTimestamp == 100)
 
     Log("PASS - RuntimeModel updated")
 
 end
 
-local function TestReset(model)
+local function TestClone(model)
 
-    ClearLog()
+    Log("Cloning RuntimeModel...")
+
+    local clone = model:Clone()
+
+    assert(clone ~= nil)
+    assert(clone ~= model)
+
+    assert(clone.Metrics ~= nil)
+    assert(clone.Metrics ~= model.Metrics)
+
+    assert(clone.State == model.State)
+
+    assert(clone.RMS == model.RMS)
+    assert(clone.Peak == model.Peak)
+    assert(clone.CrestFactor == model.CrestFactor)
+
+    assert(clone.SampleCount == model.SampleCount)
+    assert(clone.Timestamp == model.Timestamp)
+
+    assert(clone.Metrics.Heartbeat == model.Metrics.Heartbeat)
+    assert(clone.Metrics.SampleCounter == model.Metrics.SampleCounter)
+    assert(clone.Metrics.FramesProcessed == model.Metrics.FramesProcessed)
+    assert(clone.Metrics.UpdateTimestamp == model.Metrics.UpdateTimestamp)
+
+    Log("PASS - RuntimeModel cloned")
+
+end
+
+local function TestReset(model)
 
     Log("Resetting RuntimeModel...")
 
     model:Reset()
 
-    assert(model:GetState() == 0)
-    assert(model:GetRMS() == 0.0)
-    assert(model:GetPeak() == 0.0)
-    assert(model:GetCrestFactor() == 0.0)
-    assert(model:GetSampleCount() == 0)
-    assert(model:GetTimestamp() == 0)
+    assert(model.State == 0)
+
+    assert(model.RMS == 0.0)
+    assert(model.Peak == 0.0)
+    assert(model.CrestFactor == 0.0)
+
+    assert(model.SampleCount == 0)
+    assert(model.Timestamp == 0)
+
+    assert(model.Metrics ~= nil)
+
+    assert(model.Metrics.Heartbeat == 0)
+    assert(model.Metrics.SampleCounter == 0)
+    assert(model.Metrics.FramesProcessed == 0)
+    assert(model.Metrics.UpdateTimestamp == 0)
 
     Log("PASS - RuntimeModel reset")
 
@@ -139,6 +203,7 @@ local function Run()
 
     TestInitialState(model)
     TestUpdate(model)
+    TestClone(model)
     TestReset(model)
 
     Log("========================================")

@@ -2,10 +2,10 @@
 -- ACP Studio
 -- ObservationSnapshot_Test.lua
 --
--- Component     : ObservationSnapshot
--- Layer         : Runtime Observability
--- Purpose       : Unit test for ObservationSnapshot
--- Specification : OBS-001
+-- Component     : Observation Snapshot Test
+-- Layer         : Tests/Observability
+-- Purpose       : Validate ObservationSnapshot behavior.
+-- Specification : OBS-002
 ----------------------------------------------------------------------
 
 ----------------------------------------------------------------------
@@ -21,10 +21,14 @@ dofile(
 -- Module
 ----------------------------------------------------------------------
 
-local ObservationSnapshot = require("Core.Observability.ObservationSnapshot")
 ----------------------------------------------------------------------
 -- Dependencies
 ----------------------------------------------------------------------
+
+local RuntimeModel = require("Core.Runtime.RuntimeModel")
+
+local ObservationSnapshot =
+    require("Core.Observability.ObservationSnapshot")
 
 ----------------------------------------------------------------------
 -- Constants
@@ -54,41 +58,77 @@ end
 -- Test Cases
 ----------------------------------------------------------------------
 
-local function TestCase()
+local function TestCreation()
+
+    Log("Creating RuntimeModel...")
+
+    local model = RuntimeModel.New()
+
+    assert(model ~= nil)
+
+    Log("PASS - RuntimeModel created")
+
+    model.State = 1
+    model.RMS = -18.0
+    model.Peak = -6.0
+    model.CrestFactor = 12.0
+
+    model.SampleCount = 1024
+    model.Timestamp = 100
+
+    model.Metrics.Heartbeat = 25
+    model.Metrics.SampleCounter = 48000
+    model.Metrics.FramesProcessed = 1000
+    model.Metrics.UpdateTimestamp = 100
 
     Log("Creating ObservationSnapshot...")
 
-    local snapshot = ObservationSnapshot.New({
-
-        state       = "RUNNING",
-        rms         = -18.0,
-        peak        = -3.0,
-        crestFactor = 15.0,
-        sampleCount = 48000,
-        timestamp   = 100
-
-    })
+    local snapshot = ObservationSnapshot.New(model)
 
     assert(snapshot ~= nil)
+
     Log("PASS - ObservationSnapshot created")
 
-    assert(snapshot:GetState() == "RUNNING")
-    Log("PASS - GetState()")
+    return model, snapshot
 
-    assert(snapshot:GetRMS() == -18.0)
-    Log("PASS - GetRMS()")
+end
 
-    assert(snapshot:GetPeak() == -3.0)
-    Log("PASS - GetPeak()")
+local function TestImmutability(model, snapshot)
 
-    assert(snapshot:GetCrestFactor() == 15.0)
-    Log("PASS - GetCrestFactor()")
+    Log("Verifying snapshot immutability...")
 
-    assert(snapshot:GetSampleCount() == 48000)
-    Log("PASS - GetSampleCount()")
+    local snapshotModel = snapshot:GetModel()
 
-    assert(snapshot:GetTimestamp() == 100)
-    Log("PASS - GetTimestamp()")
+    --------------------------------------------------------------------------
+    -- Modify RuntimeModel
+    --------------------------------------------------------------------------
+
+    model.State = 2
+    model.RMS = -12.0
+    model.Peak = -3.0
+
+    model.Metrics.Heartbeat = 50
+    model.Metrics.SampleCounter = 96000
+
+    --------------------------------------------------------------------------
+    -- Snapshot must remain unchanged
+    --------------------------------------------------------------------------
+
+    assert(snapshotModel.State == 1)
+
+    assert(snapshotModel.RMS == -18.0)
+    assert(snapshotModel.Peak == -6.0)
+    assert(snapshotModel.CrestFactor == 12.0)
+
+    assert(snapshotModel.SampleCount == 1024)
+    assert(snapshotModel.Timestamp == 100)
+
+    assert(snapshotModel.Metrics.Heartbeat == 25)
+    assert(snapshotModel.Metrics.SampleCounter == 48000)
+    assert(snapshotModel.Metrics.FramesProcessed == 1000)
+    assert(snapshotModel.Metrics.UpdateTimestamp == 100)
+
+    Log("PASS - Snapshot is immutable")
 
 end
 
@@ -105,7 +145,9 @@ local function Run()
     Log("ObservationSnapshot Test")
     Log("========================================")
 
-    TestCase()
+    local model, snapshot = TestCreation()
+
+    TestImmutability(model, snapshot)
 
     Log("========================================")
     Log("ObservationSnapshot Test PASSED")
