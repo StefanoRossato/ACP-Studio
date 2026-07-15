@@ -465,3 +465,24 @@ Certified capabilities:
 The Analysis Domain Layer is now fully implemented, immutable,
 stateless where appropriate, and completely independent from
 Runtime, Infrastructure and REAPER.
+
+## [Unreleased]
+
+### Added
+
+#### Application Architecture
+
+- Added APP-001 — Analysis Application Layer specification.
+- Defined the responsibilities and architectural boundaries of the Application Layer.
+- Specified the interaction model between the Application Layer and the Domain Layer.
+- Defined the interaction model between the Application Layer and the Infrastructure Layer.
+- Documented application workflows and application service responsibilities.
+- Established public interface guidelines and design constraints.
+- Defined certification criteria for the Application Layer.
+- Documented future evolution guidelines for application services.
+
+### Architecture
+
+- Application Layer architecture is now formally specified and approved.
+- Domain and Application architectural boundaries are fully documented.
+
