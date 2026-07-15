@@ -505,3 +505,25 @@ Runtime, Infrastructure and REAPER.
 - Application Layer capability model is now formally specified.
 - Application service responsibilities are clearly separated from Domain services.
 - Application workflow orchestration is fully documented.
+
+## [Unreleased]
+
+### Added
+
+#### Application Layer
+
+- Implemented AnalysisApplicationService (APS-001).
+- Added the initial application workflow orchestration.
+- Introduced the AnalysisApplicationService public API.
+- Implemented the Execute(request) application entry point.
+- Integrated the Application Layer with the Analysis Domain Service.
+- Added the AnalysisApplicationService capability test.
+- Certified the initial Analysis Application Service implementation.
+
+### Tests
+
+- Added APS-001 Capability Test.
+- Verified module loading.
+- Verified public API availability.
+- Verified application workflow execution.
+- Verified AnalysisSession creation.
