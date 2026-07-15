@@ -22,10 +22,46 @@
 -- Test Setup
 ----------------------------------------------------------------------
 
-dofile(
-    debug.getinfo(1, "S").source:match("@?(.*[/\\])")
-    .. "../TestSetup.lua"
-)
+local function LoadTestSetup()
+
+    local separator = package.config:sub(1, 1)
+
+    local path =
+        debug.getinfo(1, "S").source:match("@?(.*)")
+
+    path = path:gsub("[/\\][^/\\]+$", "")
+
+    while path ~= "" do
+
+        local candidate = path .. separator .. "TestSetup.lua"
+
+        local file = io.open(candidate, "r")
+
+        if file then
+
+            file:close()
+
+            dofile(candidate)
+
+            return
+
+        end
+
+        local parent = path:gsub("[/\\][^/\\]+$", "")
+
+        if parent == path then
+            break
+        end
+
+        path = parent
+
+    end
+
+    error("Unable to locate TestSetup.lua")
+
+end
+
+LoadTestSetup()
 
 ----------------------------------------------------------------------
 -- Module
@@ -66,9 +102,23 @@ local function ClearLog()
 
 end
 
+----------------------------------------------------------------------
+
 local function Log(message)
 
     reaper.ShowConsoleMsg(message .. "\n")
+
+end
+
+----------------------------------------------------------------------
+
+local function Assert(condition, message)
+
+    if not condition then
+        error("FAILED - " .. message)
+    end
+
+    Log("PASS - " .. message)
 
 end
 
