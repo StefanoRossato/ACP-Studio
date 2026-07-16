@@ -549,3 +549,19 @@ Runtime, Infrastructure and REAPER.
 - Verified public API availability.
 - Verified analysis execution entry point.
 - Verified MeasurementResult creation.
+
+## [Unreleased]
+
+### Added
+- Implemented `SharedMemoryGateway.Attach()`.
+- Implemented `SharedMemoryGateway.Read(register)`.
+- Implemented `SharedMemoryGateway.Write(register, value)`.
+- Implemented `SharedMemoryGateway.Reset()`.
+- Completed RTG-002 capability implementation.
+- Added complete RTG-002 Capability Test covering Attach, Write, Read and Reset.
+- Approved RTG-002 — Shared Memory Gateway specification.
+- Added incremental implementation section to RTG-002 specification.
+
+### Changed
+- Encapsulated all shared memory access inside `SharedMemoryGateway`.
+- Runtime shared memory operations are now accessed through the gateway abstraction.
