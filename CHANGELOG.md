@@ -591,3 +591,15 @@ Runtime, Infrastructure and REAPER.
 - Runtime state read verified.
 - Runtime measurement read verified.
 - RTP-001 certification completed.
+
+## [Unreleased]
+
+### Added
+
+- Added Observation Layer foundation.
+- Added `Core/Observation/Monitor/ACP_Monitor.lua`.
+- Added `Tests/Observation/Monitor/ACP_Monitor_Test.lua`.
+- Implemented the `ACP_Monitor` lifecycle (`Initialize`, `Render`, `Shutdown`).
+- Added ImGui context initialization and shutdown.
+- Introduced the initial Observation Monitor state management.
+- Certified the first Observation Layer component (OBS-001).
