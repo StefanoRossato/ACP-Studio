@@ -565,3 +565,29 @@ Runtime, Infrastructure and REAPER.
 ### Changed
 - Encapsulated all shared memory access inside `SharedMemoryGateway`.
 - Runtime shared memory operations are now accessed through the gateway abstraction.
+
+## [Unreleased]
+
+### Added
+- Implemented `SharedMemoryProtocol` Runtime component.
+- Added semantic Runtime communication interface.
+- Added Runtime Start command support.
+- Added Runtime Reset command support.
+- Added Runtime state read support.
+- Added Runtime measurement read support.
+- Added complete RTP-001 Capability Test.
+
+### Changed
+- Refactored `SharedMemoryProtocol` to use IPC protocol definitions.
+- Removed duplicated protocol constants from Runtime layer.
+- Integrated `Registers`, `RuntimeCommands` and `RuntimeStates` from the IPC layer.
+- Updated RTP-001 specification to reflect the final Runtime architecture.
+- Certified RTP-001 — Shared Memory Protocol capability.
+
+### Verified
+- SharedMemoryProtocol Capability Test PASSED.
+- Start command verified.
+- Reset command verified.
+- Runtime state read verified.
+- Runtime measurement read verified.
+- RTP-001 certification completed.
