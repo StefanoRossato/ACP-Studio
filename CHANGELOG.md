@@ -609,3 +609,49 @@ Runtime, Infrastructure and REAPER.
 Added GUI-001 — ReaImGui Platform
 Introduced Platform Certification documentation category.
 Defined ReaImGui certification process and Approved API model.
+
+## [Unreleased]
+
+### Added
+
+#### GUI Foundation
+
+- Added `GuiTestSkeleton.lua` as the certified graphical test framework.
+- Implemented standardized GUI lifecycle:
+  - Load
+  - Initialize
+  - Render Loop
+  - Shutdown
+- Added automatic ReaImGui context management.
+- Added extensibility hooks:
+  - `OnInitialize()`
+  - `OnRender()`
+  - `OnShutdown()`
+- Added support for test identification through:
+  - `TestName`
+  - `TestId`
+- Added automatic window lifecycle and cleanup.
+
+#### GUI Testing
+
+- Reimplemented `GUI-003 — Basic Widgets Test`.
+- Integrated the new `GuiTestSkeleton` framework.
+- Added Bootstrap loading and test environment initialization.
+- Certified the following basic widgets:
+  - Text
+  - Button
+  - Separator
+  - SameLine
+  - Dummy
+- Verified complete GUI lifecycle:
+  - Context creation
+  - Rendering
+  - Window close
+  - Context destruction
+- Certified end-to-end execution of the GUI testing framework.
+
+### Certified
+
+- GUI-003 — Basic Widgets
+- GST-001 — GUI Test Template Standard
+- GuiTestSkeleton v1
