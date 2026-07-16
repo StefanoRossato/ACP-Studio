@@ -603,3 +603,9 @@ Runtime, Infrastructure and REAPER.
 - Added ImGui context initialization and shutdown.
 - Introduced the initial Observation Monitor state management.
 - Certified the first Observation Layer component (OBS-001).
+
+### Added
+
+Added GUI-001 — ReaImGui Platform
+Introduced Platform Certification documentation category.
+Defined ReaImGui certification process and Approved API model.

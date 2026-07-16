@@ -118,6 +118,41 @@ DDD design patterns.
 Priority: Low
 Category: Engineering Standard
 
+ARC-00X — Repository Naming Review
+
+Status
+------
+TODO
+
+Objective
+---------
+Review the naming and responsibilities of the Observation and
+Observability packages after the Observation Layer is completed.
+
+Motivation
+----------
+Current repository contains both:
+
+- Core/Observability
+- Core/Observation
+
+The distinction is intentional but may be confusing for future
+maintenance.
+
+The review will determine whether:
+- the current naming is appropriate,
+- clearer documentation is sufficient,
+- or a repository-wide rename is justified.
+
+Notes
+-----
+Any rename must be performed as a dedicated refactoring milestone,
+including:
+- require() updates
+- test verification
+- documentation updates
+- full repository certification
+
 ------------------------------------------------------------------------------
 End of Document
 ------------------------------------------------------------------------------
