@@ -674,3 +674,25 @@ Defined ReaImGui certification process and Approved API model.
 - Fixed callback lifecycle bug where `State.OnFinished` was cleared before invocation.
 - Fixed premature test termination caused by external shutdown management.
 - Corrected GUI component shutdown sequence.
+
+## Added
+
+### GUI-005 — Runtime Information Panel
+
+Implemented the first Runtime Information Panel vertical slice.
+
+Added:
+
+- ObservationSnapshot foundation
+- ObservationProvider foundation
+- Runtime Information Panel layout
+- GUI-005 Runtime Information Panel capability test
+
+The ACP Monitor now provides the initial observation interface organized into the following sections:
+
+- Runtime
+- Observation
+- Analysis
+- Shared Memory
+
+The graphical architecture is now prepared for incremental integration with the Observation pipeline.

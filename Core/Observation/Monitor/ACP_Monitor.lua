@@ -51,6 +51,62 @@ local function RenderLoop()
 
 end
 
+local function DrawRuntime()
+
+    reaper.ImGui_Text(
+        State.Context,
+        "Runtime")
+
+    reaper.ImGui_Separator(
+        State.Context)
+
+    reaper.ImGui_Spacing(
+        State.Context)
+
+end
+
+local function DrawObservation()
+
+    reaper.ImGui_Text(
+        State.Context,
+        "Observation")
+        
+    reaper.ImGui_Separator(
+        State.Context)
+
+    reaper.ImGui_Spacing(
+        State.Context)
+
+end
+
+local function DrawAnalysis()
+    
+    reaper.ImGui_Text(
+        State.Context,
+        "Analysis")
+
+    reaper.ImGui_Separator(
+        State.Context)
+
+    reaper.ImGui_Spacing(
+        State.Context)
+
+end
+
+local function DrawSharedMemory()
+
+    reaper.ImGui_Text(
+        State.Context,
+        "Shared Memory")
+
+    reaper.ImGui_Separator(
+        State.Context)
+
+    reaper.ImGui_Spacing(
+        State.Context)
+
+end
+
 --------------------------------------------------------------------------------
 -- Public API
 --------------------------------------------------------------------------------
@@ -81,16 +137,13 @@ end
 
 function ACP_Monitor.Draw()
 
-    reaper.ImGui_Text(
-        State.Context,
-        "ACP Studio Monitor")
+    DrawRuntime()
 
-    reaper.ImGui_Separator(
-        State.Context)
+    DrawObservation()
 
-    reaper.ImGui_Text(
-        State.Context,
-        "GUI-004")
+    DrawAnalysis()
+
+    DrawSharedMemory()
 
 end
 
