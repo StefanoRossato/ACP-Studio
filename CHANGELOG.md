@@ -696,3 +696,25 @@ The ACP Monitor now provides the initial observation interface organized into th
 - Shared Memory
 
 The graphical architecture is now prepared for incremental integration with the Observation pipeline.
+
+## [GUI-006] - Certified GUI Test Skeleton
+
+### Added
+- Introduced `Tests/GUI/Framework/GuiTestSkeleton.lua` as the certified GUI test framework.
+- Centralized the common GUI test lifecycle into a reusable framework.
+- Added a shared Test API (`Log`, `Pass`) for GUI test callbacks.
+
+### Changed
+- Migrated `GUI-004 ACP Monitor Test` to the new `GuiTestSkeleton`.
+- Migrated `GUI-005 Runtime Information Panel Test` to the new `GuiTestSkeleton`.
+- Separated bootstrap responsibilities from the GUI framework.
+- GUI test entry points are now responsible only for environment initialization and test configuration.
+- `GuiTestSkeleton` is now a pure framework module with no bootstrap dependencies.
+
+### Architecture
+- Established the official GUI Test Framework architecture:
+  - Entry Point → GUI Test
+  - Framework → GuiTestSkeleton
+  - Component Under Test → ACP Monitor
+- Eliminated duplicated lifecycle code across certified GUI tests.
+- Preserved identical runtime behavior and console output after migration.

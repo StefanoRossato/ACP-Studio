@@ -153,6 +153,28 @@ including:
 - documentation updates
 - full repository certification
 
+TODO
+
+Repository Cleanup
+
+- Valutare la separazione tra:
+    Documentation Templates
+    Runtime Templates
+    Test Framework
+
+Possibile struttura futura
+
+Documentation/
+    Templates/
+
+Framework/
+    Templates/
+
+Tests/
+    Framework/
+    GUI/
+        Framework/
+
 ------------------------------------------------------------------------------
 End of Document
 ------------------------------------------------------------------------------

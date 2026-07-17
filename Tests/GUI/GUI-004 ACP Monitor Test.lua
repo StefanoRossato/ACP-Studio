@@ -82,83 +82,37 @@ InitializeTestEnvironment()
 -- Dependencies
 --------------------------------------------------------------------------------
 
-local ACP_Monitor =
-    require("Core.Observation.Monitor.ACP_Monitor")
-
---------------------------------------------------------------------------------
--- Logging
---------------------------------------------------------------------------------
-
-local function ClearLog()
-
-    reaper.ClearConsole()
-
-end
-
-local function Log(message)
-
-    reaper.ShowConsoleMsg(message .. "\n")
-
-end
-
-local function Pass(message)
-
-    Log("PASS - " .. message)
-
-end
-
---------------------------------------------------------------------------------
--- Banner
---------------------------------------------------------------------------------
-
-local function PrintBanner()
-
-    ClearLog()
-
-    Log("========================================")
-    Log("ACP Monitor Test")
-    Log("GUI-004")
-    Log("========================================")
-
-end
-
---------------------------------------------------------------------------------
--- Summary
---------------------------------------------------------------------------------
-
-local function PrintSummary()
-
-    Log("")
-    Log("========================================")
-    Log("GUI-004 PASSED")
-    Log("========================================")
-
-end
+local GuiTestSkeleton =
+    require("Tests.GUI.Framework.GuiTestSkeleton")
 
 --------------------------------------------------------------------------------
 -- Execute
 --------------------------------------------------------------------------------
 
-PrintBanner()
+GuiTestSkeleton.Run({
 
-Log("Loading ACP_Monitor...")
+    Id =
+        "GUI-004",
 
-assert(
-    ACP_Monitor,
-    "Unable to load ACP_Monitor.")
+    Name =
+        "ACP Monitor Test",
 
-Pass("Module loaded")
+    ModuleName =
+        "Core.Observation.Monitor.ACP_Monitor",
 
-Log("")
-Log("Opening ACP Monitor...")
-Log("Close the window to complete the test.")
-Log("")
+    ModuleDisplayName =
+        "ACP_Monitor",
 
-ACP_Monitor.Run(function()
+    OpenMessage =
+        "Opening ACP Monitor...",
 
-    Pass("Monitor shutdown")
+    CloseMessage =
+        "Close the window to complete the test.",
 
-    PrintSummary()
+    OnCompleted = function(Test)
 
+        Test.Pass("Monitor shutdown")
 
-end)
+    end
+
+})

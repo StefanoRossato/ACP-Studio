@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
--- GUI-005 Runtime Information Panel.lua
+-- GUI-005 Runtime Information Panel Test.lua
 --
 -- GUI-005
 -- Runtime Information Panel Test
@@ -82,90 +82,45 @@ InitializeTestEnvironment()
 -- Dependencies
 --------------------------------------------------------------------------------
 
-local ACP_Monitor =
-    require("Core.Observation.Monitor.ACP_Monitor")
-
---------------------------------------------------------------------------------
--- Logging
---------------------------------------------------------------------------------
-
-local function ClearLog()
-
-    reaper.ClearConsole()
-
-end
-
-local function Log(message)
-
-    reaper.ShowConsoleMsg(message .. "\n")
-
-end
-
-local function Pass(message)
-
-    Log("PASS - " .. message)
-
-end
-
---------------------------------------------------------------------------------
--- Banner
---------------------------------------------------------------------------------
-
-local function PrintBanner()
-
-    ClearLog()
-
-    Log("========================================")
-    Log("Runtime Information Panel Test")
-    Log("GUI-005")
-    Log("========================================")
-
-end
-
---------------------------------------------------------------------------------
--- Summary
---------------------------------------------------------------------------------
-
-local function PrintSummary()
-
-    Log("")
-    Log("========================================")
-    Log("GUI-005 PASSED")
-    Log("========================================")
-
-end
+local GuiTestSkeleton =
+    require("Tests.GUI.Framework.GuiTestSkeleton")
 
 --------------------------------------------------------------------------------
 -- Execute
 --------------------------------------------------------------------------------
 
-PrintBanner()
+GuiTestSkeleton.Run({
 
-Log("Loading ACP_Monitor...")
+    Id =
+        "GUI-005",
 
-assert(
-    ACP_Monitor,
-    "Unable to load ACP_Monitor.")
+    Name =
+        "Runtime Information Panel Test",
 
-Pass("Module loaded")
+    ModuleName =
+        "Core.Observation.Monitor.ACP_Monitor",
 
-Log("")
-Log("Opening Runtime Information Panel...")
-Log("Close the window to complete the test.")
-Log("")
+    ModuleDisplayName =
+        "ACP_Monitor",
 
-ACP_Monitor.Run(function()
+    OpenMessage =
+        "Opening Runtime Information Panel...",
 
-    --------------------------------------------------------------------------
-    -- Validation
-    --------------------------------------------------------------------------
+    CloseMessage =
+        "Close the window to complete the test.",
 
-    Pass("Snapshot created")
+    OnCompleted = function(Test)
 
-    Pass("Runtime panel rendered")
+        ------------------------------------------------------------------------
+        -- Validation
+        ------------------------------------------------------------------------
 
-    Pass("Runtime Information Panel closed")
+        Test.Pass("Snapshot created")
 
-    PrintSummary()
+        Test.Pass("Runtime panel rendered")
 
-end)
+        Test.Pass("Runtime Information Panel closed")
+
+    end
+
+})
