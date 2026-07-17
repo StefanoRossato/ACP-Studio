@@ -655,3 +655,22 @@ Defined ReaImGui certification process and Approved API model.
 - GUI-003 — Basic Widgets
 - GST-001 — GUI Test Template Standard
 - GuiTestSkeleton v1
+
+## [Unreleased]
+
+### Added
+- GUI-004 — ACP Monitor lifecycle completed.
+- Added callback-based completion notification (`Run(onFinished)`).
+- GUI test rewritten to validate component lifecycle without managing it.
+- First certified GUI component based on autonomous lifecycle management.
+
+### Changed
+- Refactored `ACP_Monitor` lifecycle ownership.
+- `RenderLoop()` now preserves the completion callback before shutdown.
+- Simplified `GUI-004 ACP Monitor Test` by removing duplicated lifecycle management.
+- GUI test now waits for user window closure before completing.
+
+### Fixed
+- Fixed callback lifecycle bug where `State.OnFinished` was cleared before invocation.
+- Fixed premature test termination caused by external shutdown management.
+- Corrected GUI component shutdown sequence.

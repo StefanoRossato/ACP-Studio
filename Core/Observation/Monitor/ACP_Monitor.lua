@@ -3,8 +3,8 @@
 --
 -- Module        : ACP_Monitor
 -- Layer         : Observation
--- Purpose       : Main entry point of the Observation Layer UI.
--- Specification : OBS-002
+-- Purpose       : Main window of ACP Monitor.
+-- Specification : GUI-004
 --------------------------------------------------------------------------------
 
 local ACP_Monitor = {}
@@ -21,8 +21,9 @@ local WINDOW_TITLE = "ACP Monitor"
 
 local State =
 {
-    Context = nil,
-    Open    = true
+    Context     = nil,
+    WindowOpen  = true,
+    OnFinished  = nil
 }
 
 --------------------------------------------------------------------------------
@@ -32,9 +33,20 @@ local State =
 local function RenderLoop()
 
     if ACP_Monitor.Render() then
+
         reaper.defer(RenderLoop)
+
     else
+
+        local onFinished =
+            State.OnFinished
+
         ACP_Monitor.Shutdown()
+
+        if onFinished then
+            onFinished()
+        end
+
     end
 
 end
@@ -50,15 +62,35 @@ end
 function ACP_Monitor.Initialize()
 
     State.Context =
-        reaper.ImGui_CreateContext(WINDOW_TITLE)
+        reaper.ImGui_CreateContext(
+            WINDOW_TITLE)
 
     assert(
         State.Context,
         "Unable to create ImGui context.")
 
-    State.Open = true
+    State.WindowOpen = true
 
     return true
+
+end
+
+--------------------------------------------------------------------------------
+-- Draw
+--------------------------------------------------------------------------------
+
+function ACP_Monitor.Draw()
+
+    reaper.ImGui_Text(
+        State.Context,
+        "ACP Studio Monitor")
+
+    reaper.ImGui_Separator(
+        State.Context)
+
+    reaper.ImGui_Text(
+        State.Context,
+        "GUI-004")
 
 end
 
@@ -68,7 +100,7 @@ end
 
 function ACP_Monitor.Render()
 
-    if not State.Open then
+    if not State.WindowOpen then
         return false
     end
 
@@ -80,110 +112,20 @@ function ACP_Monitor.Render()
 
     local visible
 
-    visible, State.Open =
+    visible, State.WindowOpen =
         reaper.ImGui_Begin(
             State.Context,
             WINDOW_TITLE,
-            State.Open)
+            State.WindowOpen)
 
     if visible then
-        ACP_Monitor.RenderLayout()
+        ACP_Monitor.Draw()
     end
 
-    reaper.ImGui_End(State.Context)
+    reaper.ImGui_End(
+        State.Context)
 
-    return State.Open
-
-end
-
---------------------------------------------------------------------------------
--- Layout
---------------------------------------------------------------------------------
-
-function ACP_Monitor.RenderLayout()
-
-    ACP_Monitor.RenderToolbar()
-
-    reaper.ImGui_Separator(State.Context)
-
-    ACP_Monitor.RenderNavigation()
-
-    reaper.ImGui_SameLine(State.Context)
-
-    ACP_Monitor.RenderWorkspace()
-
-    reaper.ImGui_Separator(State.Context)
-
-    ACP_Monitor.RenderStatusBar()
-
-end
-
---------------------------------------------------------------------------------
--- Toolbar
---------------------------------------------------------------------------------
-
-function ACP_Monitor.RenderToolbar()
-
-    reaper.ImGui_Button(State.Context, "Start")
-
-    reaper.ImGui_SameLine(State.Context)
-
-    reaper.ImGui_Button(State.Context, "Stop")
-
-    reaper.ImGui_SameLine(State.Context)
-
-    reaper.ImGui_Button(State.Context, "Clear")
-
-end
-
---------------------------------------------------------------------------------
--- Navigation
---------------------------------------------------------------------------------
-
-function ACP_Monitor.RenderNavigation()
-
-    reaper.ImGui_BeginGroup(State.Context)
-
-    reaper.ImGui_Text(State.Context, "Observation")
-    reaper.ImGui_Separator(State.Context)
-
-    reaper.ImGui_Text(State.Context, "Runtime")
-    reaper.ImGui_Text(State.Context, "Measurements")
-    reaper.ImGui_Text(State.Context, "Components")
-    reaper.ImGui_Text(State.Context, "Logs")
-
-    reaper.ImGui_EndGroup(State.Context)
-
-end
-
---------------------------------------------------------------------------------
--- Workspace
---------------------------------------------------------------------------------
-
-function ACP_Monitor.RenderWorkspace()
-
-    reaper.ImGui_BeginGroup(State.Context)
-
-    reaper.ImGui_Text(State.Context, "Workspace")
-    reaper.ImGui_Separator(State.Context)
-
-    reaper.ImGui_Dummy(State.Context, 500, 400)
-
-    reaper.ImGui_Text(State.Context, "Observation Workspace")
-
-    reaper.ImGui_EndGroup(State.Context)
-
-end
-
---------------------------------------------------------------------------------
--- Status Bar
---------------------------------------------------------------------------------
-
-function ACP_Monitor.RenderStatusBar()
-
-    reaper.ImGui_Text(
-        State.Context,
-        "ACP Studio Observation Layer")
+    return State.WindowOpen
 
 end
 
@@ -194,6 +136,8 @@ end
 function ACP_Monitor.Shutdown()
 
     State.Context = nil
+    State.WindowOpen = false
+    State.OnFinished = nil
 
 end
 
@@ -201,7 +145,9 @@ end
 -- Run
 --------------------------------------------------------------------------------
 
-function ACP_Monitor.Run()
+function ACP_Monitor.Run(onFinished)
+
+    State.OnFinished = onFinished
 
     if ACP_Monitor.Initialize() then
         RenderLoop()

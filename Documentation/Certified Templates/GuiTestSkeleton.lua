@@ -1,150 +1,223 @@
-----------------------------------------------------------------------
--- GUI-003 Basic Widgets Test.lua
+------------------------------------------------------------------------------
+-- GuiTestSkeleton.lua
 --
--- GUI-003
--- Basic Widgets Test
-----------------------------------------------------------------------
+-- Certified GUI Test Framework
+-- GST-001
+------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------
--- Load Bootstrap
---------------------------------------------------------------------------------
+local GuiTestSkeleton = {}
+GuiTestSkeleton.__index = GuiTestSkeleton
 
-local function LoadBootstrap()
+------------------------------------------------------------------------------
+-- Constructor
+------------------------------------------------------------------------------
 
-    local separator =
-        package.config:sub(1, 1)
+function GuiTestSkeleton.New(testName, testId)
 
-    local path =
-        debug.getinfo(1, "S").source:match("@?(.*)")
+    local self = setmetatable({}, GuiTestSkeleton)
 
-    path =
-        path:gsub("[/\\][^/\\]+$", "")
+    self.TestName = testName or "GUI Test"
+    self.TestId   = testId   or "GUI-000"
 
-    while path ~= "" do
+    self.Title = self.TestName
 
-        local candidate =
-            path
-            .. separator
-            .. "Bootstrap.lua"
+    self.Context = nil
 
-        local file =
-            io.open(candidate, "r")
+    self.WindowOpen = true
 
-        if file then
+    self.Running = false
 
-            file:close()
+    self.Initialized = false
 
-            local repositoryRoot =
-                path:gsub(separator .. "Tests$", "")
-
-            return
-                dofile(candidate),
-                repositoryRoot
-
-        end
-
-        local parent =
-            path:gsub("[/\\][^/\\]+$", "")
-
-        if parent == path then
-            break
-        end
-
-        path = parent
-
-    end
-
-    error("Unable to locate Bootstrap.lua")
+    return self
 
 end
 
---------------------------------------------------------------------------------
--- Initialize Test Environment
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
+-- Logging
+------------------------------------------------------------------------------
 
-local function InitializeTestEnvironment()
+function GuiTestSkeleton:ClearLog()
 
-    local Bootstrap
-    local RepositoryRoot
+    reaper.ClearConsole()
 
-    Bootstrap, RepositoryRoot =
-        LoadBootstrap()
+end
+
+function GuiTestSkeleton:Log(message)
+
+    reaper.ShowConsoleMsg(message .. "\n")
+
+end
+
+function GuiTestSkeleton:Pass(message)
+
+    self:Log("PASS - " .. message)
+
+end
+
+function GuiTestSkeleton:Fail(message)
+
+    self:Log("FAIL - " .. message)
+
+end
+
+------------------------------------------------------------------------------
+-- Banner
+------------------------------------------------------------------------------
+
+function GuiTestSkeleton:PrintBanner()
+
+    self:ClearLog()
+
+    self:Log("========================================")
+    self:Log(self.TestName)
+    self:Log(self.TestId)
+    self:Log("========================================")
+
+end
+
+------------------------------------------------------------------------------
+-- Summary
+------------------------------------------------------------------------------
+
+function GuiTestSkeleton:PrintSummary()
+
+    self:Log("")
+    self:Log("========================================")
+    self:Log(self.TestId .. " PASSED")
+    self:Log("========================================")
+
+end
+
+------------------------------------------------------------------------------
+-- Lifecycle
+------------------------------------------------------------------------------
+
+function GuiTestSkeleton:Load()
+
+    self:OnLoad()
+
+    return true
+
+end
+
+function GuiTestSkeleton:Initialize()
+
+    self.Context =
+        reaper.ImGui_CreateContext(self.Title)
 
     assert(
-        Bootstrap.Initialize(RepositoryRoot),
-        "Unable to initialize test infrastructure.")
+        self.Context,
+        "Unable to create ImGui context.")
+
+    self.Initialized = true
+
+    self:OnInitialize()
+
+    return true
 
 end
 
-InitializeTestEnvironment()
-
---------------------------------------------------------------------------------
--- Dependencies
---------------------------------------------------------------------------------
-
-local GuiTestSkeleton =
-    require("Tests.GUI.GuiTestSkeleton")
-
---------------------------------------------------------------------------------
--- Test
---------------------------------------------------------------------------------
-
-local Test =
-    GuiTestSkeleton.New(
-        "ACP Monitor Test",
-        "GUI-003"
-    )
-
-----------------------------------------------------------------------
--- Initialize
-----------------------------------------------------------------------
-
-function Test:OnInitialize()
-
-end
-
-----------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Render
-----------------------------------------------------------------------
+------------------------------------------------------------------------------
 
-function Test:OnRender()
+function GuiTestSkeleton:Render()
 
-    reaper.ImGui_Text(
+    if not self.WindowOpen then
+        self:Shutdown()
+        return
+    end
+
+    local visible
+
+    visible, self.WindowOpen =
+    reaper.ImGui_Begin(
         self.Context,
-        "GUI-003 - Basic Widgets Test")
+        self.Title,
+        self.WindowOpen)
 
-    reaper.ImGui_Separator(
-        self.Context)
+    if visible then
 
-    reaper.ImGui_Text(
-        self.Context,
-        "Text Widget")
+        self:OnRender()
 
-    if reaper.ImGui_Button(
-        self.Context,
-        "Button Widget") then
+        reaper.ImGui_End(
+            self.Context)
 
     end
 
-    reaper.ImGui_SameLine(
-        self.Context)
+    if self.WindowOpen then
 
-    reaper.ImGui_Text(
-        self.Context,
-        "Button OK")
+        reaper.defer(function()
+
+            self:Render()
+
+        end)
+
+    else
+
+        self:Shutdown()
+
+    end
 
 end
 
-----------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Shutdown
-----------------------------------------------------------------------
+------------------------------------------------------------------------------
 
-function Test:OnShutdown()
+function GuiTestSkeleton:Shutdown()
+
+    self:OnShutdown()
+
+    self.Context = nil
+
+    self.Running = false
+
+    self:PrintSummary()
 
 end
 
-----------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Execute
-----------------------------------------------------------------------
+------------------------------------------------------------------------------
 
-Test:Run()
+function GuiTestSkeleton:Run()
+
+    self:PrintBanner()
+
+    self:Load()
+
+    self:Initialize()
+
+    self.Running = true
+
+    self:Render()
+
+end
+
+------------------------------------------------------------------------------
+-- Virtual Hooks
+------------------------------------------------------------------------------
+
+function GuiTestSkeleton:OnLoad()
+
+end
+
+function GuiTestSkeleton:OnInitialize()
+
+end
+
+function GuiTestSkeleton:OnRender()
+
+end
+
+function GuiTestSkeleton:OnShutdown()
+
+end
+
+------------------------------------------------------------------------------
+-- End of Module
+------------------------------------------------------------------------------
+
+return GuiTestSkeleton
