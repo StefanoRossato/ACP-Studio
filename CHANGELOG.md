@@ -751,3 +751,34 @@ The graphical architecture is now prepared for incremental integration with the 
 - Main window lifecycle verified.
 - Layout orchestration verified.
 - Toolbar component integration verified.
+
+### Added
+- GUI-101 — Toolbar Foundation.
+- Introduced the certified Toolbar component lifecycle.
+- Toolbar rendering consolidated into an independent GUI module.
+- Added GUI-101 Toolbar Foundation Test.
+- Certified Toolbar as an autonomous GUI component.
+
+### Architecture
+- Preserved MainWindow responsibilities.
+- Preserved WindowLayout as the GUI orchestrator.
+- Established Toolbar as the first reusable GUI component.
+
+## [GUI-102] - Toolbar Controls
+
+### Added
+- Certified GUI capability GUI-102 — Toolbar Controls.
+- Toolbar rendering lifecycle documentation.
+- Certified Toolbar architectural responsibilities.
+- Toolbar graphical control capability specification.
+- Architectural constraints for future Toolbar evolution.
+- Certified development rules for Toolbar implementations.
+
+### Changed
+- Toolbar architecture extended from structural foundation (GUI-101)
+  to graphical control capability.
+- Certified rendering lifecycle standardized as:
+  Render() → Begin() → DrawControls() → End().
+
+### Certified
+- GUI-102 — Toolbar Controls.
