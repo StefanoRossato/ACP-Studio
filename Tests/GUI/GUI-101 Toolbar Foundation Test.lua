@@ -1,13 +1,12 @@
 ------------------------------------------------------------------------------
+-- ACP Studio
 -- GUI-101
 -- Toolbar Foundation Test
---
--- GUI-101
 ------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Load Bootstrap
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 local function LoadBootstrap()
 
@@ -24,8 +23,8 @@ local function LoadBootstrap()
 
         local candidate =
             path
-                .. separator
-                .. "Bootstrap.lua"
+            .. separator
+            .. "Bootstrap.lua"
 
         local file =
             io.open(candidate, "r")
@@ -58,38 +57,46 @@ local function LoadBootstrap()
 
 end
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Initialize Test Environment
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
-local function InitializeTestEnvironment()
+do
 
     local Bootstrap
     local RepositoryRoot
 
-    Bootstrap, RepositoryRoot =
+    Bootstrap,
+    RepositoryRoot =
         LoadBootstrap()
 
     assert(
-        Bootstrap.Initialize(RepositoryRoot),
-        "Unable to initialize test infrastructure.")
+
+        Bootstrap.Initialize(
+            RepositoryRoot),
+
+        "Unable to initialize test infrastructure."
+
+    )
 
 end
 
-InitializeTestEnvironment()
-
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Dependencies
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 local GuiTestSkeleton =
     require("Tests.GUI.Framework.GuiTestSkeleton")
 
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 -- Execute
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 GuiTestSkeleton.Run({
+
+    --------------------------------------------------------------------------
+    -- Test Information
+    --------------------------------------------------------------------------
 
     Id =
         "GUI-101",
@@ -97,29 +104,74 @@ GuiTestSkeleton.Run({
     Name =
         "Toolbar Foundation Test",
 
+    --------------------------------------------------------------------------
+    -- Module
+    --------------------------------------------------------------------------
+
     ModuleName =
-        "Core.GUI.MainWindow",
+        "Core.GUI.Toolbar.Toolbar",
 
     ModuleDisplayName =
-        "MainWindow",
+        "Toolbar",
+
+    --------------------------------------------------------------------------
+    -- Messages
+    --------------------------------------------------------------------------
 
     OpenMessage =
-        "Opening Main Window...",
+        "Running Toolbar Foundation tests...",
 
     CloseMessage =
-        "Close the window to complete the test.",
+        "Toolbar Foundation tests completed.",
+
+    --------------------------------------------------------------------------
+    -- Test
+    --------------------------------------------------------------------------
 
     OnCompleted = function(Test)
 
-        ------------------------------------------------------------------------
-        -- Validation
-        ------------------------------------------------------------------------
+        ----------------------------------------------------------------------
+        -- Dependencies
+        ----------------------------------------------------------------------
 
-        Test.Pass("Toolbar initialized")
+        local Toolbar =
+            require("Core.GUI.Toolbar.Toolbar")
 
-        Test.Pass("Toolbar rendered")
+        ----------------------------------------------------------------------
+        -- Initialize
+        ----------------------------------------------------------------------
 
-        Test.Pass("Toolbar closed")
+        assert(
+
+            type(Toolbar.Initialize)
+                == "function",
+
+            "Initialize() not found."
+
+        )
+
+        Toolbar.Initialize()
+
+        Test.Pass(
+            "Toolbar initialized")
+
+        ----------------------------------------------------------------------
+        -- Shutdown
+        ----------------------------------------------------------------------
+
+        assert(
+
+            type(Toolbar.Shutdown)
+                == "function",
+
+            "Shutdown() not found."
+
+        )
+
+        Toolbar.Shutdown()
+
+        Test.Pass(
+            "Toolbar shutdown")
 
     end
 
