@@ -782,3 +782,8 @@ The graphical architecture is now prepared for incremental integration with the 
 
 ### Certified
 - GUI-102 — Toolbar Controls.
+
+### Changed
+- Reorganized Toolbar module into its dedicated GUI subsystem.
+- Updated module dependencies to reflect the new Toolbar directory structure.
+- No functional changes.

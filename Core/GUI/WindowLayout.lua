@@ -12,7 +12,7 @@
 ------------------------------------------------------------------------------
 
 local Toolbar =
-    require("Core.GUI.Toolbar")
+    require("Core.GUI.Toolbar.Toolbar")
 
 local WindowLayout = {}
 
