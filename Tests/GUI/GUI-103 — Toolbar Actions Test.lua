@@ -1,8 +1,85 @@
 ------------------------------------------------------------------------------
--- ACP Studio
 -- GUI-103
 -- Toolbar Actions Test
 ------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Load Bootstrap
+--------------------------------------------------------------------------------
+
+local function LoadBootstrap()
+
+    local separator =
+        package.config:sub(1, 1)
+
+    local path =
+        debug.getinfo(1, "S").source:match("@?(.*)")
+
+    path =
+        path:gsub("[/\\][^/\\]+$", "")
+
+    while path ~= "" do
+
+        local candidate =
+            path
+                .. separator
+                .. "Bootstrap.lua"
+
+        local file =
+            io.open(candidate, "r")
+
+        if file then
+
+            file:close()
+
+            local repositoryRoot =
+                path:gsub(separator .. "Tests$", "")
+
+            return
+                dofile(candidate),
+                repositoryRoot
+
+        end
+
+        local parent =
+            path:gsub("[/\\][^/\\]+$", "")
+
+        if parent == path then
+            break
+        end
+
+        path = parent
+
+    end
+
+    error("Unable to locate Bootstrap.lua")
+
+end
+
+--------------------------------------------------------------------------------
+-- Initialize Test Environment
+--------------------------------------------------------------------------------
+
+local function InitializeTestEnvironment()
+
+    local Bootstrap
+    local RepositoryRoot
+
+    Bootstrap, RepositoryRoot =
+        LoadBootstrap()
+
+    assert(
+
+        Bootstrap.Initialize(
+            RepositoryRoot),
+
+        "Unable to initialize test infrastructure."
+
+    )
+
+end
+
+InitializeTestEnvironment()
 
 --------------------------------------------------------------------------------
 -- Dependencies
@@ -47,6 +124,10 @@ GuiTestSkeleton.Run({
         ------------------------------------------------------------------------
         -- Initialize
         ------------------------------------------------------------------------
+
+        assert(
+            Actions.Initialize,
+            "Initialize() not implemented.")
 
         Actions.Initialize()
 
@@ -99,6 +180,10 @@ GuiTestSkeleton.Run({
         ------------------------------------------------------------------------
         -- Shutdown
         ------------------------------------------------------------------------
+
+        assert(
+            Actions.Shutdown,
+            "Shutdown() not implemented.")
 
         Actions.Shutdown()
 
