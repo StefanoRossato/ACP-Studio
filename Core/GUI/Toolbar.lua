@@ -2,27 +2,54 @@
 -- ACP Studio
 -- Toolbar
 --
--- GUI-101 — Toolbar Foundation
+-- GUI-102 — Toolbar Controls
 --
 -- Responsibility:
---   Render the application toolbar.
+--   Render and organize the graphical toolbar controls.
 --
 -- This module owns the toolbar lifecycle and rendering.
--- No business logic is implemented here.
+-- No application logic is implemented here.
 ------------------------------------------------------------------------------
 
 local Toolbar = {}
+
+------------------------------------------------------------------------------
+-- Private Rendering
+------------------------------------------------------------------------------
+
+local function Begin(ctx)
+
+    -- Reserved for future toolbar initialization.
+
+end
+
+local function DrawControls(ctx)
+
+    reaper.ImGui_SeparatorText(ctx, "Toolbar")
+    reaper.ImGui_Button(ctx, "Control")
+
+end
+
+local function End(ctx)
+
+    -- Reserved for future toolbar finalization.
+
+end
 
 ------------------------------------------------------------------------------
 -- Lifecycle
 ------------------------------------------------------------------------------
 
 function Toolbar.Initialize()
+
     -- Reserved for future initialization.
+
 end
 
 function Toolbar.Shutdown()
+
     -- Reserved for future cleanup.
+
 end
 
 ------------------------------------------------------------------------------
@@ -35,8 +62,16 @@ function Toolbar.Render(ctx)
         return
     end
 
-    reaper.ImGui_SeparatorText(ctx, "Toolbar")
+    Begin(ctx)
+
+    DrawControls(ctx)
+
+    End(ctx)
 
 end
+
+------------------------------------------------------------------------------
+-- Module
+------------------------------------------------------------------------------
 
 return Toolbar

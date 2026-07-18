@@ -1,6 +1,14 @@
 ------------------------------------------------------------------------------
 -- ACP Studio
 -- WindowLayout
+--
+-- GUI-102 — Toolbar Controls
+--
+-- Responsibility:
+--   Orchestrate the rendering of GUI components.
+--
+-- WindowLayout owns the graphical composition of the main window.
+-- It delegates rendering to independent GUI components.
 ------------------------------------------------------------------------------
 
 local Toolbar =
@@ -9,7 +17,7 @@ local Toolbar =
 local WindowLayout = {}
 
 ------------------------------------------------------------------------------
--- Render
+-- Rendering
 ------------------------------------------------------------------------------
 
 function WindowLayout.Render(context)
