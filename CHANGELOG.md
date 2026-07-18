@@ -718,3 +718,36 @@ The graphical architecture is now prepared for incremental integration with the 
   - Component Under Test → ACP Monitor
 - Eliminated duplicated lifecycle code across certified GUI tests.
 - Preserved identical runtime behavior and console output after migration.
+
+## [Unreleased]
+
+### Added
+
+- GUI-100 Main Window Foundation certified.
+- Implemented `Core.GUI.MainWindow`.
+- Implemented `Core.GUI.WindowLayout`.
+- Implemented `Core.GUI.WindowLifecycle`.
+- Introduced the certified Main Window execution model.
+- Standardized the `Run(onCompleted)` entry point for Main Window modules.
+- Added `GST-002 — Main Window Template`.
+- Certified the Main Window architectural template.
+- Integrated Main Window with the certified `GuiTestSkeleton` framework.
+- Added GUI-100 Main Window Foundation Test.
+
+## [Unreleased]
+
+### Added
+- Introduced `Core/GUI/Toolbar.lua` as the first dedicated GUI component.
+- Established the GUI component architecture based on single responsibility.
+- Integrated `Toolbar` into `WindowLayout`.
+
+### Changed
+- Refactored `WindowLayout` into a layout orchestrator responsible only for coordinating GUI components.
+- Simplified toolbar implementation to use only certified ReaImGui capabilities (`Text` and `Separator`).
+- Preserved complete separation between window lifecycle, layout orchestration and component rendering.
+
+### Certified
+- GUI-100 — Main Window Foundation certified.
+- Main window lifecycle verified.
+- Layout orchestration verified.
+- Toolbar component integration verified.
