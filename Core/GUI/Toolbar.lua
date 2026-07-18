@@ -1,24 +1,25 @@
 ------------------------------------------------------------------------------
 -- ACP Studio
--- WindowLayout
+-- Toolbar
 ------------------------------------------------------------------------------
 
-local Toolbar =
-    require("Core.GUI.Toolbar")
-
-local WindowLayout = {}
+local Toolbar = {}
 
 ------------------------------------------------------------------------------
 -- Render
 ------------------------------------------------------------------------------
 
-function WindowLayout.Render(context)
+function Toolbar.Render(context)
 
     assert(
         context,
-        "WindowLayout.Render(): context is nil.")
+        "Toolbar.Render(): context is nil.")
 
-    Toolbar.Render(context)
+    reaper.ImGui_Text(
+        context,
+        "Toolbar")
+
+    reaper.ImGui_Separator(context)
 
 end
 
@@ -26,4 +27,4 @@ end
 -- Module
 ------------------------------------------------------------------------------
 
-return WindowLayout
+return Toolbar
