@@ -787,3 +787,13 @@ The graphical architecture is now prepared for incremental integration with the 
 - Reorganized Toolbar module into its dedicated GUI subsystem.
 - Updated module dependencies to reflect the new Toolbar directory structure.
 - No functional changes.
+
+## GUI-104 - Menu Bar Foundation
+
+### Added
+- Implemented MenuBar component.
+- Added MenuBar lifecycle management.
+- Added menu registration API.
+- Added menu retrieval API.
+- Added GUI-104 certification test.
+- Certified Menu Bar Foundation milestone.
