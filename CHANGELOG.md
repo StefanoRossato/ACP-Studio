@@ -797,3 +797,14 @@ The graphical architecture is now prepared for incremental integration with the 
 - Added menu retrieval API.
 - Added GUI-104 certification test.
 - Certified Menu Bar Foundation milestone.
+
+## GUI-105 — View Management Foundation
+
+### Added
+
+- Introduced View base class.
+- Added HomeView implementation.
+- Implemented ViewManager lifecycle management.
+- Added active view management.
+- Added GUI-105 certified test.
+- Established View Management architecture for future application views.

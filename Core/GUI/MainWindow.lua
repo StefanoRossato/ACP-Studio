@@ -1,6 +1,10 @@
 ------------------------------------------------------------------------------
 -- ACP Studio
--- MainWindow
+--
+-- Module        : MainWindow
+-- Layer         : GUI
+-- Purpose       : Coordinates the main application window.
+-- Specification : GUI-105
 ------------------------------------------------------------------------------
 
 local WindowLifecycle =
@@ -9,15 +13,32 @@ local WindowLifecycle =
 local WindowLayout =
     require("Core.GUI.WindowLayout")
 
+local ViewManager =
+    require("Core.GUI.ViewManager")
+
+local HomeView =
+    require("Core.GUI.Views.HomeView")
+
 local MainWindow = {}
 
 ------------------------------------------------------------------------------
 -- Initialize
 ------------------------------------------------------------------------------
 
-function MainWindow.Initialize()
+function MainWindow.Initialize(context)
+
+    assert(
+        context,
+        "MainWindow.Initialize(): context is nil.")
 
     WindowLifecycle.Open()
+
+    ViewManager:Initialize(context)
+
+    local home =
+        HomeView:New(context)
+
+    ViewManager:SetView(home)
 
 end
 
@@ -41,6 +62,8 @@ end
 
 function MainWindow.Shutdown()
 
+    ViewManager:Shutdown()
+
     WindowLifecycle.Close()
 
 end
@@ -51,10 +74,10 @@ end
 
 function MainWindow.Run(onCompleted)
 
-    MainWindow.Initialize()
-
     local context =
         reaper.ImGui_CreateContext("ACP Studio")
+
+    MainWindow.Initialize(context)
 
     local windowOpen = true
 
@@ -109,7 +132,7 @@ function MainWindow.Run(onCompleted)
 end
 
 ------------------------------------------------------------------------------
--- Module
+-- End of Module
 ------------------------------------------------------------------------------
 
 return MainWindow
