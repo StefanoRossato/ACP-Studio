@@ -2,41 +2,45 @@
 -- ACP Studio
 --
 -- Module        : HomeDashboard
--- Layer         : Application
--- Purpose       : Renders the Home Dashboard panels.
+-- Layer         : GUI Component
+-- Purpose       : Renders the Home Dashboard main area.
+--
 -- Specification : GUI-201
 --------------------------------------------------------------------------------
 
-local RuntimeStatusPanel =
-    require("Core.Application.Views.Home.Panels.RuntimeStatusPanel")
-
-local ProjectInformationPanel =
-    require("Core.Application.Views.Home.Panels.ProjectInformationPanel")
-
-local AnalysisOverviewPanel =
-    require("Core.Application.Views.Home.Panels.AnalysisOverviewPanel")
-
-
 local HomeDashboard = {}
+
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
+
+local TITLE =
+    "Dashboard"
 
 
 --------------------------------------------------------------------------------
--- Rendering
+-- Public API
 --------------------------------------------------------------------------------
 
 function HomeDashboard.Render(ctx)
 
-    RuntimeStatusPanel.Render(ctx)
 
-    reaper.ImGui_SameLine(ctx)
+    reaper.ImGui_Text(
+        ctx,
+        TITLE
+    )
 
-    ProjectInformationPanel.Render(ctx)
 
-    reaper.ImGui_SameLine(ctx)
+    reaper.ImGui_Separator(
+        ctx
+    )
 
-    AnalysisOverviewPanel.Render(ctx)
 
-    reaper.ImGui_Spacing(ctx)
+    reaper.ImGui_Text(
+        ctx,
+        "Dashboard workspace ready."
+    )
+
 
 end
 

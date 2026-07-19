@@ -43,7 +43,8 @@ function BaseView:OnExit()
 
 end
 
-function BaseView:Render()
+function BaseView:Render(ctx)
+
 
 end
 

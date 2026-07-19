@@ -907,3 +907,97 @@ Implemented:
 
 Status:
 GUI-200 Certified
+
+## [Unreleased]
+
+### Added
+
+#### GUI Architecture
+- Introduced View Package Architecture (GUI-110).
+- Standardized Application View organization.
+- Introduced View Components architecture.
+- Introduced View Panels architecture.
+
+#### Home Dashboard
+- Added HomeView package.
+- Added HomeHeader component.
+- Added HomeWelcome component.
+- Added HomeDashboard component.
+- Added HomeWorkspace component.
+- Added RuntimeStatusPanel placeholder.
+- Added ProjectInformationPanel placeholder.
+- Added AnalysisOverviewPanel placeholder.
+
+### Certified
+
+- GUI-200 — Home Dashboard Foundation
+
+# Changelog
+
+## [GUI-201] — Home Dashboard Layout
+Status: Certified
+
+### Added
+
+- Completed Home Dashboard graphical architecture.
+- Implemented HomeView composition structure.
+- Added Home Components package:
+  - HomeHeader
+  - HomeWelcome
+  - HomeDashboard
+  - HomeWorkspace
+
+- Added Home Panels package:
+  - RuntimeStatusPanel
+  - ProjectInformationPanel
+  - AnalysisOverviewPanel
+
+
+### GUI Testing
+
+- Extended GUI Test Skeleton with interactive rendering support.
+- Added asynchronous GUI certification workflow.
+- Added real ImGui context based component tests.
+
+
+### Certified Tests
+
+- GUI-201 HomeHeader Component Test
+- GUI-201 HomeWelcome Component Test
+- GUI-201 HomeDashboard Component Test
+- GUI-201 HomeWorkspace Component Test
+- GUI-201 RuntimeStatusPanel Test
+- GUI-201 ProjectInformationPanel Test
+- GUI-201 AnalysisOverviewPanel Test
+- GUI-201 HomeView Integration Test
+
+
+### Architecture
+
+Certified View Package Architecture:
+
+Application View
+
+    HomeView
+
+        Components
+            |
+            +-- HomeHeader
+            +-- HomeWelcome
+            +-- HomeDashboard
+            +-- HomeWorkspace
+
+        Panels
+            |
+            +-- RuntimeStatusPanel
+            +-- ProjectInformationPanel
+            +-- AnalysisOverviewPanel
+
+
+### Status
+
+GUI-201 completed and frozen.
+
+Next milestone:
+
+GUI-202 — Home View Model Foundation

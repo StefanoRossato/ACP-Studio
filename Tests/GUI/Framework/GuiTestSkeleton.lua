@@ -1,16 +1,19 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- ACP Studio
+--
 -- Gui Test Skeleton
 --
--- GUI-006
-------------------------------------------------------------------------------
+-- Version      : GUI-006 v2
+-- Purpose      : Provides the common infrastructure for GUI certification tests.
+--------------------------------------------------------------------------------
 
 
 local GuiTestSkeleton = {}
 
-------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
 -- Logging
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function ClearLog()
 
@@ -18,73 +21,210 @@ local function ClearLog()
 
 end
 
+
 local function Log(message)
 
-    reaper.ShowConsoleMsg(message .. "\n")
+    reaper.ShowConsoleMsg(
+        message .. "\n"
+    )
 
 end
+
 
 local function Pass(message)
 
-    Log("PASS - " .. message)
+    Log(
+        "PASS - " .. message
+    )
 
 end
 
-------------------------------------------------------------------------------
+
+local function Fail(message)
+
+    Log(
+        "FAIL - " .. message
+    )
+
+end
+
+
+--------------------------------------------------------------------------------
 -- Banner
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function PrintBanner(configuration)
 
     ClearLog()
 
-    Log("========================================")
-    Log(configuration.Name)
-    Log(configuration.Id)
-    Log("========================================")
+    Log(
+        "========================================"
+    )
+
+    Log(
+        configuration.Name
+    )
+
+    Log(
+        configuration.Id
+    )
+
+    Log(
+        "========================================"
+    )
 
 end
 
-------------------------------------------------------------------------------
--- Summary
-------------------------------------------------------------------------------
 
-local function PrintSummary(configuration)
+--------------------------------------------------------------------------------
+-- Summary
+--------------------------------------------------------------------------------
+
+local function PrintSummary(
+    configuration,
+    Test
+)
 
     Log("")
-    Log("========================================")
-    Log(configuration.Id .. " PASSED")
-    Log("========================================")
+
+
+    Log(
+        "========================================"
+    )
+
+
+    if Test.Failed then
+
+        Log(
+            configuration.Id .. " FAILED"
+        )
+
+    else
+
+        Log(
+            configuration.Id .. " PASSED"
+        )
+
+    end
+
+
+    Log(
+        "========================================"
+    )
 
 end
 
-------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
 -- Test API
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 local function CreateTestApi()
 
-    return {
-
-        Log = Log,
-
-        Pass = Pass
-
+    local Test =
+    {
+        Completed = true,
+        Failed = false
     }
+
+
+    function Test.Log(message)
+
+        Log(message)
+
+    end
+
+
+    function Test.Pass(message)
+
+        Pass(message)
+
+    end
+
+
+    function Test.Fail(message)
+
+        Test.Failed = true
+
+        Fail(message)
+
+    end
+
+
+    --------------------------------------------------------------------------
+    -- Async Support
+    --------------------------------------------------------------------------
+
+    function Test.BeginAsync()
+
+        Test.Completed = false
+
+    end
+
+
+    function Test.Complete()
+
+        Test.Completed = true
+
+    end
+
+
+    return Test
 
 end
 
-------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Completion Wait
+--------------------------------------------------------------------------------
+
+local function WaitCompletion(
+    configuration,
+    Test
+)
+
+
+    if Test.Completed then
+
+        PrintSummary(
+            configuration,
+            Test
+        )
+
+        return
+
+    end
+
+
+    reaper.defer(
+        function()
+
+            WaitCompletion(
+                configuration,
+                Test
+            )
+
+        end
+    )
+
+end
+
+
+--------------------------------------------------------------------------------
 -- Public
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 function GuiTestSkeleton.Run(configuration)
+
 
     --------------------------------------------------------------------------
     -- Banner
     --------------------------------------------------------------------------
 
-    PrintBanner(configuration)
+    PrintBanner(
+        configuration
+    )
+
 
     --------------------------------------------------------------------------
     -- Load Module
@@ -92,17 +232,29 @@ function GuiTestSkeleton.Run(configuration)
 
     Log(
         "Loading "
-        .. configuration.ModuleDisplayName
-        .. "...")
+        ..
+        configuration.ModuleDisplayName
+        ..
+        "..."
+    )
+
 
     local Module =
-        require(configuration.ModuleName)
+        require(
+            configuration.ModuleName
+        )
+
 
     assert(
         Module,
-        "Unable to load module.")
+        "Unable to load module."
+    )
 
-    Pass("Module loaded")
+
+    Pass(
+        "Module loaded"
+    )
+
 
     --------------------------------------------------------------------------
     -- Messages
@@ -110,11 +262,19 @@ function GuiTestSkeleton.Run(configuration)
 
     Log("")
 
-    Log(configuration.OpenMessage)
 
-    Log(configuration.CloseMessage)
+    Log(
+        configuration.OpenMessage
+    )
+
+
+    Log(
+        configuration.CloseMessage
+    )
+
 
     Log("")
+
 
     --------------------------------------------------------------------------
     -- Test API
@@ -123,26 +283,35 @@ function GuiTestSkeleton.Run(configuration)
     local Test =
         CreateTestApi()
 
+
     --------------------------------------------------------------------------
     -- Execute Test
     --------------------------------------------------------------------------
 
     if configuration.OnCompleted then
 
-        configuration.OnCompleted(Test)
+        configuration.OnCompleted(
+            Test
+        )
 
     end
 
+
     --------------------------------------------------------------------------
-    -- Summary
+    -- Wait Completion
     --------------------------------------------------------------------------
 
-    PrintSummary(configuration)
+    WaitCompletion(
+        configuration,
+        Test
+    )
+
 
 end
 
-------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
 -- Return
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 return GuiTestSkeleton

@@ -23,7 +23,7 @@ local ViewManager =
     require("Core.GUI.ViewManager")
 
 local HomeView =
-    require("Core.GUI.Views.HomeView")
+    require("Core.Application.Views.Home.HomeView")
 
 local AnalysisView =
     require("Core.GUI.Views.AnalysisView")
@@ -87,7 +87,9 @@ end
 
 local function RenderWorkspace()
 
-    ViewManager.Render()
+    ViewManager.Render(
+        State.Context
+    )
 
 end
 

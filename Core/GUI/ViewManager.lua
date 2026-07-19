@@ -65,13 +65,13 @@ function ViewManager.GetActive()
     return State.ActiveView
 end
 
-function ViewManager.Render()
+function ViewManager.Render(context)
 
     if not State.ActiveView then
         return
     end
 
-    State.ActiveView:Render()
+    State.ActiveView:Render(context)
 
 end
 

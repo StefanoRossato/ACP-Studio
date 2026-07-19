@@ -2,33 +2,45 @@
 -- ACP Studio
 --
 -- Module        : HomeWorkspace
--- Layer         : Application
--- Purpose       : Renders the Home Dashboard workspace.
+-- Layer         : GUI Component
+-- Purpose       : Renders the Home Dashboard workspace container.
+--
 -- Specification : GUI-201
 --------------------------------------------------------------------------------
 
 local HomeWorkspace = {}
 
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
+
+local TITLE =
+    "Workspace"
+
 
 --------------------------------------------------------------------------------
--- Rendering
+-- Public API
 --------------------------------------------------------------------------------
 
 function HomeWorkspace.Render(ctx)
 
-    reaper.ImGui_Separator(ctx)
 
     reaper.ImGui_Text(
         ctx,
-        "Workspace"
+        TITLE
     )
 
-    reaper.ImGui_Separator(ctx)
+
+    reaper.ImGui_Separator(
+        ctx
+    )
+
 
     reaper.ImGui_Text(
         ctx,
-        "Workspace Placeholder"
+        "Dashboard panels area."
     )
+
 
 end
 

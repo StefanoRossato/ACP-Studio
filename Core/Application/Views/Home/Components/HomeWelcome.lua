@@ -2,28 +2,48 @@
 -- ACP Studio
 --
 -- Module        : HomeWelcome
--- Layer         : Application
+-- Layer         : GUI Component
 -- Purpose       : Renders the Home Dashboard welcome section.
+--
 -- Specification : GUI-201
 --------------------------------------------------------------------------------
 
 local HomeWelcome = {}
 
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
+
+local MESSAGE =
+    "Welcome to ACP Studio"
+
+local DESCRIPTION =
+    "Prepare your tracks for analog mixing."
+
 
 --------------------------------------------------------------------------------
--- Rendering
+-- Public API
 --------------------------------------------------------------------------------
 
 function HomeWelcome.Render(ctx)
 
+
     reaper.ImGui_Text(
         ctx,
-        "Welcome to ACP Studio"
+        MESSAGE
     )
 
-    reaper.ImGui_Spacing(
+
+    reaper.ImGui_Separator(
         ctx
     )
+
+
+    reaper.ImGui_Text(
+        ctx,
+        DESCRIPTION
+    )
+
 
 end
 

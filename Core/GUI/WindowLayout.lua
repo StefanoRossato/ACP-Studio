@@ -27,9 +27,21 @@ end
 
 --------------------------------------------------------------------------------
 
-local function RenderWorkspace()
+local function RenderWorkspace(context)
 
-    ViewManager.Render()
+    ViewManager.Render(context)
+
+end
+
+function WindowLayout.Render(context)
+
+    assert(
+        context,
+        "WindowLayout.Render(): context is nil.")
+
+    RenderToolbar(context)
+
+    RenderWorkspace(context)
 
 end
 

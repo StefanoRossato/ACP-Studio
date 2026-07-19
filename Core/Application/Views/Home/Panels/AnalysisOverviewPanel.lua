@@ -2,35 +2,49 @@
 -- ACP Studio
 --
 -- Module        : AnalysisOverviewPanel
--- Layer         : Application
--- Purpose       : Renders the Analysis Overview panel.
+-- Layer         : GUI Panel
+-- Purpose       : Renders the Analysis Overview panel container.
+--
 -- Specification : GUI-201
 --------------------------------------------------------------------------------
 
 local AnalysisOverviewPanel = {}
 
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
+
+local TITLE =
+    "Analysis Overview"
+
+
+local MESSAGE =
+    "Analysis overview panel ready."
+
 
 --------------------------------------------------------------------------------
--- Rendering
+-- Public API
 --------------------------------------------------------------------------------
 
 function AnalysisOverviewPanel.Render(ctx)
 
-    reaper.ImGui_BeginGroup(ctx)
 
     reaper.ImGui_Text(
         ctx,
-        "Analysis Overview"
+        TITLE
     )
 
-    reaper.ImGui_Separator(ctx)
+
+    reaper.ImGui_Separator(
+        ctx
+    )
+
 
     reaper.ImGui_Text(
         ctx,
-        "Placeholder"
+        MESSAGE
     )
 
-    reaper.ImGui_EndGroup(ctx)
 
 end
 

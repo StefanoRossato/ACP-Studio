@@ -2,24 +2,47 @@
 -- ACP Studio
 --
 -- Module        : HomeHeader
--- Layer         : Application
+-- Layer         : GUI Component
 -- Purpose       : Renders the Home Dashboard header.
+--
 -- Specification : GUI-201
 --------------------------------------------------------------------------------
 
 local HomeHeader = {}
 
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
+
+local TITLE =
+    "ACP Studio"
+
+local SUBTITLE =
+    "Home Dashboard"
+
 
 --------------------------------------------------------------------------------
--- Rendering
+-- Public API
 --------------------------------------------------------------------------------
 
 function HomeHeader.Render(ctx)
 
     reaper.ImGui_Text(
         ctx,
-        "ACP Studio"
+        TITLE
     )
+
+
+    reaper.ImGui_Separator(
+        ctx
+    )
+
+
+    reaper.ImGui_Text(
+        ctx,
+        SUBTITLE
+    )
+
 
     reaper.ImGui_Separator(
         ctx
@@ -29,7 +52,7 @@ end
 
 
 --------------------------------------------------------------------------------
--- End of Module
+-- Return
 --------------------------------------------------------------------------------
 
 return HomeHeader
