@@ -4,9 +4,8 @@
 -- Module        : HomeView
 -- Layer         : Application
 -- Purpose       : Defines the application home view.
--- Specification : GUI-203
+-- Specification : GUI-204
 --------------------------------------------------------------------------------
-
 
 local HomeView = {}
 
@@ -40,7 +39,13 @@ function HomeView.New()
             "Home"
         )
 
+    ------------------------------------------------------------------------
+    -- State
+    ------------------------------------------------------------------------
 
+    View.PresentationModel= nil
+
+    
     setmetatable(
         View,
         {
@@ -48,11 +53,19 @@ function HomeView.New()
         }
     )
 
-
     return View
 
 end
 
+--------------------------------------------------------------------------------
+-- Refresh
+--------------------------------------------------------------------------------
+
+function HomeView:RefreshModel()
+
+    self.PresentationModel =
+        HomeViewModel.GetModel()
+end
 
 --------------------------------------------------------------------------------
 -- Lifecycle
@@ -60,21 +73,15 @@ end
 
 function HomeView:OnEnter()
 
-    ------------------------------------------------------------------------
-    -- View activation
-    ------------------------------------------------------------------------
+    self:RefreshModel()
 
 end
-
 
 function HomeView:OnExit()
 
-    ------------------------------------------------------------------------
-    -- View deactivation
-    ------------------------------------------------------------------------
+    self.PresentationModel = nil
 
 end
-
 
 --------------------------------------------------------------------------------
 -- Rendering
@@ -82,19 +89,16 @@ end
 
 function HomeView:Render(ctx)
 
-    local model =
-        HomeViewModel.GetModel()
+    if not self.PresentationModel then
+        return
+    end
 
-    HomeHeader.Render(ctx, model)
-
-    HomeWelcome.Render(ctx, model)
-
-    HomeDashboard.Render(ctx, model)
-
-    HomeWorkspace.Render(ctx, model)
+    HomeHeader.Render(ctx, self.PresentationModel)
+    HomeWelcome.Render(ctx, self.PresentationModel)
+    HomeDashboard.Render(ctx, self.PresentationModel)
+    HomeWorkspace.Render(ctx, self.PresentationModel)
 
 end
-
 --------------------------------------------------------------------------------
 -- End of Module
 --------------------------------------------------------------------------------

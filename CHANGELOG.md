@@ -1064,3 +1064,32 @@ GUI-202 Home View Model Foundation completed and frozen.
 
 ### Certified
 - GUI-203 — Home View Data Binding Foundation.
+
+## [Unreleased]
+
+### Added
+
+#### GUI-204 — Home View Refresh Foundation
+
+Implemented the certified Home View refresh lifecycle.
+
+##### Home View
+
+- Added Presentation Model cache.
+- Introduced `RefreshModel()` as the certified model acquisition mechanism.
+- `OnEnter()` now initializes the Presentation Model.
+- `Render()` now consumes only the cached Presentation Model.
+- Separated Presentation Model acquisition from graphical rendering.
+
+##### Testing
+
+- Added **GUI-204 — Home View Refresh Foundation Test**.
+- Certified Presentation Model cache initialization.
+- Certified Home View refresh lifecycle.
+- Certified rendering using the cached Presentation Model.
+
+##### Architecture
+
+- Established the first certified Home View refresh lifecycle.
+- Introduced the architectural foundation for future refresh operations.
+- Preserved one-way dependency between `HomeViewModel` and `HomeView`.
