@@ -1,24 +1,41 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- ACP Studio
--- WindowLayout
 --
--- GUI-102 — Toolbar Controls
---
--- Responsibility:
---   Orchestrate the rendering of GUI components.
---
--- WindowLayout owns the graphical composition of the main window.
--- It delegates rendering to independent GUI components.
-------------------------------------------------------------------------------
+-- Module        : WindowLayout
+-- Layer         : GUI
+-- Purpose       : Orchestrates the rendering of the main window layout.
+-- Specification : GUI-106
+--------------------------------------------------------------------------------
 
 local Toolbar =
     require("Core.GUI.Toolbar.Toolbar")
 
+local ViewManager =
+    require("Core.GUI.ViewManager")
+
 local WindowLayout = {}
 
-------------------------------------------------------------------------------
--- Rendering
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Private Rendering
+--------------------------------------------------------------------------------
+
+local function RenderToolbar(context)
+
+    Toolbar.Render(context)
+
+end
+
+--------------------------------------------------------------------------------
+
+local function RenderWorkspace()
+
+    ViewManager.Render()
+
+end
+
+--------------------------------------------------------------------------------
+-- Public API
+--------------------------------------------------------------------------------
 
 function WindowLayout.Render(context)
 
@@ -26,12 +43,22 @@ function WindowLayout.Render(context)
         context,
         "WindowLayout.Render(): context is nil.")
 
-    Toolbar.Render(context)
+    --------------------------------------------------------------------------
+    -- Toolbar
+    --------------------------------------------------------------------------
+
+    RenderToolbar(context)
+
+    --------------------------------------------------------------------------
+    -- Workspace
+    --------------------------------------------------------------------------
+
+    RenderWorkspace()
 
 end
 
-------------------------------------------------------------------------------
--- Module
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- End of Module
+--------------------------------------------------------------------------------
 
 return WindowLayout

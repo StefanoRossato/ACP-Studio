@@ -1,11 +1,11 @@
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- ACP Studio
 --
 -- Module        : MainWindow
 -- Layer         : GUI
 -- Purpose       : Coordinates the main application window.
--- Specification : GUI-105
-------------------------------------------------------------------------------
+-- Specification : GUI-106
+--------------------------------------------------------------------------------
 
 local WindowLifecycle =
     require("Core.GUI.WindowLifecycle")
@@ -13,126 +13,161 @@ local WindowLifecycle =
 local WindowLayout =
     require("Core.GUI.WindowLayout")
 
+local Toolbar =
+    require("Core.GUI.Toolbar.Toolbar")
+
+local ViewRegistry =
+    require("Core.GUI.ViewRegistry")
+
 local ViewManager =
     require("Core.GUI.ViewManager")
 
 local HomeView =
     require("Core.GUI.Views.HomeView")
 
+local AnalysisView =
+    require("Core.GUI.Views.AnalysisView")
+
+local ResultsView =
+    require("Core.GUI.Views.ResultsView")
+
 local MainWindow = {}
 
-------------------------------------------------------------------------------
--- Initialize
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+-- Private State
+--------------------------------------------------------------------------------
+
+local State = {
+
+    Context = nil
+
+}
+
+--------------------------------------------------------------------------------
+-- Private Functions
+--------------------------------------------------------------------------------
+
+local function InitializeViews()
+
+    ViewRegistry.Initialize()
+
+    ViewRegistry.Register(
+        "Home",
+        HomeView.New(State.Context))
+
+    ViewRegistry.Register(
+        "Analysis",
+        AnalysisView.New(State.Context))
+
+    ViewRegistry.Register(
+        "Results",
+        ResultsView.New(State.Context))
+
+    ViewManager.Initialize(ViewRegistry)
+
+    ViewManager.SetActive("Home")
+
+end
+
+--------------------------------------------------------------------------------
+
+local function ShutdownViews()
+
+    ViewManager.Shutdown()
+
+    ViewRegistry.Shutdown()
+
+end
+
+--------------------------------------------------------------------------------
+
+local function RenderWorkspace()
+
+    ViewManager.Render()
+
+end
+
+--------------------------------------------------------------------------------
+-- Public API
+--------------------------------------------------------------------------------
 
 function MainWindow.Initialize(context)
+
+    reaper.ShowConsoleMsg(
+    "Initialize Context = "
+    .. tostring(context)
+    .. "\n")
+
 
     assert(
         context,
         "MainWindow.Initialize(): context is nil.")
 
+    State.Context = context
+
+    --------------------------------------------------------------------------
+    -- Window
+    --------------------------------------------------------------------------
+
     WindowLifecycle.Open()
 
-    ViewManager:Initialize(context)
+    --------------------------------------------------------------------------
+    -- Views
+    --------------------------------------------------------------------------
 
-    local home =
-        HomeView:New(context)
-
-    ViewManager:SetView(home)
-
-end
-
-------------------------------------------------------------------------------
--- Render
-------------------------------------------------------------------------------
-
-function MainWindow.Render(context)
-
-    assert(
-        context,
-        "MainWindow.Render(): context is nil.")
-
-    WindowLayout.Render(context)
+    reaper.ShowConsoleMsg(
+    "State.Context = "
+    .. tostring(State.Context)
+    .. "\n")
+    InitializeViews()
 
 end
 
-------------------------------------------------------------------------------
--- Shutdown
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+function MainWindow.Run()
+
+    if not WindowLifecycle.IsOpen() then
+        return false
+    end
+
+    --------------------------------------------------------------------------
+    -- Layout
+    --------------------------------------------------------------------------
+
+    WindowLayout.Render(
+        State.Context)
+
+    return WindowLifecycle.IsOpen()
+
+end
+
+--------------------------------------------------------------------------------
 
 function MainWindow.Shutdown()
 
-    ViewManager:Shutdown()
+    --------------------------------------------------------------------------
+    -- Views
+    --------------------------------------------------------------------------
+
+    ShutdownViews()
+
+    --------------------------------------------------------------------------
+    -- Window
+    --------------------------------------------------------------------------
 
     WindowLifecycle.Close()
 
-end
-
-------------------------------------------------------------------------------
--- Run
-------------------------------------------------------------------------------
-
-function MainWindow.Run(onCompleted)
-
-    local context =
-        reaper.ImGui_CreateContext("ACP Studio")
-
-    MainWindow.Initialize(context)
-
-    local windowOpen = true
-
-    local function RenderLoop()
-
-        if not windowOpen then
-
-            MainWindow.Shutdown()
-
-            if onCompleted then
-                onCompleted()
-            end
-
-            return
-
-        end
-
-        local visible
-
-        visible, windowOpen =
-            reaper.ImGui_Begin(
-                context,
-                "ACP Studio",
-                windowOpen)
-
-        if visible then
-
-            MainWindow.Render(context)
-
-            reaper.ImGui_End(context)
-
-        end
-
-        if windowOpen then
-
-            reaper.defer(RenderLoop)
-
-        else
-
-            MainWindow.Shutdown()
-
-            if onCompleted then
-                onCompleted()
-            end
-
-        end
-
-    end
-
-    RenderLoop()
+    State.Context = nil
 
 end
 
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 -- End of Module
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 return MainWindow

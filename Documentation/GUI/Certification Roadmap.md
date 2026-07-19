@@ -13,11 +13,13 @@ Completed
 ✓ GUI-102 Toolbar Controls
 ✓ GUI-103 Toolbar Actions
 ✓ GUI-104 MenuBar Foundation
+✓ GUI-105 View Management Foundation
+
+
 
 Planned
 -------
-GUI-105
-GUI-106
+GUI-106 View Switching
 
 Notes
 -----

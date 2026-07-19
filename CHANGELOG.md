@@ -808,3 +808,22 @@ The graphical architecture is now prepared for incremental integration with the 
 - Added active view management.
 - Added GUI-105 certified test.
 - Established View Management architecture for future application views.
+
+GUI-106 — View Framework Foundation
+
+Added
+
+- Foundation Specification for the ACP Studio View Framework.
+- View lifecycle architecture.
+- View activation model.
+- ViewManager responsibilities.
+- Dependency model.
+- Design constraints.
+- Extension guidelines.
+- Compliance requirements.
+
+Result
+
+The ACP Studio View Framework now has a complete architectural foundation
+defining the contracts governing every View independently of the Window
+Framework.

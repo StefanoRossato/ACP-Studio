@@ -28,13 +28,19 @@ local State = {}
 -- Public API
 --------------------------------------------------------------------------------
 
-function View:New(context)
+function View.New(context)
 
-    local instance = setmetatable({}, self)
+    local self = {
 
-    instance.Context = context
+        Context = context
 
-    return instance
+    }
+
+    setmetatable(
+        self,
+        View)
+
+    return self
 
 end
 

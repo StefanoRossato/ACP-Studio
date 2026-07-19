@@ -1,13 +1,13 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Module        : ViewManager
+-- Module        : ViewRegistry
 -- Layer         : GUI
--- Purpose       : Manages the active application view.
+-- Purpose       : Stores and retrieves application views.
 -- Specification : GUI-106
 --------------------------------------------------------------------------------
 
-local ViewManager = {}
+local ViewRegistry = {}
 
 --------------------------------------------------------------------------------
 -- Constants
@@ -19,9 +19,9 @@ local ViewManager = {}
 
 local State = {
 
-    Registry = nil,
+    Initialized = false,
 
-    ActiveView = nil
+    Views = {}
 
 }
 
@@ -31,8 +31,7 @@ local State = {
 
 local function Reset()
 
-    State.Registry = nil
-    State.ActiveView = nil
+    State.Views = {}
 
 end
 
@@ -40,100 +39,107 @@ end
 -- Public API
 --------------------------------------------------------------------------------
 
-function ViewManager.Initialize(registry)
-
-    assert(
-        registry,
-        "ViewManager.Initialize(): registry is nil.")
-
-    assert(
-        registry.IsInitialized(),
-        "ViewManager.Initialize(): registry not initialized.")
+function ViewRegistry.Initialize()
 
     Reset()
 
-    State.Registry = registry
+    State.Initialized = true
 
 end
 
 --------------------------------------------------------------------------------
 
-function ViewManager.IsInitialized()
+function ViewRegistry.IsInitialized()
 
-    return State.Registry ~= nil
+    return State.Initialized
 
 end
 
 --------------------------------------------------------------------------------
 
-function ViewManager.SetActive(name)
+function ViewRegistry.Register(name, view)
 
     assert(
-        ViewManager.IsInitialized(),
-        "ViewManager.SetActive(): manager not initialized.")
+        State.Initialized,
+        "ViewRegistry.Register(): registry not initialized.")
 
     assert(
-        State.Registry.Exists(name),
-        "ViewManager.SetActive(): view not registered.")
+        type(name) == "string" and name ~= "",
+        "ViewRegistry.Register(): invalid view name.")
 
-    local view =
-        State.Registry.Get(name)
+    assert(
+        view,
+        "ViewRegistry.Register(): view is nil.")
 
-    if State.ActiveView == view then
-        return
-    end
+    assert(
+        State.Views[name] == nil,
+        "ViewRegistry.Register(): view already registered.")
 
-    if State.ActiveView then
-
-        State.ActiveView:Shutdown()
-
-    end
-
-    State.ActiveView = view
-
-    State.ActiveView:Initialize()
+    State.Views[name] = view
 
 end
 
 --------------------------------------------------------------------------------
 
-function ViewManager.GetActiveView()
+function ViewRegistry.Get(name)
 
-    return State.ActiveView
+    assert(
+        State.Initialized,
+        "ViewRegistry.Get(): registry not initialized.")
 
-end
-
---------------------------------------------------------------------------------
-
-function ViewManager.HasActive()
-
-    return State.ActiveView ~= nil
+    return State.Views[name]
 
 end
 
 --------------------------------------------------------------------------------
 
-function ViewManager.Render()
+function ViewRegistry.Exists(name)
 
-    if not State.ActiveView then
-        return
+    assert(
+        State.Initialized,
+        "ViewRegistry.Exists(): registry not initialized.")
+
+    return State.Views[name] ~= nil
+
+end
+
+--------------------------------------------------------------------------------
+
+function ViewRegistry.Count()
+
+    assert(
+        State.Initialized,
+        "ViewRegistry.Count(): registry not initialized.")
+
+    local count = 0
+
+    for _ in pairs(State.Views) do
+        count = count + 1
     end
 
-    State.ActiveView:Render()
+    return count
 
 end
 
 --------------------------------------------------------------------------------
 
-function ViewManager.Shutdown()
+function ViewRegistry.Clear()
 
-    if State.ActiveView then
-
-        State.ActiveView:Shutdown()
-
-    end
+    assert(
+        State.Initialized,
+        "ViewRegistry.Clear(): registry not initialized.")
 
     Reset()
+
+end
+
+--------------------------------------------------------------------------------
+
+function ViewRegistry.Shutdown()
+
+    Reset()
+
+    State.Initialized = false
 
 end
 
@@ -141,4 +147,4 @@ end
 -- End of Module
 --------------------------------------------------------------------------------
 
-return ViewManager
+return ViewRegistry

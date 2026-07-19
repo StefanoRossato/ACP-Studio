@@ -48,10 +48,10 @@ local DESCRIPTION =
 -- Public API
 --------------------------------------------------------------------------------
 
-function HomeView:New(context)
+function HomeView.New(context)
 
     local instance =
-        View:New(context)
+        View.New(context)
 
     setmetatable(
         instance,
@@ -71,6 +71,13 @@ end
 
 function HomeView:Render()
 
+    assert(
+    self.Context,
+    "HomeView.Context is nil")
+
+reaper.ShowConsoleMsg(
+    tostring(self.Context) .. "\n")
+    
     reaper.ImGui_Text(
         self.Context,
         TITLE)
