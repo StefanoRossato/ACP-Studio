@@ -827,3 +827,43 @@ Result
 The ACP Studio View Framework now has a complete architectural foundation
 defining the contracts governing every View independently of the Window
 Framework.
+
+## [Unreleased]
+
+### Added
+
+#### GUI Foundation Completed
+
+Completed and certified the ACP Studio GUI Foundation.
+
+New certified milestones:
+
+- GUI-108 — ViewManager Foundation
+- GUI-109 — BaseView Foundation
+- GUI-110 — HomeView Foundation
+- GUI-111 — View Integration Foundation
+
+Implemented the complete View Framework architecture:
+
+- ViewManager lifecycle management
+- BaseView abstraction
+- HomeView reference implementation
+- View registration
+- View activation and deactivation
+- Active View rendering
+- Integration certification
+
+The GUI architecture is now composed of:
+
+MainWindow
+├── WindowLifecycle
+├── WindowLayout
+├── Toolbar
+├── Workspace
+│   └── ViewManager
+│       └── BaseView
+│           └── HomeView
+└── StatusBar
+
+The GUI Foundation is now considered stable and certified.
+Future GUI development will focus on application Views and features built on top of this framework.

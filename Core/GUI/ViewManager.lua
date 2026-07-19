@@ -3,115 +3,67 @@
 --
 -- Module        : ViewManager
 -- Layer         : GUI
--- Purpose       : Manages the active application view.
--- Specification : GUI-106
+-- Purpose       : Manages the lifecycle of application views.
+-- Specification : GUI-108
 --------------------------------------------------------------------------------
 
 local ViewManager = {}
 
 --------------------------------------------------------------------------------
--- Constants
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
 -- Private State
 --------------------------------------------------------------------------------
 
-local State = {
-
-    Registry = nil,
-
+local State =
+{
+    Views = {},
     ActiveView = nil
-
 }
 
 --------------------------------------------------------------------------------
 -- Private Functions
 --------------------------------------------------------------------------------
 
-local function Reset()
-
-    State.Registry = nil
-    State.ActiveView = nil
-
-end
-
 --------------------------------------------------------------------------------
 -- Public API
 --------------------------------------------------------------------------------
 
-function ViewManager.Initialize(registry)
-
-    assert(
-        registry,
-        "ViewManager.Initialize(): registry is nil.")
-
-    assert(
-        registry.IsInitialized(),
-        "ViewManager.Initialize(): registry not initialized.")
-
-    Reset()
-
-    State.Registry = registry
-
+function ViewManager.Register(view)
+    State.Views[view.Id] = view
 end
 
---------------------------------------------------------------------------------
+function ViewManager.Activate(id)
 
-function ViewManager.IsInitialized()
+    local view = State.Views[id]
 
-    return State.Registry ~= nil
-
-end
-
---------------------------------------------------------------------------------
-
-function ViewManager.SetActive(name)
-
-    assert(
-        ViewManager.IsInitialized(),
-        "ViewManager.SetActive(): manager not initialized.")
-
-    assert(
-        State.Registry.Exists(name),
-        "ViewManager.SetActive(): view not registered.")
-
-    local view =
-        State.Registry.Get(name)
-
-    if State.ActiveView == view then
+    if not view then
         return
     end
 
     if State.ActiveView then
-
-        State.ActiveView:Shutdown()
-
+        State.ActiveView:OnExit()
     end
 
     State.ActiveView = view
 
-    State.ActiveView:Initialize()
+    State.ActiveView:OnEnter()
 
 end
 
---------------------------------------------------------------------------------
+function ViewManager.Deactivate()
 
-function ViewManager.GetActiveView()
+    if not State.ActiveView then
+        return
+    end
 
+    State.ActiveView:OnExit()
+
+    State.ActiveView = nil
+
+end
+
+function ViewManager.GetActive()
     return State.ActiveView
-
 end
-
---------------------------------------------------------------------------------
-
-function ViewManager.HasActive()
-
-    return State.ActiveView ~= nil
-
-end
-
---------------------------------------------------------------------------------
 
 function ViewManager.Render()
 
@@ -123,20 +75,12 @@ function ViewManager.Render()
 
 end
 
---------------------------------------------------------------------------------
+function ViewManager.Reset()
 
-function ViewManager.Shutdown()
-
-    if State.ActiveView then
-
-        State.ActiveView:Shutdown()
-
-    end
-
-    Reset()
+    State.Views = {}
+    State.ActiveView = nil
 
 end
-
 --------------------------------------------------------------------------------
 -- End of Module
 --------------------------------------------------------------------------------

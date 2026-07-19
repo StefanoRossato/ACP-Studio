@@ -1,37 +1,49 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Module        : HomeView
+-- Module        : BaseView
 -- Layer         : GUI
--- Purpose       : Default application view.
--- Specification : GUI-110
+-- Purpose       : Defines the common interface for all application views.
+-- Specification : GUI-109
 --------------------------------------------------------------------------------
 
-local BaseView =
-    require("Core.GUI.BaseView")
+local BaseView = {}
 
-local HomeView =
-    BaseView.New(
-        "HOME",
-        "Home")
+--------------------------------------------------------------------------------
+-- Public API
+--------------------------------------------------------------------------------
+
+function BaseView.New(id, title)
+
+    local View =
+    {
+        Id = id,
+        Title = title
+    }
+
+    setmetatable(
+        View,
+        {
+            __index = BaseView
+        })
+
+    return View
+
+end
 
 --------------------------------------------------------------------------------
 -- Lifecycle
 --------------------------------------------------------------------------------
 
-function HomeView:OnEnter()
+function BaseView:OnEnter()
 
 end
 
-function HomeView:OnExit()
+function BaseView:OnExit()
 
 end
 
---------------------------------------------------------------------------------
--- Rendering
---------------------------------------------------------------------------------
-
-function HomeView:Render()
+function BaseView:Render()
 
 end
 
@@ -39,4 +51,4 @@ end
 -- End of Module
 --------------------------------------------------------------------------------
 
-return HomeView
+return BaseView
