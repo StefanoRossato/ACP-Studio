@@ -1001,3 +1001,48 @@ GUI-201 completed and frozen.
 Next milestone:
 
 GUI-202 — Home View Model Foundation
+
+## GUI-202 — Home View Model Foundation
+
+Status: Certified
+
+### Added
+
+- Introduced HomeViewModel application component.
+- Added Home View data contract.
+- Established separation between Application state and GUI rendering.
+
+
+### Implementation
+
+Added:
+
+Core/Application/Views/Home/HomeViewModel.lua
+
+
+The View Model provides:
+
+- Runtime state placeholder.
+- Project information placeholder.
+- Analysis state placeholder.
+
+
+### Testing
+
+Added:
+
+Tests/Application/GUI-202 HomeViewModel Test.lua
+
+
+Certified:
+
+- Module loading.
+- Factory creation.
+- Runtime contract.
+- Project contract.
+- Analysis contract.
+
+
+### Status
+
+GUI-202 Home View Model Foundation completed and frozen.
