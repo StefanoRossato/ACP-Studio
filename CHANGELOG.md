@@ -878,3 +878,32 @@ Implemented:
 - Application workflow foundation
 - Domain Service coordination
 - APS-001 certification test
+
+## GUI-200 — Home Dashboard Foundation
+
+### Added
+- Introduced HomeView as the first Application View.
+- Added Core/Application/Views/Home/HomeView.lua.
+- HomeView now derives from GUI BaseView.
+- Implemented standard View lifecycle:
+  - New()
+  - OnEnter()
+  - OnExit()
+  - Render()
+
+### Added
+- GUI-200 Home Dashboard Foundation certification test.
+- Certified:
+  - Module loading
+  - Constructor
+  - View identity
+  - Lifecycle
+  - Render contract
+
+### Architecture
+- Established separation between GUI Framework and Application Views.
+- Rendering is delegated to the GUI Framework through a valid ImGui context.
+- Foundation certification validates the View contract without requiring an active ImGui context.
+
+Status:
+GUI-200 Certified
