@@ -10,25 +10,54 @@
 local AnalysisService =
     require("Core.Domain.Analysis.AnalysisService")
 
+
 local AnalysisApplicationService = {}
 
---------------------------------------------------------------------------------
--- Constants
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
--- Private State
---------------------------------------------------------------------------------
-
-local State = {}
 
 --------------------------------------------------------------------------------
 -- Private Functions
 --------------------------------------------------------------------------------
 
---------------------------------------------------------------------------------
--- Public API
---------------------------------------------------------------------------------
+local function ValidateRequest(request)
+
+    ------------------------------------------------------------------------
+    -- Application Validation
+    ------------------------------------------------------------------------
+
+    -- Reserved for future application request validation.
+
+    return true
+
+end
+
+
+local function ExecuteWorkflow(request)
+
+    ------------------------------------------------------------------------
+    -- Domain Coordination
+    ------------------------------------------------------------------------
+
+    local session
+
+    session =
+        AnalysisService.CreateSession()
+
+
+    return session
+
+end
+
+
+local function CreateResult(session)
+
+    ------------------------------------------------------------------------
+    -- Application Result
+    ------------------------------------------------------------------------
+
+    return session
+
+end
+
 
 --------------------------------------------------------------------------------
 -- Public API
@@ -36,28 +65,31 @@ local State = {}
 
 function AnalysisApplicationService.Execute(request)
 
-    local session
-
     ------------------------------------------------------------------------
     -- Validate Request
     ------------------------------------------------------------------------
 
-    -- Reserved for future request validation.
+    if not ValidateRequest(request) then
+        return nil
+    end
+
 
     ------------------------------------------------------------------------
-    -- Create Analysis Session
+    -- Execute Application Workflow
     ------------------------------------------------------------------------
 
-    session =
-        AnalysisService.CreateSession()
+    local session =
+        ExecuteWorkflow(request)
+
 
     ------------------------------------------------------------------------
-    -- Return Result
+    -- Return Application Result
     ------------------------------------------------------------------------
 
-    return session
+    return CreateResult(session)
 
 end
+
 
 --------------------------------------------------------------------------------
 -- End of Module

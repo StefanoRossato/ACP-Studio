@@ -867,3 +867,14 @@ MainWindow
 
 The GUI Foundation is now considered stable and certified.
 Future GUI development will focus on application Views and features built on top of this framework.
+
+## APS-001 — Analysis Application Service
+
+Completed and certified.
+
+Implemented:
+- AnalysisApplicationService application coordinator
+- Execute(request) public interface
+- Application workflow foundation
+- Domain Service coordination
+- APS-001 certification test
