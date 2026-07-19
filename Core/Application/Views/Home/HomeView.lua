@@ -14,6 +14,20 @@ local BaseView =
 
 local HomeView = {}
 
+local BaseView =
+    require("Core.GUI.BaseView")
+
+local HomeHeader =
+    require("Core.Application.Views.Home.Components.HomeHeader")
+
+local HomeWelcome =
+    require("Core.Application.Views.Home.Components.HomeWelcome")
+
+local HomeDashboard =
+    require("Core.Application.Views.Home.Components.HomeDashboard")
+
+local HomeWorkspace =
+    require("Core.Application.Views.Home.Components.HomeWorkspace")
 
 --------------------------------------------------------------------------------
 -- Constructor
@@ -69,25 +83,13 @@ end
 
 function HomeView:Render(ctx)
 
-    ------------------------------------------------------------------------
-    -- Home Dashboard Foundation
-    ------------------------------------------------------------------------
+    HomeHeader.Render(ctx)
 
-    reaper.ImGui_Text(
-        ctx,
-        "ACP Studio"
-    )
+    HomeWelcome.Render(ctx)
 
+    HomeDashboard.Render(ctx)
 
-    reaper.ImGui_Separator(
-        ctx
-    )
-
-
-    reaper.ImGui_Text(
-        ctx,
-        "Home Dashboard"
-    )
+    HomeWorkspace.Render(ctx)
 
 end
 
