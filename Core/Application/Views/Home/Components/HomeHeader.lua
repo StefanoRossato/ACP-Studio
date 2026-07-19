@@ -4,52 +4,20 @@
 -- Module        : HomeHeader
 -- Layer         : GUI Component
 -- Purpose       : Renders the Home Dashboard header.
---
--- Specification : GUI-201
+-- Specification : GUI-203
 --------------------------------------------------------------------------------
 
 local HomeHeader = {}
 
 --------------------------------------------------------------------------------
--- Constants
---------------------------------------------------------------------------------
-
-local TITLE =
-    "ACP Studio"
-
-local SUBTITLE =
-    "Home Dashboard"
-
-
---------------------------------------------------------------------------------
 -- Public API
 --------------------------------------------------------------------------------
 
-function HomeHeader.Render(ctx)
+function HomeHeader.Render(ctx, model)
 
-    reaper.ImGui_Text(
-        ctx,
-        TITLE
-    )
-
-
-    reaper.ImGui_Separator(
-        ctx
-    )
-
-
-    reaper.ImGui_Text(
-        ctx,
-        SUBTITLE
-    )
-
-
-    reaper.ImGui_Separator(
-        ctx
-    )
+    reaper.ImGui_Text(ctx, model.title)
 
 end
-
 
 --------------------------------------------------------------------------------
 -- Return

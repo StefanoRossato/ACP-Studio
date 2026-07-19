@@ -5,7 +5,7 @@
 -- Layer         : GUI Component
 -- Purpose       : Renders the Home Dashboard workspace container.
 --
--- Specification : GUI-201
+-- Specification : GUI-203
 --------------------------------------------------------------------------------
 
 local HomeWorkspace = {}
@@ -17,33 +17,27 @@ local HomeWorkspace = {}
 local TITLE =
     "Workspace"
 
-
 --------------------------------------------------------------------------------
 -- Public API
 --------------------------------------------------------------------------------
 
-function HomeWorkspace.Render(ctx)
-
+function HomeWorkspace.Render(ctx, model)
 
     reaper.ImGui_Text(
         ctx,
         TITLE
     )
 
-
     reaper.ImGui_Separator(
         ctx
     )
-
 
     reaper.ImGui_Text(
         ctx,
         "Dashboard panels area."
     )
 
-
 end
-
 
 --------------------------------------------------------------------------------
 -- End of Module

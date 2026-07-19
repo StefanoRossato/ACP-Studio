@@ -1046,3 +1046,21 @@ Certified:
 ### Status
 
 GUI-202 Home View Model Foundation completed and frozen.
+
+## GUI-203 — Home View Data Binding Foundation
+
+### Added
+- Introduced the Home View data binding architecture.
+- Implemented `HomeViewModel.GetModel()` as the Presentation Model provider.
+- Connected `HomeView` to `HomeViewModel`.
+- Established the Presentation Model pipeline from the Application Layer to the GUI Layer.
+- Updated Home components to accept the Presentation Model (`HomeHeader`, `HomeWelcome`, `HomeDashboard`, `HomeWorkspace`).
+- Added the GUI-203 certification test.
+
+### Changed
+- Refactored `HomeView` to retrieve and distribute the Presentation Model.
+- Updated component interfaces to support data binding.
+- Promoted GUI-203 specification from **Approved** to **Certified**.
+
+### Certified
+- GUI-203 — Home View Data Binding Foundation.

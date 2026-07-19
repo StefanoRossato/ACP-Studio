@@ -4,12 +4,8 @@
 -- Module        : HomeView
 -- Layer         : Application
 -- Purpose       : Defines the application home view.
--- Specification : GUI-200
+-- Specification : GUI-203
 --------------------------------------------------------------------------------
-
-
-local BaseView =
-    require("Core.GUI.BaseView")
 
 
 local HomeView = {}
@@ -28,6 +24,9 @@ local HomeDashboard =
 
 local HomeWorkspace =
     require("Core.Application.Views.Home.Components.HomeWorkspace")
+
+local HomeViewModel =
+    require("Core.Application.Views.Home.HomeViewModel")
 
 --------------------------------------------------------------------------------
 -- Constructor
@@ -83,13 +82,16 @@ end
 
 function HomeView:Render(ctx)
 
-    HomeHeader.Render(ctx)
+    local model =
+        HomeViewModel.GetModel()
 
-    HomeWelcome.Render(ctx)
+    HomeHeader.Render(ctx, model)
 
-    HomeDashboard.Render(ctx)
+    HomeWelcome.Render(ctx, model)
 
-    HomeWorkspace.Render(ctx)
+    HomeDashboard.Render(ctx, model)
+
+    HomeWorkspace.Render(ctx, model)
 
 end
 
