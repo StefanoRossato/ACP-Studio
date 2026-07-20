@@ -1,17 +1,19 @@
 --------------------------------------------------------------------------------
 -- ACP Studio
 --
--- Module        : HomeViewModel
--- Layer         : Application
--- Purpose       : Provides the Presentation Model for the Home View.
--- Specification : GUI-207
+-- Module        : ReferenceModule
+-- Layer         : Engineering
+-- Purpose       : Reference implementation used to certify the Lua Module Template.
+-- Specification : TPL-001
 --------------------------------------------------------------------------------
 
-local HomeViewModel = {}
+local ReferenceModule = {}
 
 --------------------------------------------------------------------------------
 -- Constants
 --------------------------------------------------------------------------------
+
+local VERSION = "1.0"
 
 --------------------------------------------------------------------------------
 -- Private State
@@ -19,44 +21,16 @@ local HomeViewModel = {}
 
 local State =
 {
-    title = "ACP Studio",
-
-    runtime =
-    {
-        title = "Runtime",
-        description = "Runtime monitoring"
-    },
-
-    application =
-    {
-        title = "Application",
-        description = "Application services"
-    },
-
-    domain =
-    {
-        title = "Domain",
-        description = "Domain model"
-    }
+    initialized = false
 }
 
 --------------------------------------------------------------------------------
 -- Private Functions
 --------------------------------------------------------------------------------
 
-local function BuildModel()
+local function Initialize()
 
-    return
-    {
-        title = State.title,
-
-        cards =
-        {
-            State.runtime,
-            State.application,
-            State.domain
-        }
-    }
+    State.initialized = true
 
 end
 
@@ -64,16 +38,21 @@ end
 -- Public Functions
 --------------------------------------------------------------------------------
 
-function HomeViewModel.Refresh()
+function ReferenceModule.Initialize()
 
-    -- Future implementation:
-    -- Query Application Services and update State.
+    Initialize()
 
 end
 
-function HomeViewModel.GetModel()
+function ReferenceModule.IsInitialized()
 
-    return BuildModel()
+    return State.initialized
+
+end
+
+function ReferenceModule.GetVersion()
+
+    return VERSION
 
 end
 
@@ -81,4 +60,4 @@ end
 -- Return Module
 --------------------------------------------------------------------------------
 
-return HomeViewModel
+return ReferenceModule

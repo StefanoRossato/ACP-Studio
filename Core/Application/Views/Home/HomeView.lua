@@ -27,6 +27,9 @@ local HomeWorkspace =
 local HomeViewModel =
     require("Core.Application.Views.Home.HomeViewModel")
 
+local DashboardDataBindingService =
+    require("Core.GUI.Dashboard.DashboardDataBindingService")
+
 --------------------------------------------------------------------------------
 -- Constructor
 --------------------------------------------------------------------------------
@@ -62,8 +65,11 @@ end
 
 function HomeView:RefreshModel()
 
+    HomeViewModel.Refresh()
+
     self.PresentationModel =
         HomeViewModel.GetModel()
+
 end
 
 --------------------------------------------------------------------------------

@@ -1150,3 +1150,35 @@ Architecture
 ### Notes
 
 - ModuleSkeleton.lua certification intentionally deferred until its implementation as the official Reference Implementation for TPL-001.
+
+## [Engineering] - Certified Engineering Templates
+
+### Added
+
+- Certified specification **TPL-001 — Lua Module Template Standard**.
+- Certified specification **TPL-002 — Lua Test Template Standard**.
+- Introduced the certified **ModuleSkeleton.lua** reference template.
+- Introduced the certified **TestSkeleton.lua** reference template.
+- Established the standardized engineering workflow for Lua modules and automated tests.
+- Standardized the Test Environment initialization lifecycle.
+- Standardized separation between Module Under Test and Test Dependencies.
+- Standardized engineering test utilities (`ClearLog`, `Log`, `Pass`, `Fail`).
+- Standardized deterministic test execution model.
+
+### Changed
+
+- Regenerated **ReferenceModule.lua** from the certified ModuleSkeleton.
+- Regenerated **ReferenceModule_Test.lua** from the certified TestSkeleton.
+- Refined Bootstrap loading and initialization workflow.
+- Improved Bootstrap validation during test initialization.
+- Removed temporary Bootstrap debugging output from the engineering test infrastructure.
+
+### Certified
+
+- **TPL-001 — Lua Module Template Standard**
+- **Documentation/Engineering/Templates/ModuleSkeleton.lua**
+- **Tests/Engineering/ReferenceModule.lua**
+
+- **TPL-002 — Lua Test Template Standard**
+- **Documentation/Engineering/Templates/TestSkeleton.lua**
+- **Tests/Engineering/ReferenceModule_Test.lua**
