@@ -3,47 +3,33 @@
 --
 -- Module        : WindowLayout
 -- Layer         : GUI
--- Purpose       : Orchestrates the rendering of the main window layout.
--- Specification : GUI-106
+-- Purpose       : Renders the main application window layout.
+-- Specification : GUI-208
 --------------------------------------------------------------------------------
+
+local WindowLifecycle =
+    require("Core.GUI.WindowLifecycle")
+
+local MenuBar =
+    require("Core.GUI.MenuBar.MenuBar")
 
 local Toolbar =
     require("Core.GUI.Toolbar.Toolbar")
 
-local ViewManager =
-    require("Core.GUI.ViewManager")
+local Workspace =
+    require("Core.GUI.Workspace")
 
 local WindowLayout = {}
 
 --------------------------------------------------------------------------------
--- Private Rendering
+-- Constants
 --------------------------------------------------------------------------------
 
-local function RenderToolbar(context)
+local WINDOW_TITLE =
+    "ACP Monitor"
 
-    Toolbar.Render(context)
-
-end
-
---------------------------------------------------------------------------------
-
-local function RenderWorkspace(context)
-
-    ViewManager.Render(context)
-
-end
-
-function WindowLayout.Render(context)
-
-    assert(
-        context,
-        "WindowLayout.Render(): context is nil.")
-
-    RenderToolbar(context)
-
-    RenderWorkspace(context)
-
-end
+local WINDOW_FLAGS =
+    reaper.ImGui_WindowFlags_MenuBar()
 
 --------------------------------------------------------------------------------
 -- Public API
@@ -55,17 +41,76 @@ function WindowLayout.Render(context)
         context,
         "WindowLayout.Render(): context is nil.")
 
+    local visible
+    local open
+
+    visible, open =
+        reaper.ImGui_Begin(
+            context,
+            WINDOW_TITLE,
+            true,
+            WINDOW_FLAGS
+        )
+
     --------------------------------------------------------------------------
-    -- Toolbar
+    -- Window Closed
     --------------------------------------------------------------------------
 
-    RenderToolbar(context)
+    if not open then
+
+        WindowLifecycle.Close()
+
+        reaper.ImGui_End(
+            context
+        )
+
+        return
+
+    end
 
     --------------------------------------------------------------------------
-    -- Workspace
+    -- Render
     --------------------------------------------------------------------------
 
-    RenderWorkspace()
+    if visible then
+
+        ----------------------------------------------------------------------
+        -- Menu Bar
+        ----------------------------------------------------------------------
+
+        MenuBar.Render(
+            context
+        )
+
+        ----------------------------------------------------------------------
+        -- Toolbar
+        ----------------------------------------------------------------------
+
+        Toolbar.Render(
+            context
+        )
+
+        reaper.ImGui_Separator(
+            context
+        )
+
+        ----------------------------------------------------------------------
+        -- Workspace
+        ----------------------------------------------------------------------
+
+        Workspace.Render(
+            context
+        )
+
+    end
+
+    --------------------------------------------------------------------------
+    -- End Window
+    --------------------------------------------------------------------------
+
+    reaper.ImGui_End(
+        context
+    )
 
 end
 

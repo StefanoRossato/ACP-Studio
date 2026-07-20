@@ -3,35 +3,35 @@
 --
 -- Module        : ResultsView
 -- Layer         : GUI
--- Purpose       : Results workspace view.
--- Specification : GUI-106
+-- Purpose       : Defines the application results view.
+-- Specification : GUI-209
 --------------------------------------------------------------------------------
 
-local View =
-    require("Core.GUI.Views.View")
+local BaseView =
+    require("Core.GUI.BaseView")
 
 local ResultsView = {}
-
-ResultsView.__index = ResultsView
-
-setmetatable(
-    ResultsView,
-    { __index = View })
 
 --------------------------------------------------------------------------------
 -- Constructor
 --------------------------------------------------------------------------------
 
-function ResultsView.New(context)
+function ResultsView.New()
 
-    local self =
-        View.New(context)
+    local View =
+        BaseView.New(
+            "Results",
+            "Results"
+        )
 
     setmetatable(
-        self,
-        ResultsView)
+        View,
+        {
+            __index = ResultsView
+        }
+    )
 
-    return self
+    return View
 
 end
 
@@ -39,34 +39,40 @@ end
 -- Lifecycle
 --------------------------------------------------------------------------------
 
-function ResultsView:Initialize()
+function ResultsView:OnEnter()
 
 end
 
 --------------------------------------------------------------------------------
 
-function ResultsView:Render()
+function ResultsView:OnExit()
+
+end
+
+--------------------------------------------------------------------------------
+-- Rendering
+--------------------------------------------------------------------------------
+
+function ResultsView:Render(context)
 
     reaper.ImGui_Text(
-        self.Context,
-        "Results")
+        context,
+        "Results"
+    )
 
     reaper.ImGui_Separator(
-        self.Context)
+        context
+    )
 
     reaper.ImGui_Text(
-        self.Context,
-        "Results View")
+        context,
+        "Results View"
+    )
 
     reaper.ImGui_Text(
-        self.Context,
-        "GUI-106")
-
-end
-
---------------------------------------------------------------------------------
-
-function ResultsView:Shutdown()
+        context,
+        "GUI-209"
+    )
 
 end
 

@@ -1182,3 +1182,32 @@ Architecture
 - **TPL-002 — Lua Test Template Standard**
 - **Documentation/Engineering/Templates/TestSkeleton.lua**
 - **Tests/Engineering/ReferenceModule_Test.lua**
+
+## [Unreleased]
+
+### Added
+- Introduced the new ACP Monitor application bootstrap.
+- Implemented MonitorApplication lifecycle coordinator.
+- Refactored MainWindow according to the new GUI architecture.
+- Implemented the new WindowLayout orchestration layer.
+- Introduced the new MenuBar rendering component.
+- Integrated Workspace with ViewManager.
+- Migrated AnalysisView to the BaseView architecture.
+- Migrated ResultsView to the BaseView architecture.
+- Completed GUI-208 MainWindow Refactoring.
+- Completed GUI-209 View Migration.
+- Completed GUI-210 Menu Bar Rendering.
+
+### Changed
+- Removed the dependency on ViewRegistry from the GUI runtime.
+- MainWindow now uses ViewManager directly.
+- Unified all application views on the BaseView lifecycle model.
+- Simplified the GUI rendering pipeline.
+
+### Fixed
+- Fixed application bootstrap sequence.
+- Fixed ViewManager registration.
+- Fixed Workspace rendering.
+- Fixed MenuBar integration.
+- Fixed ReaImGui rendering lifecycle.
+- ACP Monitor now launches successfully using the new GUI architecture.

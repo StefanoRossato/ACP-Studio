@@ -3,35 +3,35 @@
 --
 -- Module        : AnalysisView
 -- Layer         : GUI
--- Purpose       : Analysis workspace view.
--- Specification : GUI-106
+-- Purpose       : Defines the analysis application view.
+-- Specification : GUI-209
 --------------------------------------------------------------------------------
 
-local View =
-    require("Core.GUI.Views.View")
+local BaseView =
+    require("Core.GUI.BaseView")
 
 local AnalysisView = {}
-
-AnalysisView.__index = AnalysisView
-
-setmetatable(
-    AnalysisView,
-    { __index = View })
 
 --------------------------------------------------------------------------------
 -- Constructor
 --------------------------------------------------------------------------------
 
-function AnalysisView.New(context)
+function AnalysisView.New()
 
-    local self =
-        View.New(context)
+    local View =
+        BaseView.New(
+            "Analysis",
+            "Analysis"
+        )
 
     setmetatable(
-        self,
-        AnalysisView)
+        View,
+        {
+            __index = AnalysisView
+        }
+    )
 
-    return self
+    return View
 
 end
 
@@ -39,34 +39,40 @@ end
 -- Lifecycle
 --------------------------------------------------------------------------------
 
-function AnalysisView:Initialize()
+function AnalysisView:OnEnter()
 
 end
 
 --------------------------------------------------------------------------------
 
-function AnalysisView:Render()
+function AnalysisView:OnExit()
+
+end
+
+--------------------------------------------------------------------------------
+-- Rendering
+--------------------------------------------------------------------------------
+
+function AnalysisView:Render(context)
 
     reaper.ImGui_Text(
-        self.Context,
-        "Analysis")
+        context,
+        "Analysis"
+    )
 
     reaper.ImGui_Separator(
-        self.Context)
+        context
+    )
 
     reaper.ImGui_Text(
-        self.Context,
-        "Analysis View")
+        context,
+        "Analysis View"
+    )
 
     reaper.ImGui_Text(
-        self.Context,
-        "GUI-106")
-
-end
-
---------------------------------------------------------------------------------
-
-function AnalysisView:Shutdown()
+        context,
+        "GUI-209"
+    )
 
 end
 

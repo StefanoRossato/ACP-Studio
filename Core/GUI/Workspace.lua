@@ -4,7 +4,7 @@
 -- Module        : Workspace
 -- Layer         : GUI
 -- Purpose       : Renders the application workspace.
--- Specification : GUI-105
+-- Specification : GUI-208
 --------------------------------------------------------------------------------
 
 local ViewManager =
@@ -16,33 +16,25 @@ local Workspace = {}
 -- Constants
 --------------------------------------------------------------------------------
 
-local WORKSPACE_ID = "Workspace"
-
---------------------------------------------------------------------------------
--- Private State
---------------------------------------------------------------------------------
-
-local State = {}
-
---------------------------------------------------------------------------------
--- Private Functions
---------------------------------------------------------------------------------
+local WORKSPACE_ID =
+    "Workspace"
 
 --------------------------------------------------------------------------------
 -- Public API
 --------------------------------------------------------------------------------
 
-function Workspace:Render(context)
+function Workspace.Render(context)
 
     reaper.ImGui_BeginChild(
         context,
         WORKSPACE_ID,
         0,
-        0,
-        true
+        0
     )
 
-    ViewManager:Render()
+    ViewManager.Render(
+        context
+    )
 
     reaper.ImGui_EndChild(
         context

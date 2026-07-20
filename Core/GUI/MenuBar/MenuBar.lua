@@ -1,118 +1,136 @@
--------------------------------------------------------------------------------
--- Project      : ACP Studio
--- Component    : Menu Bar
--- Module       : MenuBar
--- File         : Core/GUI/MenuBar/MenuBar.lua
+--------------------------------------------------------------------------------
+-- ACP Studio
 --
--- Purpose
--- -------
--- Provides the foundation of the application's Menu Bar.
---
--- Responsibilities
--- ----------------
--- • Manage the Menu Bar lifecycle.
--- • Maintain the menu registry.
--- • Expose a minimal public API.
---
--- Public API
--- ----------
--- Initialize(window)
--- Shutdown()
--- IsInitialized()
--- AddMenu(name)
--- GetMenu(name)
---
--- Certification
--- -------------
--- GUI-104 : Menu Bar Foundation
--------------------------------------------------------------------------------
+-- Module        : MenuBar
+-- Layer         : GUI
+-- Purpose       : Renders the application menu bar.
+-- Specification : GUI-210
+--------------------------------------------------------------------------------
 
 local MenuBar = {}
 
--------------------------------------------------------------------------------
--- Private State
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- Constants
+--------------------------------------------------------------------------------
 
-local initialized = false
-local mainWindow = nil
-local menus = {}
+local MENU_FILE =
+    "File"
+
+local MENU_VIEW =
+    "View"
+
+local MENU_HELP =
+    "Help"
 
 --------------------------------------------------------------------------------
--- Initializes the component.
---
--- Parameters
--- ----------
--- window
---     Main Window instance.
--------------------------------------------------------------------------------
-function MenuBar.Initialize(window)
+-- Private Rendering
+--------------------------------------------------------------------------------
 
-    mainWindow = window
-    menus = {}
+local function RenderFileMenu(context)
 
-    initialized = true
+    if reaper.ImGui_BeginMenu(context, MENU_FILE) then
+
+        reaper.ImGui_MenuItem(
+            context,
+            "Exit"
+        )
+
+        reaper.ImGui_EndMenu(
+            context
+        )
+
+    end
 
 end
 
--------------------------------------------------------------------------------
--- Shuts down the component.
--------------------------------------------------------------------------------
+--------------------------------------------------------------------------------
+
+local function RenderViewMenu(context)
+
+    if reaper.ImGui_BeginMenu(context, MENU_VIEW) then
+
+        reaper.ImGui_MenuItem(
+            context,
+            "Home"
+        )
+
+        reaper.ImGui_MenuItem(
+            context,
+            "Analysis"
+        )
+
+        reaper.ImGui_MenuItem(
+            context,
+            "Results"
+        )
+
+        reaper.ImGui_EndMenu(
+            context
+        )
+
+    end
+
+end
+
+--------------------------------------------------------------------------------
+
+local function RenderHelpMenu(context)
+
+    if reaper.ImGui_BeginMenu(context, MENU_HELP) then
+
+        reaper.ImGui_MenuItem(
+            context,
+            "About ACP Studio"
+        )
+
+        reaper.ImGui_EndMenu(
+            context
+        )
+
+    end
+
+end
+
+--------------------------------------------------------------------------------
+-- Public API
+--------------------------------------------------------------------------------
+
+function MenuBar.Initialize()
+
+end
+
+--------------------------------------------------------------------------------
+
+function MenuBar.Render(context)
+
+    if not context then
+        return
+    end
+
+    if reaper.ImGui_BeginMenuBar(context) then
+
+        RenderFileMenu(context)
+
+        RenderViewMenu(context)
+
+        RenderHelpMenu(context)
+
+        reaper.ImGui_EndMenuBar(
+            context
+        )
+
+    end
+
+end
+
+--------------------------------------------------------------------------------
+
 function MenuBar.Shutdown()
 
-    menus = {}
-    mainWindow = nil
-
-    initialized = false
-
 end
 
--------------------------------------------------------------------------------
--- Returns whether the component has been initialized.
---
--- Returns
--- -------
--- True if initialized, otherwise false.
--------------------------------------------------------------------------------
-function MenuBar.IsInitialized()
-
-    return initialized
-
-end
-
--------------------------------------------------------------------------------
--- Public API
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
--- Registers a new menu.
---
--- Parameters
--- ----------
--- name
---     Menu name.
--------------------------------------------------------------------------------
-function MenuBar.AddMenu(name)
-
-    menus[name] = {}
-
-end
-
--------------------------------------------------------------------------------
--- Returns a registered menu.
---
--- Parameters
--- ----------
--- name
---     Menu name.
---
--- Returns
--- -------
--- Registered menu or nil.
--------------------------------------------------------------------------------
-function MenuBar.GetMenu(name)
-
-    return menus[name]
-
-end
+--------------------------------------------------------------------------------
+-- End of Module
+--------------------------------------------------------------------------------
 
 return MenuBar

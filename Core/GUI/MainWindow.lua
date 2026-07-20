@@ -4,7 +4,7 @@
 -- Module        : MainWindow
 -- Layer         : GUI
 -- Purpose       : Coordinates the main application window.
--- Specification : GUI-106
+-- Specification : GUI-208
 --------------------------------------------------------------------------------
 
 local WindowLifecycle =
@@ -12,12 +12,6 @@ local WindowLifecycle =
 
 local WindowLayout =
     require("Core.GUI.WindowLayout")
-
-local Toolbar =
-    require("Core.GUI.Toolbar.Toolbar")
-
-local ViewRegistry =
-    require("Core.GUI.ViewRegistry")
 
 local ViewManager =
     require("Core.GUI.ViewManager")
@@ -34,62 +28,44 @@ local ResultsView =
 local MainWindow = {}
 
 --------------------------------------------------------------------------------
--- Constants
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
 -- Private State
 --------------------------------------------------------------------------------
 
-local State = {
-
+local State =
+{
     Context = nil
-
 }
 
 --------------------------------------------------------------------------------
 -- Private Functions
 --------------------------------------------------------------------------------
 
-local function InitializeViews()
+local function RegisterViews()
 
-    ViewRegistry.Initialize()
+    local home = HomeView.New()
+reaper.ShowConsoleMsg("Home.Id = " .. tostring(home.Id) .. "\n")
+ViewManager.Register(home)
 
-    ViewRegistry.Register(
-        "Home",
-        HomeView.New(State.Context))
+local analysis = AnalysisView.New()
+reaper.ShowConsoleMsg("Analysis.Id = " .. tostring(analysis.Id) .. "\n")
+ViewManager.Register(analysis)
 
-    ViewRegistry.Register(
-        "Analysis",
-        AnalysisView.New(State.Context))
+local results = ResultsView.New()
+reaper.ShowConsoleMsg("Results.Id = " .. tostring(results.Id) .. "\n")
+ViewManager.Register(results)
 
-    ViewRegistry.Register(
-        "Results",
-        ResultsView.New(State.Context))
+    ViewManager.Reset()
 
-    ViewManager.Initialize(ViewRegistry)
+    ViewManager.Register(
+        HomeView.New())
 
-    ViewManager.SetActive("Home")
+    ViewManager.Register(
+        AnalysisView.New())
 
-end
+    ViewManager.Register(
+        ResultsView.New())
 
---------------------------------------------------------------------------------
-
-local function ShutdownViews()
-
-    ViewManager.Shutdown()
-
-    ViewRegistry.Shutdown()
-
-end
-
---------------------------------------------------------------------------------
-
-local function RenderWorkspace()
-
-    ViewManager.Render(
-        State.Context
-    )
+    
 
 end
 
@@ -98,12 +74,6 @@ end
 --------------------------------------------------------------------------------
 
 function MainWindow.Initialize(context)
-
-    reaper.ShowConsoleMsg(
-    "Initialize Context = "
-    .. tostring(context)
-    .. "\n")
-
 
     assert(
         context,
@@ -121,11 +91,9 @@ function MainWindow.Initialize(context)
     -- Views
     --------------------------------------------------------------------------
 
-    reaper.ShowConsoleMsg(
-    "State.Context = "
-    .. tostring(State.Context)
-    .. "\n")
-    InitializeViews()
+    RegisterViews()
+
+    ViewManager.Activate("Home")
 
 end
 
@@ -137,12 +105,9 @@ function MainWindow.Run()
         return false
     end
 
-    --------------------------------------------------------------------------
-    -- Layout
-    --------------------------------------------------------------------------
-
     WindowLayout.Render(
-        State.Context)
+        State.Context
+    )
 
     return WindowLifecycle.IsOpen()
 
@@ -152,15 +117,9 @@ end
 
 function MainWindow.Shutdown()
 
-    --------------------------------------------------------------------------
-    -- Views
-    --------------------------------------------------------------------------
+    ViewManager.Deactivate()
 
-    ShutdownViews()
-
-    --------------------------------------------------------------------------
-    -- Window
-    --------------------------------------------------------------------------
+    ViewManager.Reset()
 
     WindowLifecycle.Close()
 
