@@ -4,8 +4,7 @@
 -- Module        : HomeWorkspace
 -- Layer         : GUI Component
 -- Purpose       : Renders the Home Dashboard workspace container.
---
--- Specification : GUI-203
+-- Specification : GUI-205
 --------------------------------------------------------------------------------
 
 local HomeWorkspace = {}
@@ -21,7 +20,11 @@ local TITLE =
 -- Public API
 --------------------------------------------------------------------------------
 
-function HomeWorkspace.Render(ctx, model)
+function HomeWorkspace.Render(ctx, presentationModel)
+
+    if not presentationModel then
+        return
+    end
 
     reaper.ImGui_Text(
         ctx,

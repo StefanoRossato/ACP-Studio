@@ -45,7 +45,6 @@ function HomeView.New()
 
     View.PresentationModel= nil
 
-    
     setmetatable(
         View,
         {
@@ -99,6 +98,7 @@ function HomeView:Render(ctx)
     HomeWorkspace.Render(ctx, self.PresentationModel)
 
 end
+
 --------------------------------------------------------------------------------
 -- End of Module
 --------------------------------------------------------------------------------

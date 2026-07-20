@@ -4,7 +4,7 @@
 -- Module        : HomeHeader
 -- Layer         : GUI Component
 -- Purpose       : Renders the Home Dashboard header.
--- Specification : GUI-203
+-- Specification : GUI-205
 --------------------------------------------------------------------------------
 
 local HomeHeader = {}
@@ -13,9 +13,16 @@ local HomeHeader = {}
 -- Public API
 --------------------------------------------------------------------------------
 
-function HomeHeader.Render(ctx, model)
+function HomeHeader.Render(ctx, presentationModel)
 
-    reaper.ImGui_Text(ctx, model.title)
+    if not presentationModel then
+        return
+    end
+
+    reaper.ImGui_Text(
+        ctx,
+        presentationModel.title
+    )
 
 end
 

@@ -4,8 +4,7 @@
 -- Module        : HomeWelcome
 -- Layer         : GUI Component
 -- Purpose       : Renders the Home Dashboard welcome section.
---
--- Specification : GUI-203
+-- Specification : GUI-205
 --------------------------------------------------------------------------------
 
 local HomeWelcome = {}
@@ -24,7 +23,11 @@ local DESCRIPTION =
 -- Public API
 --------------------------------------------------------------------------------
 
-function HomeWelcome.Render(ctx, model)
+function HomeWelcome.Render(ctx, presentationModel)
+
+    if not presentationModel then
+        return
+    end
 
     reaper.ImGui_Text(
         ctx,

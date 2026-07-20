@@ -4,7 +4,7 @@
 -- Module        : HomeDashboard
 -- Layer         : GUI Component
 -- Purpose       : Renders the Home Dashboard main area.
--- Specification : GUI-203
+-- Specification : GUI-205
 --------------------------------------------------------------------------------
 
 local HomeDashboard = {}
@@ -20,13 +20,25 @@ local TITLE =
 -- Public API
 --------------------------------------------------------------------------------
 
-function HomeDashboard.Render(ctx, model)
+function HomeDashboard.Render(ctx, presentationModel)
 
-    reaper.ImGui_Text(ctx, TITLE)
+    if not presentationModel then
+        return
+    end
 
-    reaper.ImGui_Separator(ctx)
+    reaper.ImGui_Text(
+        ctx,
+        TITLE
+    )
 
-    reaper.ImGui_Text(ctx, "Dashboard workspace ready.")
+    reaper.ImGui_Separator(
+        ctx
+    )
+
+    reaper.ImGui_Text(
+        ctx,
+        "Dashboard workspace ready."
+    )
 
 end
 
