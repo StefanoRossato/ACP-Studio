@@ -2,55 +2,30 @@
 -- ACP Studio
 --
 -- Module        : ProjectInformationPanel
--- Layer         : GUI Panel
--- Purpose       : Renders the Project Information panel container.
---
--- Specification : GUI-201
+-- Layer         : Application
+-- Purpose       : Renders the Project Information dashboard panel.
+-- Specification : GUI-206
 --------------------------------------------------------------------------------
 
 local ProjectInformationPanel = {}
 
 --------------------------------------------------------------------------------
--- Constants
+-- Public Interface
 --------------------------------------------------------------------------------
 
-local TITLE =
-    "Project Information"
+function ProjectInformationPanel.Render(context, model)
 
+    local ImGui = context.ImGui
 
-local MESSAGE =
-    "Project information panel ready."
+    ImGui.Text(context.Ctx, "Project")
+    ImGui.Separator(context.Ctx)
 
-
---------------------------------------------------------------------------------
--- Public API
---------------------------------------------------------------------------------
-
-function ProjectInformationPanel.Render(ctx)
-
-
-    reaper.ImGui_Text(
-        ctx,
-        TITLE
-    )
-
-
-    reaper.ImGui_Separator(
-        ctx
-    )
-
-
-    reaper.ImGui_Text(
-        ctx,
-        MESSAGE
-    )
-
+    ImGui.Text(context.Ctx, "Project Name")
+    ImGui.Text(context.Ctx, "Sample Rate")
+    ImGui.Text(context.Ctx, "Track Count")
 
 end
 
-
---------------------------------------------------------------------------------
--- End of Module
 --------------------------------------------------------------------------------
 
 return ProjectInformationPanel

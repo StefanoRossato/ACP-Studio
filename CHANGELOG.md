@@ -1112,3 +1112,16 @@ Architecture
 - Home View acts as a composition root
 - Home components are stateless
 - Rendering responsibilities delegated to dedicated components
+
+## [Unreleased]
+
+### Added
+
+- GUI-206 — Dashboard Panel Composition.
+- Introduced modular dashboard composition architecture.
+- Added AnalysisOverviewPanel component.
+- Added RuntimeStatusPanel component.
+- Added ProjectInformationPanel component.
+- Refactored HomeDashboard into a composition component.
+- Added certified GUI-206 Dashboard Panel Composition test.
+- Added GUI-206 foundation specification.

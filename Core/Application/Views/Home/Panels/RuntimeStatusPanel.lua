@@ -2,55 +2,30 @@
 -- ACP Studio
 --
 -- Module        : RuntimeStatusPanel
--- Layer         : GUI Panel
--- Purpose       : Renders the Runtime Status panel container.
---
--- Specification : GUI-201
+-- Layer         : Application
+-- Purpose       : Renders the Runtime Status dashboard panel.
+-- Specification : GUI-206
 --------------------------------------------------------------------------------
 
 local RuntimeStatusPanel = {}
 
 --------------------------------------------------------------------------------
--- Constants
+-- Public Interface
 --------------------------------------------------------------------------------
 
-local TITLE =
-    "Runtime Status"
+function RuntimeStatusPanel.Render(context, model)
 
+    local ImGui = context.ImGui
 
-local MESSAGE =
-    "Runtime information panel ready."
+    ImGui.Text(context.Ctx, "Runtime")
+    ImGui.Separator(context.Ctx)
 
-
---------------------------------------------------------------------------------
--- Public API
---------------------------------------------------------------------------------
-
-function RuntimeStatusPanel.Render(ctx)
-
-
-    reaper.ImGui_Text(
-        ctx,
-        TITLE
-    )
-
-
-    reaper.ImGui_Separator(
-        ctx
-    )
-
-
-    reaper.ImGui_Text(
-        ctx,
-        MESSAGE
-    )
-
+    ImGui.Text(context.Ctx, "Status")
+    ImGui.Text(context.Ctx, "Frame Time")
+    ImGui.Text(context.Ctx, "Refresh Rate")
 
 end
 
-
---------------------------------------------------------------------------------
--- End of Module
 --------------------------------------------------------------------------------
 
 return RuntimeStatusPanel
