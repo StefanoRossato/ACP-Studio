@@ -1125,3 +1125,28 @@ Architecture
 - Refactored HomeDashboard into a composition component.
 - Added certified GUI-206 Dashboard Panel Composition test.
 - Added GUI-206 foundation specification.
+
+## [Unreleased]
+
+### Added
+
+#### Engineering Standards
+- Certified ENG-001 — Engineering Documentation Standard.
+- Certified ENG-002 — Engineering Review Standard.
+- Certified ENG-003 — Engineering Versioning Standard.
+- Certified ENG-004 — Engineering Change Management Standard.
+
+#### Template Standards
+- Introduced the new TPL (Template Standards) family.
+- Certified TPL-001 — Lua Module Template Standard.
+
+### Changed
+
+- Established the separation between Engineering Standards, Template Standards, and Reference Implementations.
+- Adopted the new Engineering governance workflow:
+  Engineering Standard → Template Standard → Reference Implementation → Engineering Review → Certification → Project Implementation.
+- Designated first-generation templates (MOD-001, TST-001, ModuleSkeleton.lua, TestSkeleton.lua) as historical engineering artifacts pending replacement by the new TPL-based Reference Implementations.
+
+### Notes
+
+- ModuleSkeleton.lua certification intentionally deferred until its implementation as the official Reference Implementation for TPL-001.

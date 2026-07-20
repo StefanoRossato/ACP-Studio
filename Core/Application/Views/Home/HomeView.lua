@@ -74,6 +74,11 @@ function HomeView:OnEnter()
 
     self:RefreshModel()
 
+    self.DataBindingService =
+        DashboardDataBindingService.Create(
+            self.PresentationModel
+        )
+
 end
 
 function HomeView:OnExit()
