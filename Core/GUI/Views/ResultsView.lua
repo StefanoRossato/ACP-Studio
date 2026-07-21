@@ -10,6 +10,9 @@
 local BaseView =
     require("Core.GUI.BaseView")
 
+local ViewId =
+    require("Core.Application.Navigation.ViewId")
+
 local ResultsView = {}
 
 --------------------------------------------------------------------------------
@@ -20,7 +23,7 @@ function ResultsView.New()
 
     local View =
         BaseView.New(
-            "Results",
+            ViewId.Results,
             "Results"
         )
 

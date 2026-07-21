@@ -30,6 +30,9 @@ local HomeViewModel =
 local DashboardDataBindingService =
     require("Core.GUI.Dashboard.DashboardDataBindingService")
 
+local ViewId =
+    require("Core.Application.Navigation.ViewId")
+
 --------------------------------------------------------------------------------
 -- Constructor
 --------------------------------------------------------------------------------
@@ -38,7 +41,7 @@ function HomeView.New()
 
     local View =
         BaseView.New(
-            "Home",
+            ViewId.Home,
             "Home"
         )
 
@@ -97,7 +100,7 @@ end
 -- Rendering
 --------------------------------------------------------------------------------
 
-function HomeView:Render(ctx)
+function HomeView:Render(context)
 
     if not self.PresentationModel then
         return

@@ -4,7 +4,7 @@
 -- Module        : MainWindow
 -- Layer         : GUI
 -- Purpose       : Coordinates the main application window.
--- Specification : GUI-208
+-- Specification : GUI-211
 --------------------------------------------------------------------------------
 
 local WindowLifecycle =
@@ -15,6 +15,9 @@ local WindowLayout =
 
 local ViewManager =
     require("Core.GUI.ViewManager")
+
+local NavigationService =
+    require("Core.Application.Navigation.NavigationService")
 
 local HomeView =
     require("Core.Application.Views.Home.HomeView")
@@ -42,18 +45,6 @@ local State =
 
 local function RegisterViews()
 
-    local home = HomeView.New()
-reaper.ShowConsoleMsg("Home.Id = " .. tostring(home.Id) .. "\n")
-ViewManager.Register(home)
-
-local analysis = AnalysisView.New()
-reaper.ShowConsoleMsg("Analysis.Id = " .. tostring(analysis.Id) .. "\n")
-ViewManager.Register(analysis)
-
-local results = ResultsView.New()
-reaper.ShowConsoleMsg("Results.Id = " .. tostring(results.Id) .. "\n")
-ViewManager.Register(results)
-
     ViewManager.Reset()
 
     ViewManager.Register(
@@ -64,8 +55,6 @@ ViewManager.Register(results)
 
     ViewManager.Register(
         ResultsView.New())
-
-    
 
 end
 
@@ -93,7 +82,11 @@ function MainWindow.Initialize(context)
 
     RegisterViews()
 
-    ViewManager.Activate("Home")
+    --------------------------------------------------------------------------
+    -- Navigation
+    --------------------------------------------------------------------------
+
+    NavigationService.Initialize()
 
 end
 
@@ -106,8 +99,7 @@ function MainWindow.Run()
     end
 
     WindowLayout.Render(
-        State.Context
-    )
+        State.Context)
 
     return WindowLifecycle.IsOpen()
 
@@ -116,8 +108,6 @@ end
 --------------------------------------------------------------------------------
 
 function MainWindow.Shutdown()
-
-    ViewManager.Deactivate()
 
     ViewManager.Reset()
 

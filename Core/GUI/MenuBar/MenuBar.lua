@@ -4,8 +4,14 @@
 -- Module        : MenuBar
 -- Layer         : GUI
 -- Purpose       : Renders the application menu bar.
--- Specification : GUI-210
+-- Specification : GUI-211
 --------------------------------------------------------------------------------
+
+local NavigationService =
+    require("Core.Application.Navigation.NavigationService")
+
+local ViewId =
+    require("Core.Application.Navigation.ViewId")
 
 local MenuBar = {}
 
@@ -30,14 +36,20 @@ local function RenderFileMenu(context)
 
     if reaper.ImGui_BeginMenu(context, MENU_FILE) then
 
-        reaper.ImGui_MenuItem(
-            context,
-            "Exit"
-        )
+        local selected
 
-        reaper.ImGui_EndMenu(
-            context
-        )
+        selected =
+            reaper.ImGui_MenuItem(
+                context,
+                "Exit"
+            )
+
+        if selected then
+            -- TODO
+            -- Application shutdown request.
+        end
+
+        reaper.ImGui_EndMenu(context)
 
     end
 
@@ -49,24 +61,39 @@ local function RenderViewMenu(context)
 
     if reaper.ImGui_BeginMenu(context, MENU_VIEW) then
 
-        reaper.ImGui_MenuItem(
-            context,
-            "Home"
-        )
+        local selected
 
-        reaper.ImGui_MenuItem(
-            context,
-            "Analysis"
-        )
+        selected =
+            reaper.ImGui_MenuItem(
+                context,
+                "Home"
+            )
 
-        reaper.ImGui_MenuItem(
-            context,
-            "Results"
-        )
+        if selected then
+            NavigationService.Navigate(ViewId.Home)
+        end
 
-        reaper.ImGui_EndMenu(
-            context
-        )
+        selected =
+            reaper.ImGui_MenuItem(
+                context,
+                "Analysis"
+            )
+
+        if selected then
+            NavigationService.Navigate(ViewId.Analysis)
+        end
+
+        selected =
+            reaper.ImGui_MenuItem(
+                context,
+                "Results"
+            )
+
+        if selected then
+            NavigationService.Navigate(ViewId.Results)
+        end
+
+        reaper.ImGui_EndMenu(context)
 
     end
 
@@ -83,9 +110,7 @@ local function RenderHelpMenu(context)
             "About ACP Studio"
         )
 
-        reaper.ImGui_EndMenu(
-            context
-        )
+        reaper.ImGui_EndMenu(context)
 
     end
 
@@ -110,14 +135,10 @@ function MenuBar.Render(context)
     if reaper.ImGui_BeginMenuBar(context) then
 
         RenderFileMenu(context)
-
         RenderViewMenu(context)
-
         RenderHelpMenu(context)
 
-        reaper.ImGui_EndMenuBar(
-            context
-        )
+        reaper.ImGui_EndMenuBar(context)
 
     end
 

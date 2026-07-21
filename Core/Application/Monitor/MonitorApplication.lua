@@ -98,15 +98,8 @@ function MonitorApplication.Shutdown()
 
     MainWindow.Shutdown()
 
-    if State.Context then
-
-        reaper.ImGui_DestroyContext(
-            State.Context
-        )
-
-        State.Context = nil
-
-    end
+    -- ReaImGui releases the context automatically when the script ends.
+    State.Context = nil
 
 end
 

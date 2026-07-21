@@ -1211,3 +1211,18 @@ Architecture
 - Fixed MenuBar integration.
 - Fixed ReaImGui rendering lifecycle.
 - ACP Monitor now launches successfully using the new GUI architecture.
+
+## [Unreleased]
+
+### Added
+
+- TPL-006 — Test Skeleton Framework.
+- Defined the architectural hierarchy for ACP Studio test skeletons.
+- Introduced BaseTestSkeleton as the common engineering foundation.
+- Defined the specialization model for ModuleTestSkeleton, GuiTestSkeleton, and ViewTestSkeleton.
+
+### Changed
+
+- Aligned the TPL documentation family to the new Test Skeleton Framework.
+- Updated document dependencies across TPL-002, TPL-003, TPL-004, and TPL-005.
+- Improved architectural traceability between template specifications.

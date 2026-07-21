@@ -3,9 +3,12 @@
 --
 -- Module        : ViewManager
 -- Layer         : GUI
--- Purpose       : Manages the lifecycle of application views.
--- Specification : GUI-108
+-- Purpose       : Renders registered application views.
+-- Specification : GUI-211
 --------------------------------------------------------------------------------
+
+local NavigationService =
+    require("Core.Application.Navigation.NavigationService")
 
 local ViewManager = {}
 
@@ -15,72 +18,57 @@ local ViewManager = {}
 
 local State =
 {
-    Views = {},
-    ActiveView = nil
+    Views = {}
 }
-
---------------------------------------------------------------------------------
--- Private Functions
---------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 -- Public API
 --------------------------------------------------------------------------------
 
 function ViewManager.Register(view)
+
     State.Views[view.Id] = view
+
 end
 
-function ViewManager.Activate(id)
+--------------------------------------------------------------------------------
 
-    local view = State.Views[id]
+function ViewManager.Get(id)
+
+    return State.Views[id]
+
+end
+
+--------------------------------------------------------------------------------
+
+function ViewManager.Render(context)
+
+    local viewId =
+        NavigationService.CurrentViewId()
+
+    if not viewId then
+        return
+    end
+
+    local view =
+        State.Views[viewId]
 
     if not view then
         return
     end
 
-    if State.ActiveView then
-        State.ActiveView:OnExit()
-    end
-
-    State.ActiveView = view
-
-    State.ActiveView:OnEnter()
+    view:Render(context)
 
 end
 
-function ViewManager.Deactivate()
-
-    if not State.ActiveView then
-        return
-    end
-
-    State.ActiveView:OnExit()
-
-    State.ActiveView = nil
-
-end
-
-function ViewManager.GetActive()
-    return State.ActiveView
-end
-
-function ViewManager.Render(context)
-
-    if not State.ActiveView then
-        return
-    end
-
-    State.ActiveView:Render(context)
-
-end
+--------------------------------------------------------------------------------
 
 function ViewManager.Reset()
 
     State.Views = {}
-    State.ActiveView = nil
 
 end
+
 --------------------------------------------------------------------------------
 -- End of Module
 --------------------------------------------------------------------------------
