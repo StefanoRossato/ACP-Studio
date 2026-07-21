@@ -1,52 +1,32 @@
---------------------------------------------------------------------------------
--- ACP Studio
---
--- Module        : Bootstrap
--- Layer         : Application
--- Purpose       : Initializes the application runtime environment.
--- Specification : MON-001
---------------------------------------------------------------------------------
-
 local Bootstrap = {}
 
---------------------------------------------------------------------------------
--- Private State
---------------------------------------------------------------------------------
+local RuntimeEnvironment =
+    require("Core.Runtime.RuntimeEnvironment")
 
 local State = {
-
     Initialized = false
-
 }
-
---------------------------------------------------------------------------------
--- Private Functions
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
--- Public API
---------------------------------------------------------------------------------
 
 function Bootstrap.Initialize()
 
     if State.Initialized then
-        return
+        return true
     end
 
-    --------------------------------------------------------------------------
-    -- Configure Lua runtime
-    --------------------------------------------------------------------------
+    RuntimeEnvironment.Initialize()
 
-    -- TODO:
-    -- Configure package.path
-    -- Configure package.cpath (if needed)
+    if not RuntimeEnvironment.Prepare() then
+        return false
+    end
+
+    if not RuntimeEnvironment.Validate() then
+        return false
+    end
 
     State.Initialized = true
 
-end
+    return true
 
---------------------------------------------------------------------------------
--- End of Module
---------------------------------------------------------------------------------
+end
 
 return Bootstrap

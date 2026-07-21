@@ -1226,3 +1226,41 @@ Architecture
 - Aligned the TPL documentation family to the new Test Skeleton Framework.
 - Updated document dependencies across TPL-002, TPL-003, TPL-004, and TPL-005.
 - Improved architectural traceability between template specifications.
+
+## [Unreleased]
+
+### Added
+
+- ENV-002 Runtime Environment Preparation completed.
+- Automatic Runtime Environment provisioning.
+- Automatic creation of the ACP Runtime track.
+- Automatic insertion of the ACP Studio - Baseline DSP Runtime plugin.
+- RuntimeEnvironment.Prepare() introduced.
+- Runtime track provisioning extracted into CreateRuntimeTrack().
+- Runtime plugin provisioning extracted into CreateRuntimePlugin().
+
+### Changed
+
+- Bootstrap initialization redesigned as an orchestration pipeline.
+
+  Initialize()
+      ↓
+  Prepare()
+      ↓
+  Validate()
+
+- RuntimeEnvironment responsibilities separated into:
+  - Initialize()
+  - Prepare()
+  - Validate()
+
+- ACP Monitor launcher simplified.
+- Bootstrap no longer depends on repository-specific initialization.
+
+### Fixed
+
+- ACP Monitor now starts correctly on an empty REAPER project.
+- Runtime Environment no longer requires manual project preparation.
+- Automatic Runtime Track provisioning.
+- Automatic Runtime Plugin provisioning.
+- Clean application startup and shutdown verified.

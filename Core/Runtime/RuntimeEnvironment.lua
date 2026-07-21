@@ -2,10 +2,7 @@
 -- ACP Studio
 -- RuntimeEnvironment.lua
 --
--- ENV-001 Runtime Environment
---
--- Responsible for preparing and validating the Runtime environment
--- required by ACP Studio engineering components.
+-- ENV-002 Runtime Environment Preparation
 -----------------------------------------------------------------------
 
 local RuntimeEnvironment = {}
@@ -13,8 +10,9 @@ local RuntimeEnvironment = {}
 -----------------------------------------------------------------------
 -- Constants
 -----------------------------------------------------------------------
-local RUNTIME_TRACK_NAME = "ACP Runtime"
-local RUNTIME_PLUGIN_NAME = "ACP Baseline"
+
+local RUNTIME_TRACK_NAME  = "ACP Runtime"
+local RUNTIME_PLUGIN_NAME = "ACP Studio - Baseline DSP Runtime"
 
 -----------------------------------------------------------------------
 -- Private State
@@ -48,7 +46,8 @@ local function EnsureRuntimeTrack()
 
         local track = reaper.GetTrack(0, index)
 
-        local _, name = reaper.GetTrackName(track)
+        local _, name =
+            reaper.GetTrackName(track)
 
         if name == RUNTIME_TRACK_NAME then
 
@@ -65,6 +64,37 @@ local function EnsureRuntimeTrack()
 end
 
 -----------------------------------------------------------------------
+-- Create Runtime Track
+-----------------------------------------------------------------------
+
+local function CreateRuntimeTrack()
+
+    local trackIndex =
+        reaper.CountTracks(0)
+
+    reaper.InsertTrackAtIndex(
+        trackIndex,
+        true
+    )
+
+    local track =
+        reaper.GetTrack(
+            0,
+            trackIndex
+        )
+
+    reaper.GetSetMediaTrackInfo_String(
+        track,
+        "P_NAME",
+        RUNTIME_TRACK_NAME,
+        true
+    )
+
+    return true
+
+end
+
+-----------------------------------------------------------------------
 -- Ensure Runtime Plugin
 -----------------------------------------------------------------------
 
@@ -73,6 +103,8 @@ local function EnsureRuntimePlugin()
     if not State.track then
         return false
     end
+
+    State.runtimeFX = nil
 
     local fxCount =
         reaper.TrackFX_GetCount(State.track)
@@ -101,6 +133,28 @@ local function EnsureRuntimePlugin()
 end
 
 -----------------------------------------------------------------------
+-- Create Runtime Plugin
+-----------------------------------------------------------------------
+
+local function CreateRuntimePlugin()
+
+    if not State.track then
+        return false
+    end
+
+    local fxIndex =
+        reaper.TrackFX_AddByName(
+            State.track,
+            RUNTIME_PLUGIN_NAME,
+            false,
+            -1
+        )
+
+    return fxIndex >= 0
+
+end
+
+-----------------------------------------------------------------------
 -- Public API
 -----------------------------------------------------------------------
 
@@ -118,30 +172,58 @@ end
 
 -----------------------------------------------------------------------
 
-function RuntimeEnvironment.Validate()
+function RuntimeEnvironment.Prepare()
 
-    if not State.initialized then
-
-        State.ready = false
-
-        return false
-
-    end
+    ---------------------------------------------------------------
+    -- Runtime Track
+    ---------------------------------------------------------------
 
     if not EnsureRuntimeTrack() then
 
-        State.ready = false
+        if not CreateRuntimeTrack() then
+            return false
+        end
 
-        return false
+        if not EnsureRuntimeTrack() then
+            return false
+        end
 
     end
 
+    ---------------------------------------------------------------
+    -- Runtime Plugin
+    ---------------------------------------------------------------
+
     if not EnsureRuntimePlugin() then
 
-        State.ready = false
+        if not CreateRuntimePlugin() then
+            return false
+        end
 
+        if not EnsureRuntimePlugin() then
+            return false
+        end
+
+    end
+
+    return true
+
+end
+
+-----------------------------------------------------------------------
+
+function RuntimeEnvironment.Validate()
+
+    if not State.initialized then
         return false
+    end
 
+    if not EnsureRuntimeTrack() then
+        return false
+    end
+
+    if not EnsureRuntimePlugin() then
+        return false
     end
 
     State.ready = true
@@ -162,7 +244,7 @@ end
 
 function RuntimeEnvironment.GetRuntimeTrack()
 
-     return State.track
+    return State.track
 
 end
 

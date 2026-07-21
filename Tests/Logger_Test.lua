@@ -1,28 +1,72 @@
-----------------------------------------------------------------------
--- ACP Studio
--- Logger_Test.lua
-----------------------------------------------------------------------
+--------------------------------------------------------------------------------
+-- LOGGER-201
+-- Foundation Logger Test
+--------------------------------------------------------------------------------
 
-dofile(debug.getinfo(1, "S").source:match("@?(.*[/\\])") .. "TestSetup.lua")
+--------------------------------------------------------------------------------
+-- Initialize Test Environment
+--------------------------------------------------------------------------------
 
-local Logger = require("Core.Logger")
+require("Tests.TestBootstrap").Initialize()
 
-Logger.Clear()
+--------------------------------------------------------------------------------
+-- Dependencies
+--------------------------------------------------------------------------------
 
-Logger.Section("Logger Test")
+local Logger =
+    require("Core.Foundation.Logger")
 
-Logger.Info("Session started")
-Logger.Debug("Analyzer initialized")
-Logger.Warning("Dummy warning")
-Logger.Error("Dummy error")
+--------------------------------------------------------------------------------
+-- Execute
+--------------------------------------------------------------------------------
 
-reaper.ClearConsole()
+assert(
+    Logger ~= nil,
+    "Logger module not loaded.")
 
-reaper.ShowConsoleMsg("=========================\n")
-reaper.ShowConsoleMsg("Logger Test\n")
-reaper.ShowConsoleMsg("=========================\n\n")
+------------------------------------------------------------------------------
+-- Lifecycle
+------------------------------------------------------------------------------
 
-reaper.ShowConsoleMsg("Log file created:\n")
-reaper.ShowConsoleMsg(Logger.GetLogFile() .. "\n\n")
+assert(
+    Logger.Initialize(),
+    "Logger initialization failed.")
 
-reaper.ShowConsoleMsg("TEST PASSED\n")
+assert(
+    not Logger.Initialize(),
+    "Logger accepted duplicate initialization.")
+
+------------------------------------------------------------------------------
+-- Public API
+------------------------------------------------------------------------------
+
+Logger.Log(
+    "Generic log message")
+
+Logger.Info(
+    "Information message")
+
+Logger.Warning(
+    "Warning message")
+
+Logger.Error(
+    "Error message")
+
+------------------------------------------------------------------------------
+-- Shutdown
+------------------------------------------------------------------------------
+
+assert(
+    Logger.Shutdown(),
+    "Logger shutdown failed.")
+
+assert(
+    not Logger.Shutdown(),
+    "Logger accepted duplicate shutdown.")
+
+--------------------------------------------------------------------------------
+-- Result
+--------------------------------------------------------------------------------
+
+reaper.ShowConsoleMsg(
+    "LOGGER-201 PASSED\n")
