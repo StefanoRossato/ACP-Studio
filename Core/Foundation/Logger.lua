@@ -35,12 +35,27 @@ local Constants =
 
 local State =
 {
-    Lifecycle = Lifecycle.Loaded
+    Lifecycle = Lifecycle.Loaded,
+    Configuration = nil,
+    FileHandle = nil
 }
 
 ------------------------------------------------------------------------------
 -- Private Functions
 ------------------------------------------------------------------------------
+
+local function ConsoleTarget(message)
+
+    reaper.ShowConsoleMsg(message)
+
+end
+
+local function FileTarget(message)
+
+    State.FileHandle:write(message)
+    State.FileHandle:flush()
+
+end
 
 local function ValidateOperational()
 
@@ -60,9 +75,11 @@ local function Write(prefix, message)
     assert(
         type(message) == "string",
         "A valid log message is required.")
+    
+    local output = prefix .. message .. "\n"
 
-    reaper.ShowConsoleMsg(
-        prefix .. message .. "\n")
+    ConsoleTarget(output)
+    FileTarget(output)
 
 end
 
@@ -70,11 +87,25 @@ end
 -- Lifecycle
 ------------------------------------------------------------------------------
 
-function Logger.Initialize()
+function Logger.Initialize(configuration)
+
+    assert(
+        type(configuration) == "table",
+        "Logger configuration is required.")
 
     if State.Lifecycle ~= Lifecycle.Loaded then
         return false
     end
+
+    local handle, errorMessage =
+        io.open(configuration.LogFile, "a")
+
+    assert(
+        handle,
+        errorMessage)
+
+    State.Configuration = configuration
+    State.FileHandle = handle
 
     State.Lifecycle = Lifecycle.Operational
 
@@ -91,6 +122,11 @@ function Logger.Shutdown()
     end
 
     State.Lifecycle = Lifecycle.Terminated
+
+    if State.FileHandle then
+        State.FileHandle:close()
+        State.FileHandle = nil
+    end
 
     return true
 

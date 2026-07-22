@@ -4,7 +4,7 @@
 -- Module        : AnalysisView
 -- Layer         : GUI
 -- Purpose       : Defines the analysis application view.
--- Specification : GUI-209
+-- Specification : GUI-212
 --------------------------------------------------------------------------------
 
 local BaseView =
@@ -13,6 +13,23 @@ local BaseView =
 local ViewId =
     require("Core.Application.Navigation.ViewId")
 
+local AnalysisHeader =
+    require("Core.Application.Views.Analysis.Components.AnalysisHeader")
+
+local TrackSelectionPanel =
+    require("Core.Application.Views.Analysis.Components.TrackSelectionPanel")
+
+local AnalysisStatusPanel =
+    require("Core.Application.Views.Analysis.Components.AnalysisStatusPanel")
+
+local MeasurementPanel =
+    require("Core.Application.Views.Analysis.Components.MeasurementPanel")
+
+local ActionBar =
+    require("Core.Application.Views.Analysis.Components.ActionBar")
+
+local AnalysisPresentationModel =
+    require("Core.Application.Views.Analysis.AnalysisPresentationModel")    
 
 local AnalysisView = {}
 
@@ -28,6 +45,9 @@ function AnalysisView.New()
             "Analysis"
         )
 
+    View.Model =
+        AnalysisPresentationModel.New()
+    
     setmetatable(
         View,
         {
@@ -57,26 +77,17 @@ end
 -- Rendering
 --------------------------------------------------------------------------------
 
-function AnalysisView:Render(context)
+function AnalysisHeader.Render(context,model)
 
-    reaper.ImGui_Text(
-        context,
-        "Analysis"
-    )
+    AnalysisHeader.Render(context,self.Model)
 
-    reaper.ImGui_Separator(
-        context
-    )
+    TrackSelectionPanel.Render(context,self.Model)
 
-    reaper.ImGui_Text(
-        context,
-        "Analysis View"
-    )
+    AnalysisStatusPanel.Render(context,self.Model)
 
-    reaper.ImGui_Text(
-        context,
-        "GUI-209"
-    )
+    MeasurementPanel.Render(context,self.Model)
+
+    ActionBar.Render(context,self.Model)
 
 end
 

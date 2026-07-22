@@ -13,21 +13,6 @@ local WindowLifecycle =
 local WindowLayout =
     require("Core.GUI.WindowLayout")
 
-local ViewManager =
-    require("Core.GUI.ViewManager")
-
-local NavigationService =
-    require("Core.Application.Navigation.NavigationService")
-
-local HomeView =
-    require("Core.Application.Views.Home.HomeView")
-
-local AnalysisView =
-    require("Core.GUI.Views.AnalysisView")
-
-local ResultsView =
-    require("Core.GUI.Views.ResultsView")
-
 local MainWindow = {}
 
 --------------------------------------------------------------------------------
@@ -38,25 +23,6 @@ local State =
 {
     Context = nil
 }
-
---------------------------------------------------------------------------------
--- Private Functions
---------------------------------------------------------------------------------
-
-local function RegisterViews()
-
-    ViewManager.Reset()
-
-    ViewManager.Register(
-        HomeView.New())
-
-    ViewManager.Register(
-        AnalysisView.New())
-
-    ViewManager.Register(
-        ResultsView.New())
-
-end
 
 --------------------------------------------------------------------------------
 -- Public API
@@ -70,23 +36,7 @@ function MainWindow.Initialize(context)
 
     State.Context = context
 
-    --------------------------------------------------------------------------
-    -- Window
-    --------------------------------------------------------------------------
-
     WindowLifecycle.Open()
-
-    --------------------------------------------------------------------------
-    -- Views
-    --------------------------------------------------------------------------
-
-    RegisterViews()
-
-    --------------------------------------------------------------------------
-    -- Navigation
-    --------------------------------------------------------------------------
-
-    NavigationService.Initialize()
 
 end
 
@@ -108,8 +58,6 @@ end
 --------------------------------------------------------------------------------
 
 function MainWindow.Shutdown()
-
-    ViewManager.Reset()
 
     WindowLifecycle.Close()
 

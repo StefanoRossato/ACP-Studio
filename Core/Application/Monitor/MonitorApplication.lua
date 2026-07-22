@@ -10,6 +10,21 @@
 local MainWindow =
     require("Core.GUI.MainWindow")
 
+local ViewManager =
+    require("Core.GUI.ViewManager")
+
+local NavigationService =
+    require("Core.Application.Navigation.NavigationService")
+
+local HomeView =
+    require("Core.Application.Views.Home.HomeView")
+
+local AnalysisView =
+    require("Core.GUI.Views.AnalysisView")
+
+local ResultsView =
+    require("Core.GUI.Views.ResultsView")
+
 local MonitorApplication = {}
 
 --------------------------------------------------------------------------------
@@ -33,7 +48,7 @@ local State =
 -- Private Functions
 --------------------------------------------------------------------------------
 
-local function Execute()
+local function ExecuteApplicationLoop()
 
     if not State.Running then
         return
@@ -41,13 +56,50 @@ local function Execute()
 
     if MainWindow.Run() then
 
-        reaper.defer(Execute)
+        reaper.defer(ExecuteApplicationLoop)
 
     else
 
         MonitorApplication.Shutdown()
 
     end
+
+end
+
+--------------------------------------------------------------------------------
+
+local function RegisterApplicationViews()
+
+    ViewManager.Reset()
+
+    ViewManager.Register(
+        HomeView.New())
+
+    ViewManager.Register(
+        AnalysisView.New())
+
+    ViewManager.Register(
+        ResultsView.New())
+
+end
+
+--------------------------------------------------------------------------------
+-- Application Composition
+--------------------------------------------------------------------------------
+
+local function ComposeApplication()
+
+    --------------------------------------------------------------------------
+    -- Navigation
+    --------------------------------------------------------------------------
+
+    NavigationService.Initialize()
+
+    --------------------------------------------------------------------------
+    -- Views
+    --------------------------------------------------------------------------
+
+    RegisterApplicationViews()
 
 end
 
@@ -66,9 +118,18 @@ function MonitorApplication.Initialize()
             APPLICATION_TITLE
         )
 
+    --------------------------------------------------------------------------
+    -- Application Composition
+    --------------------------------------------------------------------------
+
+    ComposeApplication()
+
+    --------------------------------------------------------------------------
+    -- Main Window
+    --------------------------------------------------------------------------
+
     MainWindow.Initialize(
-        State.Context
-    )
+        State.Context)
 
 end
 
@@ -82,7 +143,7 @@ function MonitorApplication.Run()
 
     State.Running = true
 
-    Execute()
+    ExecuteApplicationLoop()
 
 end
 
@@ -96,9 +157,20 @@ function MonitorApplication.Shutdown()
 
     State.Running = false
 
+    --------------------------------------------------------------------------
+    -- Views
+    --------------------------------------------------------------------------
+
+    ViewManager.Reset()
+
+    --------------------------------------------------------------------------
+    -- Main Window
+    --------------------------------------------------------------------------
+
     MainWindow.Shutdown()
 
     -- ReaImGui releases the context automatically when the script ends.
+
     State.Context = nil
 
 end

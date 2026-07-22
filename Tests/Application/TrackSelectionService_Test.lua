@@ -1,28 +1,10 @@
---------------------------------------------------------------------------------
--- ACP Studio
--- Test Bootstrap Loader
---------------------------------------------------------------------------------
--- Layer         : Test Infrastructure
--- Category      : Bootstrap
---------------------------------------------------------------------------------
-
---------------------------------------------------------------------------------
--- Module Declaration
---------------------------------------------------------------------------------
-
-local TestBootstrap = {}
-
---------------------------------------------------------------------------------
--- Private Functions
---------------------------------------------------------------------------------
-
 local function LoadBootstrap()
 
     local separator =
         package.config:sub(1, 1)
 
     local path =
-        debug.getinfo(2, "S").source:match("@?(.*)")
+        debug.getinfo(1, "S").source:match("@?(.*)")
 
     path =
         path:gsub("[/\\][^/\\]+$", "")
@@ -66,16 +48,15 @@ local function LoadBootstrap()
 end
 
 --------------------------------------------------------------------------------
--- Public API
+-- Initialize Test Environment
 --------------------------------------------------------------------------------
 
-function TestBootstrap.Initialize()
+local function InitializeTestEnvironment()
 
     local Bootstrap
     local RepositoryRoot
 
-    Bootstrap,
-    RepositoryRoot =
+    Bootstrap, RepositoryRoot =
         LoadBootstrap()
 
     assert(
@@ -84,8 +65,11 @@ function TestBootstrap.Initialize()
 
 end
 
---------------------------------------------------------------------------------
--- Module Return
---------------------------------------------------------------------------------
+InitializeTestEnvironment()
 
-return TestBootstrap
+
+
+local TrackSelectionService =
+    require("Core.Application.Services.TrackSelectionService")
+
+Logger.Info(type(TrackSelectionService))
