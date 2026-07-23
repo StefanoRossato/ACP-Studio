@@ -1360,3 +1360,15 @@ Validated:
 - Stable ImGui style handling during view transitions.
 
 Status: Certified
+
+## GUI-212 — View Lifecycle Contract
+
+### Added
+
+- Added GUI-212 View Lifecycle Contract specification.
+- Defined the standard View lifecycle model.
+- Defined lifecycle states and lifecycle operations.
+- Defined responsibilities for BaseView, ViewManager, ViewRegistry, Workspace,
+  and Concrete Views.
+- Defined lifecycle rules, implementation requirements, and certification
+  criteria.
