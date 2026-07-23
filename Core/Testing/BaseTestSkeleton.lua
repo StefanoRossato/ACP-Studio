@@ -66,9 +66,19 @@ end
 
 function BaseTestSkeleton:Log(message)
 
-    table.insert(self.Messages, message)
+    table.insert(
+        self.Messages,
+        message
+    )
 
-    print(message)
+
+    local Logger =
+        require("Core.Foundation.Logger")
+
+
+    Logger.Info(
+        message
+    )
 
 end
 
