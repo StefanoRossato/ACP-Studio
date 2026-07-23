@@ -7,33 +7,42 @@
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------
--- Bootstrap
+-- Test Bootstrap
 ------------------------------------------------------------------------------
 
-local Bootstrap =
-    dofile(reaper.GetResourcePath() ..
+local TestBootstrap =
+    dofile(
+        reaper.GetResourcePath() ..
         "/Scripts/ACP Studio/Tests/TestBootstrap.lua")
 
-Bootstrap.Initialize()
+assert(
+    TestBootstrap.Initialize(
+        debug.getinfo(1, "S").source),
+    "Failed to initialize test environment.")
 
 ------------------------------------------------------------------------------
 -- Dependencies
 ------------------------------------------------------------------------------
 
 local RepositoryLocator =
-    require("Core.Foundation.RepositoryLocator")
+    require("Core.Bootstrap.RepositoryLocator")
 
 local Logger =
     require("Core.Foundation.Logger")
 
 ------------------------------------------------------------------------------
--- Test
+-- Repository
 ------------------------------------------------------------------------------
 
-local Test = {}
+local Repository =
+    RepositoryLocator.GetRepositoryRoot()
+
+assert(
+    Repository ~= nil,
+    "Repository not available.")
 
 ------------------------------------------------------------------------------
--- Logging
+-- Console Helpers
 ------------------------------------------------------------------------------
 
 local function Log(message)
@@ -42,17 +51,19 @@ local function Log(message)
 
 end
 
+--------------------------------------------------------------------------------
+
 local function Pass(message)
 
     Log("[PASS] " .. message)
 
 end
 
-local function Fail(message)
+------------------------------------------------------------------------------
+-- Test
+------------------------------------------------------------------------------
 
-    Log("[FAIL] " .. message)
-
-end
+local Test = {}
 
 ------------------------------------------------------------------------------
 -- Construction
@@ -62,9 +73,10 @@ function Test.Construction()
 
     reaper.ClearConsole()
 
-    Log("======================================================")
+    Log("============================================================")
+    Log("ACP Studio")
     Log("FND-001 Logger Foundation Service Test")
-    Log("======================================================")
+    Log("============================================================")
     Log("")
 
 end
@@ -75,20 +87,13 @@ end
 
 function Test.Setup()
 
-    local repository =
-        RepositoryLocator.Locate()
-
-    assert(repository, "Repository not found.")
-
     local configuration =
     {
-        LogFile = repository .. "/Logs/ACP.log"
+        LogFile = Repository .. "/Logs/ACP.log"
     }
 
-    local initialized =
-        Logger.Initialize(configuration)
-
-    assert(initialized,
+    assert(
+        Logger.Initialize(configuration),
         "Logger initialization failed.")
 
     Pass("Logger initialized.")
@@ -102,14 +107,16 @@ end
 function Test.Execution()
 
     Logger.Log("Log")
+    Pass("Log() verified.")
 
     Logger.Info("Information")
+    Pass("Info() verified.")
 
     Logger.Warning("Warning")
+    Pass("Warning() verified.")
 
     Logger.Error("Error")
-
-    Pass("Messages written.")
+    Pass("Error() verified.")
 
 end
 
@@ -119,13 +126,13 @@ end
 
 function Test.Verification()
 
-    local repository =
-        RepositoryLocator.Locate()
-
     local file =
-        io.open(repository .. "/Logs/ACP.log", "r")
+        io.open(
+            Repository .. "/Logs/ACP.log",
+            "r")
 
-    assert(file,
+    assert(
+        file,
         "Log file not found.")
 
     local content =
@@ -133,19 +140,23 @@ function Test.Verification()
 
     file:close()
 
-    assert(content:find("Log"),
+    assert(
+        content:find("Log"),
         "Missing Log message.")
 
-    assert(content:find("%[INFO%] Information"),
+    assert(
+        content:find("%[INFO%] Information"),
         "Missing INFO message.")
 
-    assert(content:find("%[WARNING%] Warning"),
+    assert(
+        content:find("%[WARNING%] Warning"),
         "Missing WARNING message.")
 
-    assert(content:find("%[ERROR%] Error"),
+    assert(
+        content:find("%[ERROR%] Error"),
         "Missing ERROR message.")
 
-    Pass("File verification completed.")
+    Pass("Log file verified.")
 
 end
 
@@ -155,11 +166,8 @@ end
 
 function Test.Cleanup()
 
-    local shutdown =
-        Logger.Shutdown()
-
     assert(
-        shutdown,
+        Logger.Shutdown(),
         "Logger shutdown failed.")
 
     Pass("Logger shutdown.")
@@ -182,10 +190,15 @@ function Test.Run()
 
     Test.Cleanup()
 
+    assert(
+        TestBootstrap.Shutdown(),
+        "Failed to shutdown test environment.")
+
     Log("")
-    Log("======================================================")
-    Log("TEST PASSED")
-    Log("======================================================")
+    Log("============================================================")
+    Log("FND-001 PASSED")
+    Log("============================================================")
+    Log("")
 
 end
 

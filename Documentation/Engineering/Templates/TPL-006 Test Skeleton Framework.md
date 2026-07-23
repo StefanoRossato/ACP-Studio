@@ -5,9 +5,9 @@ Specification   : TPL-006
 Title           : Test Skeleton Framework
 
 Category        : Templates
-Status          : Draft
+Status          : Approved
 
-Version         : 1.0.0
+Version         : 1.1.0
 
 Author          : ACP Studio
 
@@ -16,398 +16,460 @@ Dependencies    : ENG-001
 
 # 1. Purpose
 
-This document defines the engineering architecture governing the ACP Studio Test
-Skeleton Framework.
+This specification defines the engineering architecture governing the ACP Studio
+Test Skeleton Framework.
 
-Its purpose is to establish a consistent, extensible, and reusable architectural
-foundation for all test skeletons used throughout the ACP Studio engineering
-process.
+Its purpose is to establish a standardized testing framework that provides
+reusable engineering capabilities, consistent test organization, and a common
+extension model for all ACP Studio engineering tests.
 
-The framework standardizes the common engineering capabilities shared by test
-skeletons while defining the architectural extension model used to specialize
-different categories of tests.
+This specification defines the architectural responsibilities, structural
+organization, and extension principles of the Test Skeleton Framework.
 
-This document defines the architectural organization of the Test Skeleton
-Framework.
+It does not define execution environment management, software implementation,
+individual test cases, or engineering verification procedures, which are
+governed by their respective engineering documents.
 
-It does not define the implementation of individual skeletons, testing
-methodologies, or the engineering requirements of specific test categories,
-which are governed by their respective engineering documents.
+The Test Skeleton Framework provides the common engineering foundation upon
+which specialized testing capabilities may be built while preserving
+consistency, maintainability, reuse, and long-term architectural stability.
 
 # 2. Scope
 
-This document applies to the entire ACP Studio Test Skeleton Framework.
+This specification applies to the ACP Studio Test Skeleton Framework and to all
+engineering test skeletons developed within the ACP Studio project.
 
-Its requirements govern the architectural organization, responsibilities,
-extension model, lifecycle, and specialization of all test skeletons used
-throughout the ACP Studio engineering process.
+Its requirements govern the common testing infrastructure, skeleton
+organization, extension model, lifecycle responsibilities, and reusable testing
+capabilities shared by all engineering tests.
 
-This framework applies to all reusable test skeletons regardless of:
+This specification applies to all specialized test skeletons regardless of:
 
 - Engineering area
-- Software layer
-- Component type
-- Testing purpose
+- Software component
 - Implementation technology
+- Testing domain
+- Execution environment
 
-The following engineering artifacts shall conform to this framework:
+The following engineering artifacts shall conform to this specification:
 
-- Base Test Skeleton
-- Module Test Skeleton
-- GUI Test Skeleton
-- View Test Skeleton
-- Future Test Skeleton specializations
+- Base Test Skeletons
+- Specialized Test Skeletons
+- Engineering Test Frameworks
+- Reusable Testing Infrastructure
 
-This document defines the architectural framework shared by all ACP Studio
-test skeletons.
+This specification defines the architectural framework governing reusable test
+skeletons.
 
 It does not define:
 
-- Individual skeleton implementations
-- Test procedures
+- Individual test implementations
 - Test cases
-- Testing methodologies
-- Engineering requirements for specific test categories
+- Test data
+- Engineering verification procedures
+- Execution environment management
 
 These subjects shall be governed by their respective engineering documents.
 
+Compliance with this specification is mandatory for all engineering test
+skeletons unless explicitly superseded by another certified engineering
+standard.
+
 # 3. Motivation
 
-The ACP Studio engineering process relies on reusable test skeletons to promote
-consistency, maintainability, and standardization throughout the engineering
-lifecycle.
+Engineering testing is a fundamental activity throughout the ACP Studio
+development lifecycle.
 
-As the project evolved, multiple categories of test skeletons emerged to support
-different engineering responsibilities while sharing a significant portion of
-their architectural foundation.
+As the project evolves, engineering tests increase in number, complexity, and
+specialization. Without a common architectural foundation, individual tests
+tend to duplicate infrastructure, adopt inconsistent execution models, and
+evolve independently, reducing maintainability and increasing engineering
+effort.
 
-Although these skeletons serve different purposes, they exhibit common
-engineering capabilities, lifecycle behavior, logging facilities, and extension
-mechanisms.
+The ACP Studio Test Skeleton Framework addresses these challenges by providing
+a standardized foundation for reusable engineering testing capabilities.
 
-This shared architectural foundation motivates the definition of a unified Test
-Skeleton Framework.
+A common testing framework enables engineering tests to share a consistent
+lifecycle, common engineering services, standardized reporting, and a unified
+extension model while allowing specialized test skeletons to address the
+specific requirements of different engineering domains.
 
-The framework establishes a common architectural model that enables specialized
-test skeletons to extend shared capabilities while preserving consistency,
-separation of concerns, and long-term maintainability across the ACP Studio
-engineering process.
+This architectural approach promotes consistency, reduces duplication,
+simplifies maintenance, and supports the long-term evolution of the ACP Studio
+engineering test infrastructure.
+
+The Test Skeleton Framework therefore establishes the common engineering
+foundation upon which all ACP Studio engineering tests are built.
 
 # 4. Architectural Overview
 
-The ACP Studio Test Skeleton Framework defines the common architectural
-foundation shared by all reusable test skeletons.
+The ACP Studio Test Skeleton Framework establishes the architectural foundation
+for reusable engineering testing across the ACP Studio project.
 
-The framework organizes test skeletons as a hierarchy of progressively
-specialized engineering components.
+Its purpose is to provide a common behavioral foundation upon which
+engineering test skeletons can be progressively specialized while preserving
+consistency, reuse, and long-term maintainability.
 
-Each level of the hierarchy inherits the responsibilities of its parent while
-introducing additional capabilities required for a more specific testing
-context.
+The framework is organized around three distinct architectural elements:
 
-The framework separates common testing infrastructure from environment-specific
-behavior.
+- The Test Bootstrap Foundation, responsible for preparing the execution
+  environment.
+- The BaseTestSkeleton, responsible for providing the common engineering
+  testing infrastructure.
+- A hierarchy of specialized test skeletons, responsible for extending the
+  common infrastructure with domain-specific testing capabilities.
 
-Common engineering capabilities, such as logging, execution lifecycle, and
-extension mechanisms, are defined by the base architecture, while environment
-initialization and specialized services are introduced by derived skeletons.
+The overall architectural organization is illustrated below.
 
-This architectural organization promotes reuse, minimizes duplication, and
-supports the incremental evolution of the ACP Studio engineering testing
-infrastructure.
+```text
+                Test Bootstrap Foundation
+                         │
+                         ▼
+                 BaseTestSkeleton
+                         │
+          ┌──────────────┴──────────────┐
+          ▼                             ▼
+ ModuleTestSkeleton             GuiTestSkeleton
+                                        │
+                                        ▼
+                                ViewTestSkeleton
+```
+
+Each architectural element has a clearly defined responsibility and interacts
+with the others through well-defined engineering boundaries.
+
+This separation allows execution environment management, reusable testing
+infrastructure, and domain-specific testing capabilities to evolve
+independently while preserving a stable behavioral contract throughout the
+framework.
+
+The following chapters describe each architectural element and its
+responsibilities in greater detail.
 
 # 5. Framework Architecture
 
-The Test Skeleton Framework is organized as a layered hierarchy of reusable
-engineering components.
+The Test Skeleton Framework defines the common architectural foundation for all
+ACP Studio engineering test skeletons.
 
-Each skeleton defines a well-defined engineering responsibility and extends the
-capabilities provided by its parent without modifying its architectural
-contract.
+The framework is organized as a hierarchy of reusable engineering components,
+where each layer provides additional capabilities while preserving the
+responsibilities of the underlying layers.
 
-The framework is based on the following architectural principles:
+The architecture is based on the following engineering principles:
 
-- Single Responsibility
-- Incremental Specialization
-- Reuse Through Inheritance
-- Separation of Concerns
-- Extensibility
-- Long-Term Maintainability
+- Common functionality shall be implemented once and reused by all derived
+  skeletons.
+- Specialized capabilities shall be introduced through progressive
+  specialization.
+- Engineering responsibilities shall remain clearly separated between
+  framework components.
+- Execution environment management shall remain external to the framework.
+- Framework components shall remain reusable and independent from individual
+  engineering tests.
 
-Each derived skeleton shall inherit the common testing infrastructure while
-introducing only the capabilities required by its specific engineering domain.
+This architectural organization enables engineering tests to share a common
+execution model while allowing specialized skeletons to address the
+requirements of different engineering domains.
 
-The framework shall ensure that common engineering functionality is implemented
-once and reused consistently throughout all specialized test skeletons.
+The framework therefore establishes a stable and extensible foundation capable
+of supporting the long-term evolution of ACP Studio engineering testing.
 
-This architectural organization minimizes duplication, promotes consistency,
-and enables the controlled evolution of the ACP Studio testing infrastructure.
+# 6. Test Bootstrap Foundation
 
-# 6. Skeleton Hierarchy
+The Test Bootstrap Foundation is responsible for providing the execution
+environment required by ACP Studio engineering tests.
 
-The Test Skeleton Framework is organized as a hierarchy of progressively
-specialized skeletons.
+Its purpose is to establish a consistent execution context before test
+execution begins and to restore the engineering environment once execution has
+completed.
 
-Each skeleton extends the capabilities of its parent while preserving the
-architectural contract defined by the framework.
+The Test Bootstrap Foundation is an architectural dependency of the Test
+Skeleton Framework but remains external to the framework itself.
 
-The hierarchy shall be organized as follows.
+Its engineering responsibilities include:
+
+- Initializing the ACP Studio execution environment.
+- Preparing the engineering infrastructure required by test execution.
+- Providing a consistent execution context.
+- Restoring the execution environment after test completion.
+
+The Test Bootstrap Foundation shall not provide reusable testing
+infrastructure, lifecycle management, assertions, logging, reporting, or other
+testing capabilities.
+
+Conversely, the Test Skeleton Framework assumes that the execution environment
+has already been prepared and shall remain independent of the mechanisms used
+to initialize or restore that environment.
+
+This separation ensures that execution environment management and reusable
+testing infrastructure evolve independently while preserving clear engineering
+responsibilities and long-term architectural stability.
+
+# 7. Skeleton Hierarchy
+
+The Test Skeleton Framework structures reusable testing capabilities through a
+hierarchical model of progressive specialization.
+
+Each level of the hierarchy inherits the common behavioral contract defined by
+its parent while introducing only the engineering capabilities required by its
+specific testing domain.
+
+The hierarchy is illustrated below.
 
 ```text
-                    BaseTestSkeleton
-                            │
-            ┌───────────────┴───────────────┐
-            │                               │
-            ▼                               ▼
- ModuleTestSkeleton                 GuiTestSkeleton
-                                            │
-                                            ▼
-                                   ViewTestSkeleton
+                 BaseTestSkeleton
+                         │
+          ┌──────────────┴──────────────┐
+          ▼                             ▼
+ ModuleTestSkeleton             GuiTestSkeleton
+                                        │
+                                        ▼
+                                ViewTestSkeleton
 ```
 
-The responsibilities of the skeletons are defined as follows.
+The BaseTestSkeleton defines the common behavioral foundation shared by all
+engineering test skeletons.
 
-| Skeleton | Primary Responsibility |
-|----------|-------------------------|
-| BaseTestSkeleton | Provides the common testing infrastructure shared by all test skeletons. |
-| ModuleTestSkeleton | Provides the execution environment for standard module testing. |
-| GuiTestSkeleton | Extends the common testing infrastructure with graphical application capabilities. |
-| ViewTestSkeleton | Extends GUI testing with view registration, navigation, rendering, and view-specific services. |
+ModuleTestSkeleton specializes this foundation for engineering tests focused
+on individual software modules.
 
-Future test skeletons should extend the existing hierarchy whenever their
-engineering responsibilities are compatible with the framework.
+GuiTestSkeleton specializes the common foundation for graphical user interface
+testing.
 
-New skeletons shall preserve the architectural principles defined by this
-framework and shall not duplicate capabilities already provided by their
-ancestors.
+ViewTestSkeleton further specializes GUI testing by introducing reusable
+capabilities dedicated to application view testing.
 
-# 7. Base Responsibilities
+Each derived skeleton shall extend the capabilities of its parent without
+duplicating existing responsibilities or violating the behavioral contract
+established by the Test Skeleton Framework.
 
-The BaseTestSkeleton defines the engineering capabilities common to all test
-skeletons within the Test Skeleton Framework.
+This hierarchical model enables the testing infrastructure to evolve through
+controlled specialization while preserving architectural consistency, reuse,
+and maintainability across all ACP Studio engineering tests.
 
-Its primary responsibility is to provide a consistent testing infrastructure
-independent of the execution environment or engineering domain.
+# 8. Base Responsibilities
 
-The BaseTestSkeleton shall provide the following capabilities.
+The BaseTestSkeleton constitutes the common behavioral foundation of the Test
+Skeleton Framework.
+
+Its purpose is to define the reusable engineering capabilities, behavioral
+contract, and execution model shared by all specialized test skeletons.
+
+The BaseTestSkeleton shall provide the following common capabilities.
 
 | Capability | Responsibility |
 |------------|----------------|
-| Test Lifecycle | Defines the common lifecycle for test execution. |
-| Environment Initialization | Declares the initialization contract implemented by derived skeletons. |
-| Logging | Provides standardized logging facilities for test execution. |
-| Test Result Reporting | Provides standardized mechanisms for reporting test outcomes. |
-| Assertions | Provides common assertion capabilities shared by all tests. |
-| Configuration | Manages the common test configuration. |
-| Extension Hooks | Defines extension points for specialized skeletons. |
+| Behavioral Contract | Defines the common behavioral contract inherited by all derived skeletons. |
+| Test Lifecycle | Defines the standardized lifecycle governing engineering test execution. |
+| Logging | Provides standardized logging facilities shared by all engineering tests. |
+| Assertions | Provides reusable assertion capabilities for engineering validation. |
+| Test Result Reporting | Provides standardized mechanisms for reporting engineering test outcomes. |
+| Configuration | Manages the common configuration shared by all derived skeletons. |
+| Extension Hooks | Defines controlled extension points for specialized skeletons. |
 
-The BaseTestSkeleton shall not implement environment-specific behavior.
+The BaseTestSkeleton shall remain independent from execution environment
+management.
 
-Responsibilities related to application initialization, graphical user
-interfaces, view management, or other specialized testing domains shall be
+Initialization and restoration of the engineering execution environment are
+the exclusive responsibility of the Test Bootstrap Foundation.
+
+Likewise, responsibilities related to graphical user interfaces, application
+views, software modules, or other specialized engineering domains shall be
 implemented exclusively by the appropriate derived skeletons.
 
-This separation ensures that the BaseTestSkeleton remains reusable,
-environment-independent, and stable throughout the evolution of the ACP Studio
-testing infrastructure.
+By limiting its responsibilities to the common behavioral foundation, the
+BaseTestSkeleton remains reusable, environment-independent, and stable while
+providing a consistent engineering model for all ACP Studio test skeletons.
 
-# 8. Environment Initialization
+# 9. Environment Initialization
 
-The Test Skeleton Framework separates the common testing infrastructure from
-environment-specific initialization.
+The Test Skeleton Framework separates execution environment management from
+reusable testing infrastructure.
 
-Each specialized skeleton shall initialize the execution environment required by
-its engineering responsibility.
+Execution environment initialization is provided exclusively by the Test
+Bootstrap Foundation, which prepares and restores the ACP Studio engineering
+environment required for test execution.
 
-The BaseTestSkeleton defines the initialization contract but shall not implement
-environment-specific initialization.
+The Test Skeleton Framework assumes that the execution environment has already
+been prepared and shall operate independently of the initialization process.
 
-Derived skeletons shall provide the appropriate initialization strategy for
-their execution context.
+The responsibilities related to execution environment management are summarized
+below.
 
-The environment initialization responsibilities are summarized below.
+| Component | Responsibility |
+|-----------|----------------|
+| Test Bootstrap Foundation | Prepares, initializes, and restores the execution environment. |
+| BaseTestSkeleton | Provides the common engineering testing infrastructure. |
+| Specialized Test Skeletons | Extend the common testing infrastructure with domain-specific capabilities. |
 
-| Skeleton | Initialization Responsibility |
-|----------|-------------------------------|
-| BaseTestSkeleton | Defines the environment initialization contract. |
-| ModuleTestSkeleton | Initializes the standard testing environment. |
-| GuiTestSkeleton | Initializes the ACP Studio application environment. |
-| ViewTestSkeleton | Extends the graphical application environment with view-specific initialization. |
+This architectural separation ensures that execution environment management and
+testing infrastructure evolve independently while preserving a consistent
+execution model for all engineering tests.
 
-This separation allows the common testing infrastructure to remain independent
-from any particular execution environment while enabling specialized skeletons
-to provide the services required by their respective engineering domains.
+Engineering tests shall never directly initialize or restore the execution
+environment. Test execution shall always rely upon the execution context
+provided by the Test Bootstrap Foundation.
 
-Environment initialization shall remain isolated from the common testing
-infrastructure to preserve reuse, maintainability, and architectural
-consistency throughout the Test Skeleton Framework.
+By isolating execution environment management from reusable testing
+infrastructure, the framework promotes separation of concerns, reuse,
+maintainability, and long-term architectural stability.
 
-# 9. Extension Model
+# 10. Extension Model
 
-The Test Skeleton Framework adopts an inheritance-based extension model.
+The Test Skeleton Framework is designed to support long-term evolution through
+controlled specialization.
 
-Each specialized skeleton extends the capabilities of its parent while
-preserving the architectural contract defined by the framework.
+New testing capabilities shall be introduced by extending existing test
+skeletons rather than modifying the common engineering foundation whenever
+practical.
 
-Extensions shall introduce only the engineering capabilities required by the
-specialized testing domain.
+Each specialized skeleton shall inherit the reusable capabilities provided by
+its parent and introduce only the engineering responsibilities specific to its
+target domain.
 
-Derived skeletons shall not duplicate responsibilities already provided by
-their ancestors.
+Extensions shall adhere to the following engineering principles:
 
-The extension model is based on the following principles.
+- Existing responsibilities shall not be duplicated.
+- Parent responsibilities shall not be overridden unless explicitly required by
+  the framework architecture.
+- New capabilities shall remain cohesive and focused on a single engineering
+  responsibility.
+- Derived skeletons shall preserve the behavioral contract established by their
+  parent skeletons.
+- Extensions shall remain compatible with the common testing infrastructure.
 
-- Responsibility inheritance
-- Capability specialization
-- Contract preservation
-- Incremental extension
-- Separation of concerns
+The introduction of additional specialized skeletons shall not require
+modifications to existing engineering tests or to the BaseTestSkeleton unless
+new common capabilities become necessary.
 
-Each derived skeleton may introduce additional services, lifecycle phases,
-extension hooks, and engineering capabilities provided that the inherited
-behavior remains consistent with the architectural framework.
+This extension model enables the Test Skeleton Framework to evolve
+incrementally while preserving architectural consistency, reuse, and
+maintainability across the ACP Studio engineering testing infrastructure.
 
-The extension model shall support the long-term evolution of the testing
-infrastructure while preserving compatibility, maintainability, and engineering
-consistency across all test skeletons.
+# 11. Lifecycle
 
-# 10. Lifecycle
+Every engineering test executed within the Test Skeleton Framework shall follow
+a standardized lifecycle.
 
-The Test Skeleton Framework defines a common execution lifecycle shared by all
-test skeletons.
+The lifecycle defines the sequence of engineering phases through which a test
+progresses from construction to completion, ensuring consistent behavior across
+all ACP Studio engineering tests.
 
-The lifecycle establishes the sequence of engineering activities required to
-prepare, execute, and complete a test while allowing specialized skeletons to
-extend individual phases when necessary.
+The lifecycle defines architectural phases rather than implementation details.
+Individual implementations may realize each phase using one or more concrete
+operations while preserving the overall behavioral contract.
 
-The common lifecycle consists of the following phases.
+The standardized lifecycle is illustrated below.
 
 ```text
-Initialize
+Construction
       │
       ▼
-Environment Setup
+Setup
       │
       ▼
-Execute Test
+Execution
       │
       ▼
-Report Results
+Verification
       │
       ▼
 Cleanup
+      │
+      ▼
+Shutdown
+      │
+      ▼
+Report
 ```
 
-Each phase has a well-defined engineering responsibility.
+Each lifecycle phase has a well-defined engineering responsibility.
 
 | Phase | Responsibility |
 |--------|----------------|
-| Initialize | Prepares the test skeleton for execution. |
-| Environment Setup | Initializes the execution environment required by the specialized skeleton. |
-| Execute Test | Executes the engineering test logic. |
-| Report Results | Produces standardized test output and execution results. |
-| Cleanup | Releases resources and restores the execution environment. |
+| Construction | Creates the test instance and prepares its internal state. |
+| Setup | Performs test-specific initialization prior to execution. |
+| Execution | Executes the engineering capability under test. |
+| Verification | Evaluates the observed results against the expected behavior. |
+| Cleanup | Releases temporary test resources. |
+| Shutdown | Completes the controlled termination of the testing environment. |
+| Report | Produces the final engineering test results. |
 
-Specialized skeletons may extend individual lifecycle phases provided that the
-overall lifecycle defined by the framework remains preserved.
+All specialized test skeletons shall follow this lifecycle unless explicitly
+required otherwise by a certified engineering specification.
 
-The lifecycle shall remain consistent across all test skeletons to ensure
-uniform behavior, predictable execution, and standardized engineering
-validation.
+Individual lifecycle phases may be extended by specialized skeletons provided
+that the overall lifecycle order and engineering responsibilities remain
+unchanged.
 
-# 11. Design Principles
+This standardized lifecycle promotes consistency, predictable behavior,
+maintainability, and reusable engineering testing practices throughout the ACP
+Studio Test Skeleton Framework.
 
-The Test Skeleton Framework is governed by a set of architectural principles
-intended to ensure consistency, extensibility, and long-term maintainability.
+# 12. Design Principles
 
-All test skeletons shall conform to the following principles.
+The Test Skeleton Framework is governed by a set of engineering principles that
+ensure consistency, maintainability, and long-term architectural stability.
 
-## 11.1 Single Responsibility
+These principles apply to all framework components and shall guide future
+engineering decisions affecting the testing infrastructure.
 
-Each skeleton shall define one primary engineering responsibility.
-
-Additional capabilities shall be introduced only through specialized skeletons.
-
----
-
-## 11.2 Reuse
-
-Common engineering functionality shall be implemented once within the framework
-and reused through inheritance.
-
-Duplication of common capabilities shall be avoided.
-
----
-
-## 11.3 Separation of Concerns
-
-Common testing infrastructure shall remain independent from environment-specific
-behavior.
-
-Environment initialization, graphical services, view management, and other
-specialized capabilities shall be implemented only by the appropriate derived
-skeletons.
-
----
-
-## 11.4 Incremental Specialization
-
-Each derived skeleton shall extend the capabilities of its parent without
-modifying the architectural contract defined by the framework.
-
-Specialization shall increase engineering capabilities while preserving
-architectural consistency.
-
----
-
-## 11.5 Extensibility
-
-The framework shall support the introduction of new specialized skeletons
-without requiring modifications to the existing hierarchy.
-
-Future extensions shall preserve the architectural principles defined by this
+The following principles constitute the architectural foundation of the
 framework.
 
----
+| Principle | Description |
+|-----------|-------------|
+| Single Responsibility | Each skeleton shall provide one clearly defined engineering responsibility. |
+| Reuse | Common engineering capabilities shall be implemented once and reused throughout the framework. |
+| Progressive Specialization | Specialized skeletons shall extend existing capabilities without duplicating responsibilities. |
+| Separation of Concerns | Execution environment management, testing infrastructure, and domain-specific testing shall remain independent. |
+| Consistency | All engineering tests shall follow a common execution model and engineering conventions. |
+| Extensibility | New testing capabilities shall be introduced through controlled framework extension. |
+| Maintainability | Framework evolution shall minimize the impact on existing engineering tests. |
+| Stability | Common engineering capabilities shall remain stable throughout the long-term evolution of the framework. |
 
-## 11.6 Long-Term Maintainability
+Engineering decisions affecting the Test Skeleton Framework shall preserve these
+principles unless explicitly superseded by a certified engineering
+specification.
 
-The framework shall promote stable architectural foundations that minimize the
-impact of future engineering changes.
+These principles collectively ensure that the Test Skeleton Framework remains a
+reusable, extensible, and maintainable engineering foundation for ACP Studio
+testing.
 
-Architectural evolution should occur through controlled specialization rather
-than duplication or structural redesign.
+# 13. Future Evolution
 
-# 12. Future Evolution
+The Test Skeleton Framework is designed to support the long-term evolution of
+ACP Studio engineering testing while preserving architectural consistency and
+backward compatibility.
 
-The Test Skeleton Framework is intended to support the controlled evolution of
-the ACP Studio engineering testing infrastructure.
+Future revisions of the framework may introduce additional specialized test
+skeletons, reusable engineering capabilities, and framework services provided
+that the architectural principles defined by this specification remain
+unchanged.
 
-Future engineering requirements may introduce additional specialized test
-skeletons while preserving the architectural principles defined by this
-framework.
+New framework capabilities should be incorporated into the common testing
+infrastructure only when they provide reusable value across multiple
+engineering domains.
 
-New skeletons shall integrate into the existing hierarchy through inheritance
-and specialization rather than by duplicating existing engineering
-capabilities.
+Engineering evolution shall preserve the established separation between
+execution environment management and reusable testing infrastructure.
 
-The introduction of new specialized skeletons shall not require modifications
-to the architectural contract defined by the BaseTestSkeleton unless justified
-through a controlled engineering revision.
+Future extensions shall maintain compatibility with existing engineering tests
+whenever practical, minimizing the impact of framework evolution on certified
+engineering artifacts.
 
-The framework shall evolve incrementally.
+Substantial architectural changes affecting the Test Skeleton Framework shall
+be introduced through controlled revisions of this specification and shall be
+subject to the ACP Studio engineering review and certification process.
 
-Architectural changes shall preserve compatibility with existing specialized
-skeletons whenever practical.
-
-The long-term objective of the Test Skeleton Framework is to provide a stable,
-consistent, and extensible architectural foundation for all ACP Studio testing
-capabilities.
-
----
+This evolutionary approach ensures that the Test Skeleton Framework remains a
+stable, extensible, and maintainable foundation capable of supporting the
+continuing growth of ACP Studio engineering testing.
 
 # Revision History
 
-| Version  | Date       | Description                                                |
-|----------|------------|------------------------------------------------------------|
-| 1.0.0    | 2026-07-21 | Initial draft of the Test Skeleton Framework architecture. |
+| Version | Date | Author | Description |
+|---------|------|--------|-------------|
+| 1.0.0 | 2026-07-21 | ACP Studio | Initial specification. |
+| 1.1.0 | 2026-07-22 | ACP Studio | Architectural revision. Separated the Test Bootstrap Foundation from the Test Skeleton Framework, restructured the architectural organization, clarified responsibilities, extension model, lifecycle, and behavioral contract. Approved for implementation. |
+

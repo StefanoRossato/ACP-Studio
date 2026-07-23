@@ -1264,3 +1264,69 @@ Architecture
 - Automatic Runtime Track provisioning.
 - Automatic Runtime Plugin provisioning.
 - Clean application startup and shutdown verified.
+
+# Bootstrap Foundation Certified
+
+## Status
+
+Bootstrap Foundation has been successfully completed, integrated and certified.
+
+This milestone establishes the execution infrastructure of ACP Studio and provides a stable, deterministic bootstrap process for all future application components.
+
+## Certified Components
+
+- BS-000 — Execution Entry Point
+- BS-001 — Repository Locator
+- BS-002 — Module Loader
+- BS-003 — Bootstrap Coordinator
+- BS-004 — Application Bootstrapper
+- BS-005 — Bootstrap Public API
+
+## Added
+
+- Execution Entry Point infrastructure.
+- Repository discovery service.
+- Dynamic Lua package path configuration.
+- Bootstrap Coordinator orchestration.
+- Application bootstrap layer.
+- Public Bootstrap API.
+- Bootstrap Infrastructure Test.
+
+## Architecture Improvements
+
+- EntryPoint.Initialize() now receives the script path explicitly.
+- Removed stack inspection for repository discovery.
+- Separated Public Bootstrap API from Application Bootstrapper.
+- BootstrapCoordinator now supports optional component shutdown.
+- Bootstrap lifecycle successfully verified from initialization to shutdown.
+
+## Verification
+
+Bootstrap Infrastructure Test completed successfully.
+
+PASS:
+- Bootstrap initialization
+- Bootstrap shutdown
+- Repository discovery
+- Module loading
+- Runtime environment bootstrap
+
+Bootstrap Foundation is now considered stable and certified.
+
+## [Unreleased]
+
+### Added
+
+- BST-001 — BaseTestSkeleton Foundation completed and certified.
+  - Implemented the foundational test lifecycle framework.
+  - Added private state management.
+  - Added lifecycle execution pipeline:
+    Setup → Execute → Verify → Cleanup → Shutdown.
+  - Added extension hooks for specialized test skeletons.
+  - Added certification test for lifecycle, state management and result handling.
+
+### Engineering
+
+- Established Test Framework bootstrap separation:
+  - TestBootstrap initialization remains the responsibility of individual test files.
+  - BaseTestSkeleton remains environment-independent and does not depend on REAPER runtime.
