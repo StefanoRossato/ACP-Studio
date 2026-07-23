@@ -10,10 +10,25 @@
 local BaseView =
     require("Core.GUI.BaseView")
 
+
 local ViewId =
     require("Core.Application.Navigation.ViewId")
 
+
 local AnalysisView = {}
+
+
+--------------------------------------------------------------------------------
+-- Inheritance
+--------------------------------------------------------------------------------
+
+setmetatable(
+    AnalysisView,
+    {
+        __index = BaseView
+    }
+)
+
 
 --------------------------------------------------------------------------------
 -- Constructor
@@ -27,6 +42,7 @@ function AnalysisView.New()
             "Analysis"
         )
 
+
     setmetatable(
         View,
         {
@@ -34,9 +50,11 @@ function AnalysisView.New()
         }
     )
 
+
     return View
 
 end
+
 
 --------------------------------------------------------------------------------
 -- Lifecycle
@@ -46,11 +64,11 @@ function AnalysisView:OnEnter()
 
 end
 
---------------------------------------------------------------------------------
 
 function AnalysisView:OnExit()
 
 end
+
 
 --------------------------------------------------------------------------------
 -- Rendering
@@ -63,9 +81,11 @@ function AnalysisView:Render(context)
         "Analysis"
     )
 
+
     reaper.ImGui_Separator(
         context
     )
+
 
     reaper.ImGui_Text(
         context,
@@ -73,6 +93,7 @@ function AnalysisView:Render(context)
     )
 
 end
+
 
 --------------------------------------------------------------------------------
 -- End of Module

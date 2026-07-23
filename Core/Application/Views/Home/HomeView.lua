@@ -12,6 +12,19 @@ local HomeView = {}
 local BaseView =
     require("Core.GUI.BaseView")
 
+
+--------------------------------------------------------------------------------
+-- Inheritance
+--------------------------------------------------------------------------------
+
+setmetatable(
+    HomeView,
+    {
+        __index = BaseView
+    }
+)
+
+
 local HomeHeader =
     require("Core.Application.Views.Home.Components.HomeHeader")
 
@@ -33,6 +46,7 @@ local DashboardDataBindingService =
 local ViewId =
     require("Core.Application.Navigation.ViewId")
 
+
 --------------------------------------------------------------------------------
 -- Constructor
 --------------------------------------------------------------------------------
@@ -45,11 +59,13 @@ function HomeView.New()
             "Home"
         )
 
+
     ------------------------------------------------------------------------
     -- State
     ------------------------------------------------------------------------
 
-    View.PresentationModel= nil
+    View.PresentationModel = nil
+
 
     setmetatable(
         View,
@@ -58,9 +74,11 @@ function HomeView.New()
         }
     )
 
+
     return View
 
 end
+
 
 --------------------------------------------------------------------------------
 -- Refresh
@@ -75,6 +93,7 @@ function HomeView:RefreshModel()
 
 end
 
+
 --------------------------------------------------------------------------------
 -- Lifecycle
 --------------------------------------------------------------------------------
@@ -83,6 +102,7 @@ function HomeView:OnEnter()
 
     self:RefreshModel()
 
+
     self.DataBindingService =
         DashboardDataBindingService.Create(
             self.PresentationModel
@@ -90,11 +110,13 @@ function HomeView:OnEnter()
 
 end
 
+
 function HomeView:OnExit()
 
     self.PresentationModel = nil
 
 end
+
 
 --------------------------------------------------------------------------------
 -- Rendering
@@ -106,11 +128,14 @@ function HomeView:Render(context)
         return
     end
 
+
     HomeHeader.Render(context, self.PresentationModel)
     HomeWelcome.Render(context, self.PresentationModel)
     HomeDashboard.Render(context, self.PresentationModel)
     HomeWorkspace.Render(context, self.PresentationModel)
+
 end
+
 
 --------------------------------------------------------------------------------
 -- End of Module

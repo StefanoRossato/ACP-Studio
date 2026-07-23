@@ -10,10 +10,25 @@
 local BaseView =
     require("Core.GUI.BaseView")
 
+
 local ViewId =
     require("Core.Application.Navigation.ViewId")
 
+
 local ResultsView = {}
+
+
+--------------------------------------------------------------------------------
+-- Inheritance
+--------------------------------------------------------------------------------
+
+setmetatable(
+    ResultsView,
+    {
+        __index = BaseView
+    }
+)
+
 
 --------------------------------------------------------------------------------
 -- Constructor
@@ -27,6 +42,7 @@ function ResultsView.New()
             "Results"
         )
 
+
     setmetatable(
         View,
         {
@@ -34,9 +50,11 @@ function ResultsView.New()
         }
     )
 
+
     return View
 
 end
+
 
 --------------------------------------------------------------------------------
 -- Lifecycle
@@ -46,11 +64,11 @@ function ResultsView:OnEnter()
 
 end
 
---------------------------------------------------------------------------------
 
 function ResultsView:OnExit()
 
 end
+
 
 --------------------------------------------------------------------------------
 -- Rendering
@@ -63,14 +81,17 @@ function ResultsView:Render(context)
         "Results"
     )
 
+
     reaper.ImGui_Separator(
         context
     )
+
 
     reaper.ImGui_Text(
         context,
         "Results View"
     )
+
 
     reaper.ImGui_Text(
         context,
@@ -78,6 +99,7 @@ function ResultsView:Render(context)
     )
 
 end
+
 
 --------------------------------------------------------------------------------
 -- End of Module
