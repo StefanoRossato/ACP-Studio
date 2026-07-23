@@ -917,6 +917,29 @@ Text examples shall use the `text` language identifier.
 Source code examples shall remain minimal while illustrating the engineering
 concept.
 
+## 8.6.1 Fenced Block Separation
+
+Fenced code blocks shall be separated from surrounding Markdown elements by
+blank lines.
+
+A blank line shall exist:
+
+- before the opening fence;
+- after the closing fence.
+
+Text, lists, headings, tables, or other Markdown elements shall not immediately
+follow a closing fence without a separating blank line.
+
+This requirement applies to:
+
+- source code blocks;
+- text blocks;
+- configuration examples;
+- diagrams represented through fenced blocks.
+
+The separation rule preserves Markdown parsing consistency and improves document
+readability and maintainability.
+
 ---
 
 ## 8.7 Tables
