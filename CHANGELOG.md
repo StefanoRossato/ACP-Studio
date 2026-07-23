@@ -1330,3 +1330,9 @@ Bootstrap Foundation is now considered stable and certified.
 - Established Test Framework bootstrap separation:
   - TestBootstrap initialization remains the responsibility of individual test files.
   - BaseTestSkeleton remains environment-independent and does not depend on REAPER runtime.
+
+  ### Foundation
+
+- FND-001 Logger Foundation Service certified.
+- Logger supports console and file output.
+- Logger lifecycle management verified.
