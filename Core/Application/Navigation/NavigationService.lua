@@ -67,12 +67,25 @@ function NavigationService.Navigate(viewId)
         "ViewManager is not available."
     )
 
+
+    local Activated =
+        State.ViewManager.Activate(
+            viewId
+        )
+
+
+    if not Activated then
+
+        return false
+
+    end
+
+
     State.Model.CurrentViewId =
         viewId
 
-    State.ViewManager.Activate(
-        viewId
-    )
+
+    return true
 
 end
 
