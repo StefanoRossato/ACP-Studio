@@ -1336,3 +1336,27 @@ Bootstrap Foundation is now considered stable and certified.
 - FND-001 Logger Foundation Service certified.
 - Logger supports console and file output.
 - Logger lifecycle management verified.
+
+## GUI-211 — Navigation Framework
+
+Added the ACP Monitor Navigation Framework.
+
+Implemented:
+
+- NavigationService for centralized navigation coordination.
+- NavigationModel for active view state management.
+- ViewId definitions for application views.
+- Navigation GUI component.
+- Integration between Navigation, ViewManager and Application Views.
+- Active view highlighting in navigation controls.
+
+Validated:
+
+- Home view initialization.
+- Home → Analysis navigation.
+- Analysis → Results navigation.
+- Results → Home navigation.
+- Active navigation state rendering.
+- Stable ImGui style handling during view transitions.
+
+Status: Certified

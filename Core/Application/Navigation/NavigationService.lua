@@ -19,36 +19,80 @@ local NavigationService = {}
 -- Private State
 --------------------------------------------------------------------------------
 
-local Model = nil
+local State =
+{
+    Model = nil,
+    ViewManager = nil
+}
 
 --------------------------------------------------------------------------------
 -- Public Interface
 --------------------------------------------------------------------------------
 
-function NavigationService.Initialize()
+--------------------------------------------------------------------------------
+-- Initialize
+--------------------------------------------------------------------------------
 
-    Model = NavigationModel.New()
+function NavigationService.Initialize(viewManager)
 
-    Model.CurrentViewId = ViewId.Home
+    assert(
+        viewManager,
+        "NavigationService.Initialize(): ViewManager is required."
+    )
+
+    State.Model =
+        NavigationModel.New()
+
+    State.ViewManager =
+        viewManager
+
+    State.Model.CurrentViewId =
+        ViewId.Home
 
 end
 
+--------------------------------------------------------------------------------
+-- Navigate
 --------------------------------------------------------------------------------
 
 function NavigationService.Navigate(viewId)
 
-    Model.CurrentViewId = viewId
+    assert(
+        State.Model,
+        "NavigationService is not initialized."
+    )
+
+    assert(
+        State.ViewManager,
+        "ViewManager is not available."
+    )
+
+    State.Model.CurrentViewId =
+        viewId
+
+    State.ViewManager.Activate(
+        viewId
+    )
 
 end
 
 --------------------------------------------------------------------------------
+-- Current View
+--------------------------------------------------------------------------------
 
 function NavigationService.CurrentViewId()
 
-    return Model.CurrentViewId
+    assert(
+        State.Model,
+        "NavigationService is not initialized."
+    )
+
+    return State.Model.CurrentViewId
 
 end
 
+--------------------------------------------------------------------------------
+-- End of Module
 --------------------------------------------------------------------------------
 
 return NavigationService

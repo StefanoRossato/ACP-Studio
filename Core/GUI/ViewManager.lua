@@ -3,12 +3,9 @@
 --
 -- Module        : ViewManager
 -- Layer         : GUI
--- Purpose       : Renders registered application views.
+-- Purpose       : Manages registered application views.
 -- Specification : GUI-211
 --------------------------------------------------------------------------------
-
-local NavigationService =
-    require("Core.Application.Navigation.NavigationService")
 
 local ViewManager = {}
 
@@ -18,54 +15,132 @@ local ViewManager = {}
 
 local State =
 {
-    Views = {}
+    Views = {},
+    ActiveView = nil
 }
 
 --------------------------------------------------------------------------------
 -- Public API
 --------------------------------------------------------------------------------
 
+--------------------------------------------------------------------------------
+-- Register
+--------------------------------------------------------------------------------
+
 function ViewManager.Register(view)
 
-    State.Views[view.Id] = view
+    assert(
+        view,
+        "ViewManager.Register(): view is nil."
+    )
+
+    assert(
+        view.Id,
+        "ViewManager.Register(): view id is missing."
+    )
+
+    State.Views[view.Id] =
+        view
 
 end
 
 --------------------------------------------------------------------------------
-
-function ViewManager.Get(id)
-
-    return State.Views[id]
-
-end
-
+-- Activate
 --------------------------------------------------------------------------------
 
-function ViewManager.Render(context)
-
-    local viewId =
-        NavigationService.CurrentViewId()
-
-    if not viewId then
-        return
-    end
+function ViewManager.Activate(viewId)
 
     local view =
         State.Views[viewId]
 
     if not view then
-        return
+        return false
     end
 
-    view:Render(context)
+
+    if State.ActiveView then
+
+        State.ActiveView:OnExit()
+
+    end
+
+
+    State.ActiveView =
+        view
+
+
+    State.ActiveView:OnEnter()
+
+
+    return true
 
 end
 
 --------------------------------------------------------------------------------
+-- Deactivate
+--------------------------------------------------------------------------------
+
+function ViewManager.Deactivate()
+
+    if not State.ActiveView then
+        return
+    end
+
+
+    State.ActiveView:OnExit()
+
+    State.ActiveView = nil
+
+end
+
+--------------------------------------------------------------------------------
+-- Get Active View
+--------------------------------------------------------------------------------
+
+function ViewManager.GetActive()
+
+    return State.ActiveView
+
+end
+
+--------------------------------------------------------------------------------
+-- Render
+--------------------------------------------------------------------------------
+
+function ViewManager.Render(context)
+
+    if not State.ActiveView then
+        return
+    end
+
+
+    State.ActiveView:Render(
+        context
+    )
+
+end
+
+--------------------------------------------------------------------------------
+-- Get View
+--------------------------------------------------------------------------------
+
+function ViewManager.Get(viewId)
+
+    return State.Views[viewId]
+
+end
+
+--------------------------------------------------------------------------------
+-- Reset
+--------------------------------------------------------------------------------
 
 function ViewManager.Reset()
 
-    State.Views = {}
+    State.Views =
+        {}
+
+    State.ActiveView =
+        nil
 
 end
 

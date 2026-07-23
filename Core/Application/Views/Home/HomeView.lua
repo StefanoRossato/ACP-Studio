@@ -106,11 +106,10 @@ function HomeView:Render(context)
         return
     end
 
-    HomeHeader.Render(ctx, self.PresentationModel)
-    HomeWelcome.Render(ctx, self.PresentationModel)
-    HomeDashboard.Render(ctx, self.PresentationModel)
-    HomeWorkspace.Render(ctx, self.PresentationModel)
-
+    HomeHeader.Render(context, self.PresentationModel)
+    HomeWelcome.Render(context, self.PresentationModel)
+    HomeDashboard.Render(context, self.PresentationModel)
+    HomeWorkspace.Render(context, self.PresentationModel)
 end
 
 --------------------------------------------------------------------------------

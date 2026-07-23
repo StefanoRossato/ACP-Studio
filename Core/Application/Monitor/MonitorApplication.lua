@@ -13,9 +13,6 @@ local MainWindow =
 local ViewManager =
     require("Core.GUI.ViewManager")
 
-local NavigationService =
-    require("Core.Application.Navigation.NavigationService")
-
 local HomeView =
     require("Core.Application.Views.Home.HomeView")
 
@@ -88,12 +85,6 @@ end
 --------------------------------------------------------------------------------
 
 local function ComposeApplication()
-
-    --------------------------------------------------------------------------
-    -- Navigation
-    --------------------------------------------------------------------------
-
-    NavigationService.Initialize()
 
     --------------------------------------------------------------------------
     -- Views

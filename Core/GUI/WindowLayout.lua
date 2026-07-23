@@ -19,6 +19,9 @@ local Toolbar =
 local Workspace =
     require("Core.GUI.Workspace")
 
+local Navigation =
+    require("Core.GUI.Navigation.Navigation")
+
 local WindowLayout = {}
 
 --------------------------------------------------------------------------------
@@ -78,14 +81,6 @@ function WindowLayout.Render(context)
         -- Menu Bar
         ----------------------------------------------------------------------
 
-        MenuBar.Render(
-            context
-        )
-
-        ----------------------------------------------------------------------
-        -- Toolbar
-        ----------------------------------------------------------------------
-
         Toolbar.Render(
             context
         )
@@ -94,9 +89,13 @@ function WindowLayout.Render(context)
             context
         )
 
-        ----------------------------------------------------------------------
-        -- Workspace
-        ----------------------------------------------------------------------
+        Navigation.Render(
+            context
+        )
+
+        reaper.ImGui_Separator(
+            context
+        )
 
         Workspace.Render(
             context
