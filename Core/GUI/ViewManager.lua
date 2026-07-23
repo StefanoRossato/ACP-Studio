@@ -4,7 +4,7 @@
 -- Module        : ViewManager
 -- Layer         : GUI
 -- Purpose       : Manages registered application views.
--- Specification : GUI-211
+-- Specification : GUI-212
 --------------------------------------------------------------------------------
 
 local ViewManager = {}
@@ -39,10 +39,15 @@ function ViewManager.Register(view)
         "ViewManager.Register(): view id is missing."
     )
 
+
+    view:Initialize()
+
+
     State.Views[view.Id] =
         view
 
 end
+
 
 --------------------------------------------------------------------------------
 -- Activate
@@ -76,6 +81,7 @@ function ViewManager.Activate(viewId)
 
 end
 
+
 --------------------------------------------------------------------------------
 -- Deactivate
 --------------------------------------------------------------------------------
@@ -93,6 +99,7 @@ function ViewManager.Deactivate()
 
 end
 
+
 --------------------------------------------------------------------------------
 -- Get Active View
 --------------------------------------------------------------------------------
@@ -102,6 +109,7 @@ function ViewManager.GetActive()
     return State.ActiveView
 
 end
+
 
 --------------------------------------------------------------------------------
 -- Render
@@ -120,6 +128,7 @@ function ViewManager.Render(context)
 
 end
 
+
 --------------------------------------------------------------------------------
 -- Get View
 --------------------------------------------------------------------------------
@@ -130,11 +139,19 @@ function ViewManager.Get(viewId)
 
 end
 
+
 --------------------------------------------------------------------------------
 -- Reset
 --------------------------------------------------------------------------------
 
 function ViewManager.Reset()
+
+    for _, view in pairs(State.Views) do
+
+        view:Shutdown()
+
+    end
+
 
     State.Views =
         {}
@@ -143,6 +160,7 @@ function ViewManager.Reset()
         nil
 
 end
+
 
 --------------------------------------------------------------------------------
 -- End of Module

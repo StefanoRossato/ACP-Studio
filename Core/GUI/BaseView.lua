@@ -4,7 +4,7 @@
 -- Module        : BaseView
 -- Layer         : GUI
 -- Purpose       : Defines the common interface for all application views.
--- Specification : GUI-109
+-- Specification : GUI-212
 --------------------------------------------------------------------------------
 
 local BaseView = {}
@@ -31,22 +31,35 @@ function BaseView.New(id, title)
 
 end
 
+
 --------------------------------------------------------------------------------
 -- Lifecycle
 --------------------------------------------------------------------------------
+
+function BaseView:Initialize()
+
+end
+
 
 function BaseView:OnEnter()
 
 end
 
+
+function BaseView:Render(context)
+
+end
+
+
 function BaseView:OnExit()
 
 end
 
-function BaseView:Render(context)
 
+function BaseView:Shutdown()
 
 end
+
 
 --------------------------------------------------------------------------------
 -- End of Module
