@@ -1,27 +1,24 @@
 ------------------------------------------------------------------------------
 -- ACP Studio
--- LogFormatter
+-- ConsoleSink
 --
 -- Foundation Logging Value Object
 ------------------------------------------------------------------------------
 
-local LogFormatter = {}
+local ConsoleSink = {}
 
 ------------------------------------------------------------------------------
 -- Construction
 ------------------------------------------------------------------------------
 
-function LogFormatter.Format(record)
+function ConsoleSink.Write(message)
 
-    return string.format(
-        "[%s] [%s] [%s] %s",
-        record.Timestamp,
-        record.Level,
-        record.Source,
-        record.Message
+    reaper.ShowConsoleMsg(
+        message .. "\n"
     )
+
+    return true
 
 end
 
-
-return LogFormatter
+return ConsoleSink
