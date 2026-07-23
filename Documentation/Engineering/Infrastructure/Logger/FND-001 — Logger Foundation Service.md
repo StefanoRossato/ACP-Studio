@@ -4,7 +4,7 @@
 # Specification   : FND-001
 # Title           : Logger Foundation Service
 # Category        : Engineering Infrastructure
-# Status          : Approved
+# Status          : Certified
 # Version         : 1.0.0
 # Author          : ACP Studio
 # Dependencies    : ENG-001 — Engineering Documentation Standard
