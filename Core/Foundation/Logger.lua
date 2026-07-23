@@ -2,7 +2,7 @@
 -- ACP Studio
 -- Logger Foundation Service
 ------------------------------------------------------------------------------
--- Specification : FND-001
+-- Specification : FND-001 / FND-002
 -- Category      : Foundation
 ------------------------------------------------------------------------------
 
@@ -13,11 +13,25 @@
 local Lifecycle =
     require("Core.Foundation.Lifecycle")
 
+local LogRecord =
+    require("Core.Foundation.Logging.LogRecord")
+
+local LogFormatter =
+    require("Core.Foundation.Logging.LogFormatter")
+
+local ConsoleSink =
+    require("Core.Foundation.Logging.ConsoleSink")
+
+local FileSink =
+    require("Core.Foundation.Logging.FileSink")
+
+
 ------------------------------------------------------------------------------
 -- Module Declaration
 ------------------------------------------------------------------------------
 
 local Logger = {}
+
 
 ------------------------------------------------------------------------------
 -- Constants
@@ -29,6 +43,7 @@ local Constants =
     Version = "1.0.0"
 }
 
+
 ------------------------------------------------------------------------------
 -- State
 ------------------------------------------------------------------------------
@@ -36,26 +51,13 @@ local Constants =
 local State =
 {
     Lifecycle = Lifecycle.Loaded,
-    Configuration = nil,
-    FileHandle = nil
+    Configuration = nil
 }
+
 
 ------------------------------------------------------------------------------
 -- Private Functions
 ------------------------------------------------------------------------------
-
-local function ConsoleTarget(message)
-
-    reaper.ShowConsoleMsg(message)
-
-end
-
-local function FileTarget(message)
-
-    State.FileHandle:write(message)
-    State.FileHandle:flush()
-
-end
 
 local function ValidateOperational()
 
@@ -66,22 +68,38 @@ local function ValidateOperational()
 
 end
 
+
 --------------------------------------------------------------------------------
 
-local function Write(prefix, message)
+local function Write(level, message)
 
     ValidateOperational()
 
+
     assert(
         type(message) == "string",
-        "A valid log message is required.")
-    
-    local output = prefix .. message .. "\n"
+        "A valid log message is required."
+    )
 
-    ConsoleTarget(output)
-    FileTarget(output)
+
+    local record =
+        LogRecord.new(
+            level,
+            "Logger",
+            message
+        )
+
+
+    local output =
+        LogFormatter.Format(record)
+
+
+    ConsoleSink.Write(output)
+
+    FileSink.Write(output)
 
 end
+
 
 ------------------------------------------------------------------------------
 -- Lifecycle
@@ -91,27 +109,32 @@ function Logger.Initialize(configuration)
 
     assert(
         type(configuration) == "table",
-        "Logger configuration is required.")
+        "Logger configuration is required."
+    )
+
 
     if State.Lifecycle ~= Lifecycle.Loaded then
         return false
     end
 
-    local handle, errorMessage =
-        io.open(configuration.LogFile, "a")
 
     assert(
-        handle,
-        errorMessage)
+        FileSink.Initialize(
+            configuration.LogFile
+        ),
+        "FileSink initialization failed."
+    )
+
 
     State.Configuration = configuration
-    State.FileHandle = handle
 
     State.Lifecycle = Lifecycle.Operational
+
 
     return true
 
 end
+
 
 --------------------------------------------------------------------------------
 
@@ -121,16 +144,19 @@ function Logger.Shutdown()
         return false
     end
 
+
+    FileSink.Close()
+
+
+    State.Configuration = nil
+
     State.Lifecycle = Lifecycle.Terminated
 
-    if State.FileHandle then
-        State.FileHandle:close()
-        State.FileHandle = nil
-    end
 
     return true
 
 end
+
 
 ------------------------------------------------------------------------------
 -- Public API
@@ -138,33 +164,49 @@ end
 
 function Logger.Log(message)
 
-    Write("", message)
+    Write(
+        "LOG",
+        message
+    )
 
 end
+
 
 --------------------------------------------------------------------------------
 
 function Logger.Info(message)
 
-    Write("[INFO] ", message)
+    Write(
+        "INFO",
+        message
+    )
 
 end
+
 
 --------------------------------------------------------------------------------
 
 function Logger.Warning(message)
 
-    Write("[WARNING] ", message)
+    Write(
+        "WARNING",
+        message
+    )
 
 end
+
 
 --------------------------------------------------------------------------------
 
 function Logger.Error(message)
 
-    Write("[ERROR] ", message)
+    Write(
+        "ERROR",
+        message
+    )
 
 end
+
 
 ------------------------------------------------------------------------------
 -- Module Return
