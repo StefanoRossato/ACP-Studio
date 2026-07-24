@@ -112,24 +112,21 @@ function Logger.Initialize(configuration)
         "Logger configuration is required."
     )
 
-
     if State.Lifecycle ~= Lifecycle.Loaded then
         return false
     end
 
-
     assert(
         FileSink.Initialize(
-            configuration.LogFile
+            configuration.LogFile,
+            configuration.Mode
         ),
         "FileSink initialization failed."
     )
 
-
     State.Configuration = configuration
 
     State.Lifecycle = Lifecycle.Operational
-
 
     return true
 

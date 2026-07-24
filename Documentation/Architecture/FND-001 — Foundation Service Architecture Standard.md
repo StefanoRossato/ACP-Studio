@@ -2,7 +2,7 @@
 ACP Studio
 
 Specification   : FND-001
-Title           : Foundation Service Template
+Title           : Foundation Service Architecture Standard
 
 Category        : Engineering Architecture
 Status          : Approved

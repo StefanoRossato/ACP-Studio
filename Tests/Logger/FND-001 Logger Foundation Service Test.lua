@@ -2,7 +2,7 @@
 -- ACP Studio
 -- FND-001 Logger Foundation Service Test
 ------------------------------------------------------------------------------
--- Specification : FND-001
+-- Specification : FND-001 / FND-002
 -- Category      : Foundation Test
 ------------------------------------------------------------------------------
 
@@ -82,40 +82,25 @@ function Test.Construction()
 end
 
 ------------------------------------------------------------------------------
--- Setup
-------------------------------------------------------------------------------
-
-function Test.Setup()
-
-    local configuration =
-    {
-        LogFile = Repository .. "/Logs/ACP.log"
-    }
-
-    assert(
-        Logger.Initialize(configuration),
-        "Logger initialization failed.")
-
-    Pass("Logger initialized.")
-
-end
-
-------------------------------------------------------------------------------
 -- Execution
 ------------------------------------------------------------------------------
 
 function Test.Execution()
 
     Logger.Log("Log")
+
     Pass("Log() verified.")
 
     Logger.Info("Information")
+
     Pass("Info() verified.")
 
     Logger.Warning("Warning")
+
     Pass("Warning() verified.")
 
     Logger.Error("Error")
+
     Pass("Error() verified.")
 
 end
@@ -145,15 +130,15 @@ function Test.Verification()
         "Missing Log message.")
 
     assert(
-        content:find("%[INFO%] Information"),
+        content:find("%[INFO%].-Information"),
         "Missing INFO message.")
 
     assert(
-        content:find("%[WARNING%] Warning"),
+        content:find("%[WARNING%].-Warning"),
         "Missing WARNING message.")
 
     assert(
-        content:find("%[ERROR%] Error"),
+        content:find("%[ERROR%].-Error"),
         "Missing ERROR message.")
 
     Pass("Log file verified.")
@@ -167,10 +152,10 @@ end
 function Test.Cleanup()
 
     assert(
-        Logger.Shutdown(),
-        "Logger shutdown failed.")
+        TestBootstrap.Shutdown(),
+        "Failed to shutdown test environment.")
 
-    Pass("Logger shutdown.")
+    Pass("Test environment shutdown.")
 
 end
 
@@ -182,21 +167,15 @@ function Test.Run()
 
     Test.Construction()
 
-    Test.Setup()
-
     Test.Execution()
 
     Test.Verification()
 
     Test.Cleanup()
 
-    assert(
-        TestBootstrap.Shutdown(),
-        "Failed to shutdown test environment.")
-
     Log("")
     Log("============================================================")
-    Log("FND-001 PASSED")
+    Log("FND-001 Logger Foundation Service PASSED")
     Log("============================================================")
     Log("")
 

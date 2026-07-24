@@ -72,11 +72,12 @@ function TestBootstrap.Initialize(scriptPath)
 
 
     assert(
-        Logger.Initialize(
-        {
-            LogFile = Repository .. "/Logs/ACP.log"
-        }),
-        "Logger initialization failed.")
+    Logger.Initialize(
+    {
+        LogFile = Repository .. "/Logs/Test_ACP.log",
+        Mode = "w"
+    }),
+    "Logger initialization failed.")
 
 
     Initialized = true

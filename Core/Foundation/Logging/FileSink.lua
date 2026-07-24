@@ -15,26 +15,44 @@ local FileSink =
 -- Initialization
 ------------------------------------------------------------------------------
 
-function FileSink.Initialize(path)
+function FileSink.Initialize(path, mode)
+
+    mode = mode or "a"
 
     assert(
         path ~= nil,
         "File path required."
     )
 
+    local file =
+        io.open(
+            path,
+            mode)
+
+
+    assert(
+        file ~= nil,
+        "Unable to open log file."
+    )
+
+
+    file:close()
+
 
     FileSink.Path = path
+
 
     return true
 
 end
-
 
 ------------------------------------------------------------------------------
 -- Writing
 ------------------------------------------------------------------------------
 
 function FileSink.Write(message)
+
+    FileSink.Mode = mode
 
     assert(
         FileSink.Path ~= nil,
