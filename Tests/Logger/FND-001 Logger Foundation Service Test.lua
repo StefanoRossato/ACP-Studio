@@ -113,7 +113,7 @@ function Test.Verification()
 
     local file =
         io.open(
-            Repository .. "/Logs/ACP.log",
+            Repository .. "/Logs/Test_ACP.log",
             "r")
 
     assert(
@@ -124,6 +124,10 @@ function Test.Verification()
         file:read("*a")
 
     file:close()
+
+    ------------------------------------------------------------------------------
+    -- Log File Verification
+    ------------------------------------------------------------------------------
 
     assert(
         content:find("Log"),
@@ -141,7 +145,29 @@ function Test.Verification()
         content:find("%[ERROR%].-Error"),
         "Missing ERROR message.")
 
+    ------------------------------------------------------------------------------
+    -- Output Modes Verification
+    ------------------------------------------------------------------------------
+
+    assert(
+        Logger.Mode.ConsoleAndFile ~= nil,
+        "Missing ConsoleAndFile mode.")
+
+    assert(
+        Logger.Mode.ConsoleOnly ~= nil,
+        "Missing ConsoleOnly mode.")
+
+    assert(
+        Logger.Mode.FileOnly ~= nil,
+        "Missing FileOnly mode.")
+
+    assert(
+        Logger.Mode.Silent ~= nil,
+        "Missing Silent mode.")
+
     Pass("Log file verified.")
+
+    Pass("Logger modes verified.")
 
 end
 

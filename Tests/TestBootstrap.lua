@@ -29,11 +29,9 @@ function TestBootstrap.Initialize(scriptPath)
         not Initialized,
         "Test bootstrap has already been initialized.")
 
-
     assert(
         type(scriptPath) == "string",
         "A valid script path is required.")
-
 
     ------------------------------------------------------------------------
     -- Initialize ACP Runtime Environment
@@ -44,16 +42,12 @@ function TestBootstrap.Initialize(scriptPath)
             reaper.GetResourcePath() ..
             "/Scripts/ACP Studio/Core/Bootstrap/EntryPoint.lua")
 
-
     EntryPoint.Initialize(scriptPath)
-
 
     Bootstrap =
         require("Core.Bootstrap")
 
-
     Bootstrap.Initialize()
-
 
     ------------------------------------------------------------------------
     -- Initialize Foundation Services
@@ -62,26 +56,21 @@ function TestBootstrap.Initialize(scriptPath)
     Logger =
         require("Core.Foundation.Logger")
 
-
     local RepositoryLocator =
         require("Core.Bootstrap.RepositoryLocator")
-
 
     local Repository =
         RepositoryLocator.GetRepositoryRoot()
 
-
     assert(
-    Logger.Initialize(
-    {
-        LogFile = Repository .. "/Logs/Test_ACP.log",
-        Mode = "w"
-    }),
-    "Logger initialization failed.")
-
+        Logger.Initialize(
+        {
+            LogFile  = Repository .. "/Logs/Test_ACP.log",
+            FileMode = "w"
+        }),
+        "Logger initialization failed.")
 
     Initialized = true
-
 
     return true
 
@@ -95,7 +84,6 @@ function TestBootstrap.Shutdown()
         Initialized,
         "Test bootstrap has not been initialized.")
 
-
     ------------------------------------------------------------------------
     -- Shutdown Foundation Services
     ------------------------------------------------------------------------
@@ -108,17 +96,14 @@ function TestBootstrap.Shutdown()
 
     end
 
-
     ------------------------------------------------------------------------
     -- Shutdown ACP Runtime Environment
     ------------------------------------------------------------------------
 
     Bootstrap.Shutdown()
 
-
     Bootstrap = nil
     Initialized = false
-
 
     return true
 

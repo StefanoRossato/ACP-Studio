@@ -10,7 +10,6 @@ local FileSink =
     Path = nil
 }
 
-
 ------------------------------------------------------------------------------
 -- Initialization
 ------------------------------------------------------------------------------
@@ -29,18 +28,14 @@ function FileSink.Initialize(path, mode)
             path,
             mode)
 
-
     assert(
         file ~= nil,
         "Unable to open log file."
     )
 
-
     file:close()
 
-
     FileSink.Path = path
-
 
     return true
 
@@ -52,13 +47,10 @@ end
 
 function FileSink.Write(message)
 
-    FileSink.Mode = mode
-
     assert(
         FileSink.Path ~= nil,
         "FileSink not initialized."
     )
-
 
     local file =
         io.open(
@@ -66,25 +58,20 @@ function FileSink.Write(message)
             "a"
         )
 
-
     assert(
         file ~= nil,
         "Unable to open log file."
     )
 
-
     file:write(
         message .. "\n"
     )
 
-
     file:close()
-
 
     return true
 
 end
-
 
 ------------------------------------------------------------------------------
 -- Shutdown
@@ -97,6 +84,5 @@ function FileSink.Close()
     return true
 
 end
-
 
 return FileSink

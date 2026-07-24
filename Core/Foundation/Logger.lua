@@ -43,6 +43,17 @@ local Constants =
     Version = "1.0.0"
 }
 
+------------------------------------------------------------------------------
+-- Output Modes
+------------------------------------------------------------------------------
+
+Logger.Mode =
+{
+    ConsoleAndFile = "ConsoleAndFile",
+    ConsoleOnly    = "ConsoleOnly",
+    FileOnly       = "FileOnly",
+    Silent         = "Silent"
+}
 
 ------------------------------------------------------------------------------
 -- State
@@ -116,15 +127,27 @@ function Logger.Initialize(configuration)
         return false
     end
 
+    State.Configuration =
+    {
+        LogFile =
+            configuration.LogFile,
+
+        Mode =
+            configuration.Mode
+            or Logger.Mode.ConsoleAndFile,
+
+        FileMode =
+            configuration.FileMode
+            or "a"
+    }
+
     assert(
         FileSink.Initialize(
-            configuration.LogFile,
-            configuration.Mode
+            State.Configuration.LogFile,
+            State.Configuration.FileMode
         ),
         "FileSink initialization failed."
     )
-
-    State.Configuration = configuration
 
     State.Lifecycle = Lifecycle.Operational
 
